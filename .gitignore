@@ -30,6 +30,6 @@ _ReSharper*/
 .vs/
 #Nuget packages folder
 packages/
-/src/node_modules/
-/src/coverage
-/src/dist
+/coverage
+/dist
+node_modules
