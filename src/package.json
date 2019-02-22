@@ -1,0 +1,45 @@
+{
+  "name": "yuya.ts.odata-client",
+  "version": "1.0.0",
+  "description": "OData Client for Typescript with axios ",
+  "main": "index.ts",
+  "scripts": {
+    "test": "jest",
+    "test:unit": "vue-cli-service test:unit",
+    "cover": "cross-env NODE_ENV=coverage nyc --reporter=lcov --reporter=text jest",
+    "build": "rm -r dist | tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YuyaProject/yuya.ts.odata-client"
+  },
+  "keywords": [
+    "typescript",
+    "yuya",
+    "odata-client"
+  ],
+  "author": "Alper Konuralp",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YuyaProject/yuya.ts.odata-client/issues"
+  },
+  "homepage": "https://github.com/YuyaProject/yuya.ts.odata-client#readme",
+  "devDependencies": {
+    "@types/jest": "^23.3.14",
+    "@types/lodash": "^4.14.120",
+    "@types/sinon": "^7.0.5",
+    "axios": "^0.18.0",
+    "coveralls": "^3.0.2",
+    "jest": "^23.6.0",
+    "node-fetch": "^2.2.0",
+    "sinon": "^7.2.3",
+    "ts-jest": "^23.10.5",
+    "ts-node": "^7.0.0",
+    "tslint": "~5.6.0",
+    "typescript": "^3.3.3333"
+  },
+  "dependencies": {
+    "lodash": "^4.17.11",
+    "moment": "^2.22.2"
+  }
+}

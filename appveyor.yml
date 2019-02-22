@@ -1,0 +1,37 @@
+version: 0.0.{build}
+image: Visual Studio 2017
+configuration: Release
+platform: Any CPU
+environment:
+  COVERALLS_REPO_TOKEN:
+    secure: T+HdDBDo+v0SKJcnjeQL6LZWf9iKgDGuNwGjMHTHVlU2WzbjbeVCNfhNVY/+cog2
+init:
+- cmd: git config --global core.autocrlf true
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+before_build:
+- cmd: cd src
+- cmd: dotnet restore --verbosity m
+- cmd: nuget restore -verbosity detailed
+- cmd: dotnet tool install coveralls.net --version 1.0.0 --tool-path tools
+build:
+  project: src/Yuya.Net.CastleAutomapperFacility.sln
+  parallel: true
+  verbosity: minimal
+test_script:
+- ps: .\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user "-target:$env:APPVEYOR_BUILD_FOLDER\src\packages\xunit.runner.console.2.4.1\tools\net461\xunit.console.exe" "-targetargs:$env:APPVEYOR_BUILD_FOLDER\src\Yuya.Net.CastleAutomapperFacility.NetFrameworkTest\bin\Release\Yuya.Net.CastleAutomapperFacility.NetFrameworkTest.dll -appveyor -noshadow" "-filter:+[Yuya.Net.CastleAutomapperFacility*]* -[*NetFrameworkTest*]*" "-output:.\opencoverCoverage.xml" -mergebyhash
+- ps: .\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user "-target:C:\Program Files\dotnet\dotnet.exe" "-targetargs:test Yuya.Net.CastleAutomapperFacility.NetCoreTest\Yuya.Net.CastleAutomapperFacility.NetCoreTest.csproj -c $env:CONFIGURATION" "-filter:+[Yuya*]*" "-output:.\opencoverCoverage.xml" -mergebyhash
+- ps: .\tools\csmacnz.Coveralls.exe --opencover -i ./opencoverCoverage.xml --repoToken $env:COVERALLS_REPO_TOKEN --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID
+artifacts:
+- path: '**/Yuya.Net.CastleAutomapperFacility.*.nupkg'
+  name: Nuget Package
+  
+- path: src/opencoverCoverage.xml
+  name: Coverage Report
+deploy: off
