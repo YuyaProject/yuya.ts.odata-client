@@ -29,7 +29,7 @@ steps:
 - task: PublishTestResults@2
   condition: succeededOrFailed()
   inputs:
-    testRunner: Cobertura
+    testRunner: JUnit
     testResultsFiles: '$(System.DefaultWorkingDirectory)/src/coverage/cobertura-coverage.xml'
 
 - task: PublishCodeCoverageResults@1
