@@ -24,6 +24,7 @@ steps:
 - script: |
     cd src
     npm t
+    cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
   displayName: 'npm run tests and coverage'
 
 - task: PublishTestResults@2
