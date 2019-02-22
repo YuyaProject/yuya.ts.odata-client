@@ -26,6 +26,12 @@ steps:
     npm t
   displayName: 'npm run tests and coverage'
 
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testRunner: Cobertura
+    testResultsFiles: '$(System.DefaultWorkingDirectory)/src/coverage/cobertura-coverage.xml'
+
 - task: PublishCodeCoverageResults@1
   inputs: 
     codeCoverageTool: Cobertura
