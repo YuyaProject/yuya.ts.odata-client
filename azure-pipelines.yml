@@ -22,6 +22,7 @@ steps:
   displayName: 'npm install and build'
 
 - script: |
+    cd src
     npm t
   displayName: 'npm run tests and coverage'
 
