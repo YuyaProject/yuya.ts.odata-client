@@ -20,3 +20,13 @@ steps:
     npm install
     npm run build
   displayName: 'npm install and build'
+
+- script: |
+    npm t
+  displayName: 'npm run tests and coverage'
+
+- task: PublishCodeCoverageResults@1
+  inputs: 
+    codeCoverageTool: Cobertura
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/src/coverage/cobertura-coverage.xml'
+    reportDirectory: '$(System.DefaultWorkingDirectory)/src/coverage/lcov-report'
