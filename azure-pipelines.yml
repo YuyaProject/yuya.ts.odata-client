@@ -16,22 +16,20 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-    cd src
     npm install
     npm run build
   displayName: 'npm install and build'
 
 - script: |
-    cd src
     npm t
     cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
   displayName: 'npm run tests and coverage'
 
-- task: PublishTestResults@2
-  condition: succeededOrFailed()
-  inputs:
-    testRunner: JUnit
-    testResultsFiles: '$(System.DefaultWorkingDirectory)/src/coverage/cobertura-coverage.xml'
+# - task: PublishTestResults@2
+#   condition: succeededOrFailed()
+#   inputs:
+#     testRunner: JUnit
+#     testResultsFiles: '$(System.DefaultWorkingDirectory)/src/coverage/cobertura-coverage.xml'
 
 - task: PublishCodeCoverageResults@1
   inputs: 
