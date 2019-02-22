@@ -476,4 +476,31 @@ describe('filter-builder tests', () => {
     expect(p.text).toEqual('(id eq 5)');
   });
   // #endregion
+
+  // #region method : contains
+  it('contains Expression parameter ', () => {
+    const p = FilterBuilder.contains(FilterBuilder.prop('name'), 'a');
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p.text).toEqual('contains(name,\'a\')');
+  });
+  // #endregion
+
+  // #region method : startswith
+  it('startswith Expression parameter ', () => {
+    const p = FilterBuilder.startswith(FilterBuilder.prop('name'), 'a');
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p.text).toEqual('startswith(name,\'a\')');
+  });
+  // #endregion
+
+  // #region method : endswith
+  it('endswith Expression parameter ', () => {
+    const p = FilterBuilder.endswith(FilterBuilder.prop('name'), 'a');
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p.text).toEqual('endswith(name,\'a\')');
+  });
+  // #endregion
 });

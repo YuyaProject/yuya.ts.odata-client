@@ -94,15 +94,15 @@ export function group(inside: Expression): Expression {
 }
 
 export function contains(left: IProperty, right: string): Expression {
-  return new Expression(`contains(${write(left)}, ${write(right)})`);
+  return new Expression(`contains(${write(left)},${write(right)})`);
 }
 
 export function startswith(left: IProperty, right: string): Expression {
-  return new Expression(`startswith(${write(left)}, ${write(right)})`);
+  return new Expression(`startswith(${write(left)},${write(right)})`);
 }
 
 export function endswith(left: IProperty, right: string): Expression {
-  return new Expression(`endswith(${write(left)}, ${write(right)})`);
+  return new Expression(`endswith(${write(left)},${write(right)})`);
 }
 
 export function length(inside: IProperty): Expression {
