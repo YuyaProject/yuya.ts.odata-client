@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { getODataDateTimeString } from '.';
+import { OData } from '.';
 import moment, { Moment } from 'moment';
 
 export interface IProperty {
@@ -35,7 +35,7 @@ function write(val: FilterValue): string {
   if (_.isString(val)) { return `'${val.trim()}'`; }
   if (_.isNumber(val)) { return `${val}`; }
   if (_.isBoolean(val)) { return !val ? 'false' : 'true'; }
-  if (_.isDate(val) || moment.isMoment(val)) { return getODataDateTimeString(val); }
+  if (_.isDate(val) || moment.isMoment(val)) { return OData.getODataDateTimeString(val); }
   return '';
 }
 
