@@ -36,3 +36,10 @@ steps:
     codeCoverageTool: Cobertura
     summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
     reportDirectory: '$(System.DefaultWorkingDirectory)/coverage/lcov-report'
+
+- task: Npm@1
+  inputs:
+     command: publish
+     publishRegistry: useExternalRegistry
+     publishEndpoint: https://registry.npmjs.org/
+  displayName: 'npm publish'
