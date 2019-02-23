@@ -2,7 +2,10 @@ import axios, { AxiosRequestConfig, AxiosResponse, AxiosPromise } from 'axios';
 
 // const baseUrl: string = process.env.VUE_APP_BASE_URL_API || 'http://localhost:5000/';
 
-export const config = { baseUrl: 'http://localhost:5000/' };
+export const config = {
+  baseUrl: 'http://localhost:5000/',
+  odataEndpoint: 'odata',
+};
 
 function errorHandler(e: any) {
   return e;

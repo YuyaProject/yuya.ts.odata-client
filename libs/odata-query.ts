@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { getServiceUrl, request, requestT } from './default-connection-service';
-import { ExpandBuilder } from '.';
+import { ExpandBuilder, DefaultConnectionService } from '.';
 
 export interface IQuery {
   /**
@@ -244,7 +244,7 @@ export class ODataQuery implements IQuery {
   }
 
   private createRelativeUrl(count: boolean = false): any {
-    let url = 'odata/' + this.resource;
+    let url = DefaultConnectionService.config.odataEndpoint + '/' + this.resource;
 
     if (this.key) {
       url += `(${this.key})`;
