@@ -41,5 +41,5 @@ steps:
   inputs:
      command: publish
      publishRegistry: useExternalRegistry
-     publishEndpoint: https://registry.npmjs.org/
+     publishEndpoint: 'npm yuya'
   displayName: 'npm publish'
