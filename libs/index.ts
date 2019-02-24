@@ -1,4 +1,4 @@
-export { IQuery, ODataQuery } from './odata-query';
+export { IQuery, ODataQuery, canQuery } from './odata-query';
 export { ODataQueryBuilder, OrderByDirection } from './odata-query-builder';
 export { ExpandBuilder } from './expand-builder';
 export { Expression, FilterValue, IProperty } from './filter-builder';
