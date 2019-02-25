@@ -1,6 +1,7 @@
 import { ExpandBuilder } from './expand-builder';
 import { ODataQuery } from './odata-query';
 import _ from 'lodash';
+import { isExpression, Expression } from './filter-builder';
 
 export enum OrderByDirection { Asc, Desc }
 
@@ -16,7 +17,7 @@ export class ODataQueryBuilder {
   // tslint:disable-next-line:variable-name
   private _expands: _.Dictionary<ExpandBuilder> = {};
   // tslint:disable-next-line:variable-name
-  private _filters: string[] = [];
+  private _filters: any[] = [];
   // tslint:disable-next-line:variable-name
   private _orderByList: string[] = [];
   // tslint:disable-next-line:variable-name
@@ -96,9 +97,15 @@ export class ODataQueryBuilder {
     return this;
   }
 
-  public addFilters(filters: string[]): ODataQueryBuilder {
+  public addFilters(...filters: (string | Expression | null)[]): ODataQueryBuilder {
     if (!filters || !filters.length) { return this; }
-    this._filters.push(...filters);
+    for (const c of filters) {
+      if (_.isString(c) && !_.isEmpty(c)) {
+        this._filters.push(c);
+      } else if (isExpression(c) && !_.isEmpty(c.text)) {
+        this._filters.push(c);
+      }
+    }
     return this;
   }
 
@@ -108,20 +115,31 @@ export class ODataQueryBuilder {
   }
 
   public addOrderBy(column: string, direction: OrderByDirection = OrderByDirection.Asc): ODataQueryBuilder {
-    this._orderByList.push(column + (direction === OrderByDirection.Asc ? ' asc' : ' desc'));
+    const c = column.trim();
+    if (!_.isEmpty(c)) {
+      this._orderByList.push(c + (direction === OrderByDirection.Asc ? '' : ' desc'));
+    }
     return this;
   }
 
   public addOrderByDesc(column: string): ODataQueryBuilder {
-    this._orderByList.push(column + ' desc');
+    const c = column.trim();
+    if (!_.isEmpty(c)) {
+      this._orderByList.push(c + ' desc');
+    }
     return this;
   }
 
-  public addOrderByList(columns: string | string[]) {
-    if (_.isArray(columns)) {
-      this._orderByList.push(...columns);
-    } else if (_.isString(columns)) {
-      this._orderByList.push(...(columns.split(',')));
+  public addOrderByList(...columns: string[]) {
+    if (_.isArray(columns) && !_.isEmpty(columns)) {
+      for (const c of columns) {
+        if ((c !== undefined && c !== null) && !_.isEmpty(c.trim())) {
+          const cols = c.split(',')
+            .map((x: string) => (x || '').trim())
+            .filter((x: string) => !_.isEmpty(x))            ;
+          this._orderByList.push(...cols);
+        }
+      }
     }
     return this;
   }
@@ -153,7 +171,22 @@ export class ODataQueryBuilder {
     }
 
     if (this._filters.length > 0) {
-      q.filter(...this._filters);
+      const filters = this._filters
+        .filter((x: any) => _.isString(x))
+        .map((x: any) => x as string);
+      const f2 = this._filters
+        .filter((x: any) => isExpression(x) && !_.isEmpty(x.text))
+        .map((x: Expression) => x.text);
+
+      if (f2.length > 0) { filters.push(...f2); }
+
+      q.filter(...filters);
+    }
+    if (this._orderByList.length > 0) {
+      const orderByList = this._orderByList.filter((x: string) => !_.isEmpty(x.trim()));
+      if (orderByList.length > 0) {
+        q.orderBy(...orderByList);
+      }
     }
 
     if (_.isString(this._apiVersion) && !_.isEmpty(this._apiVersion)) {

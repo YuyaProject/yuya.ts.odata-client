@@ -17,26 +17,27 @@ export class Expression {
   }
 }
 
-export type FilterValue = IProperty | Expression | string | number | Date | boolean | Moment;
+export type FilterValue = IProperty | Expression | string | number | Date | boolean | Moment | null | undefined | any;
 
-function isIProperty(val: any): val is IProperty {
+export function isIProperty(val: any): val is IProperty {
   const vproperty = val as IProperty;
   return !!vproperty;
 }
 
-function isExpression(val: any): val is Expression {
+export function isExpression(val: any): val is Expression {
   const vexpression = val as Expression;
   return !!vexpression;
 }
 
 function write(val: FilterValue): string {
+  if (val === undefined || val === null) { return 'null'; }
   if (isIProperty(val) && val.name !== undefined) { return val.name.trim(); }
   if (isExpression(val) && val.text !== undefined) { return val.toString().trim(); }
   if (_.isString(val)) { return `'${val.trim()}'`; }
   if (_.isNumber(val)) { return `${val}`; }
   if (_.isBoolean(val)) { return !val ? 'false' : 'true'; }
   if (_.isDate(val) || moment.isMoment(val)) { return OData.getODataDateTimeString(val); }
-  return '';
+  return val.toString();
 }
 
 export function prop(name: string): IProperty {

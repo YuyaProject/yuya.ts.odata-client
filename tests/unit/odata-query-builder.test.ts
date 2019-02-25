@@ -1,5 +1,6 @@
-import { ODataQueryBuilder } from '../../libs/odata-query-builder';
+import { ODataQueryBuilder, OrderByDirection } from '../../libs/odata-query-builder';
 import { ODataQuery } from '../../libs/odata-query';
+import { Expression, FilterBuilder } from '../../libs';
 
 describe('odata-query-builder tests', () => {
   // #region method : constructor
@@ -93,19 +94,19 @@ describe('odata-query-builder tests', () => {
     expect(q).toEqual(new ODataQuery('category').select('id,name'));
   });
   it('addColumn one non-empty parameter which has two column(empty and non-empty) names with comma seperated and non-trimmed',
-  () => {
-    const qb = new ODataQueryBuilder('category')
-      .addColumn('  , name ');
-    const p: any = qb;
-    expect(p).not.toBeNull();
-    expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual(['name']);
+    () => {
+      const qb = new ODataQueryBuilder('category')
+        .addColumn('  , name ');
+      const p: any = qb;
+      expect(p).not.toBeNull();
+      expect(p).not.toBeUndefined();
+      expect(p._columns).toEqual(['name']);
 
-    const q = qb.getQuery();
-    expect(q).not.toBeNull();
-    expect(q).not.toBeUndefined();
-    expect(q).toEqual(new ODataQuery('category').select('name'));
-  });
+      const q = qb.getQuery();
+      expect(q).not.toBeNull();
+      expect(q).not.toBeUndefined();
+      expect(q).toEqual(new ODataQuery('category').select('name'));
+    });
   // #endregion
 
   // #region method : addColumns
@@ -299,7 +300,6 @@ describe('odata-query-builder tests', () => {
   });
   // #endregion
 
-
   // #region method : clearColumns
   it('clearColumns parameterless', () => {
     const qb = new ODataQueryBuilder('category')
@@ -333,6 +333,542 @@ describe('odata-query-builder tests', () => {
   });
   // #endregion
 
+  // #region method : addFilters
+  it('addFilters parameterless', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addFilters();
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  it('addFilters one empty string parameter', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addFilters('');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  it('addFilters one empty Expression parameter', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addFilters(new Expression(''));
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  it('addFilters one null parameter', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addFilters(null);
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  it('addFilters two empty string parameters', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addFilters('', '');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  it('addFilters two empty Expression parameters', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addFilters(new Expression(''), new Expression(''));
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  it('addFilters two null parameters', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addFilters(null, null);
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  it('addFilters one empty string and one null parameters', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addFilters('', null);
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  it('addFilters one non-empty string parameter', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addFilters('id eq 5');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').filter('id eq 5'));
+  });
+  it('addFilters two non-empty string parameters', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addFilters('id eq 5', 'name eq \'John\'');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').filter('id eq 5', 'name eq \'John\''));
+  });
+  it('addFilters one empty, two non-empty string parameters', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addFilters('', 'id eq 5', 'name eq \'John\'');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').filter('id eq 5', 'name eq \'John\''));
+  });
+  it('addFilters one non-empty Expression parameter', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addFilters(new Expression('id eq 5'));
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').filter('id eq 5'));
+  });
+  it('addFilters one non-empty Expression parameter with FilterBuilder', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addFilters(FilterBuilder.equals(FilterBuilder.prop('id'), 5));
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').filter('id eq 5'));
+  });
+  it('addFilters two non-empty Expression parameters', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addFilters(new Expression('id eq 5'), new Expression('name eq \'John\''));
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').filter('id eq 5', 'name eq \'John\''));
+  });
+  it('addFilters two non-empty Expression parameters with FilterBuilder', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addFilters(FilterBuilder.equals(FilterBuilder.prop('id'), 5),
+        FilterBuilder.equals(FilterBuilder.prop('name'), 'John'));
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').filter('id eq 5', 'name eq \'John\''));
+  });
+  // #endregion
+
+  // #region method : clearFilters
+  it('clearFilters parameterless', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addFilters('id eq 5')
+      .clearFilters();
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._columns).toEqual([]);
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  // #endregion
+
+  // #region method : addOrderBy
+  it('addOrderBy one empty parameter', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderBy('');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  it('addOrderBy one empty parameter 2', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderBy(' ');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  it('addOrderBy one empty parameter with desc', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderBy('', OrderByDirection.Desc);
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  it('addOrderBy one empty parameter with desc 2', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderBy(' ', OrderByDirection.Desc);
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  it('addOrderBy one non-empty string parameter', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderBy('id');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').orderBy('id'));
+  });
+  it('addOrderBy one non-empty string parameter with desc', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderBy('id', OrderByDirection.Desc);
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').orderBy('id desc'));
+  });
+  it('addOrderBy multiple call with one non-empty string parameter', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderBy('id')
+      .addOrderBy('name');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').orderBy('id', 'name'));
+  });
+  // #endregion
+
+  // #region method : addOrderByDesc
+  it('addOrderByDesc one empty parameter', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderByDesc('');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  it('addOrderByDesc one empty parameter 2', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderByDesc(' ');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  it('addOrderByDesc one non-empty string parameter', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderByDesc('id');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').orderBy('id desc'));
+  });
+  it('addOrderByDesc multiple call with one non-empty string parameter', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderByDesc('id')
+      .addOrderByDesc('name');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').orderBy('id desc', 'name desc'));
+  });
+  // #endregion
+
+  // #region method : addOrderByDesc
+  it('addOrderByList parameterless', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderByList();
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  it('addOrderByList one empty parameter', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderByList('');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  it('addOrderByList one empty parameter2', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderByList(',');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  it('addOrderByList two empty parameters', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderByList('', '');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  it('addOrderByList one non-empty parameter', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderByList('id');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').orderBy('id'));
+  });
+  it('addOrderByList two non-empty parameters', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderByList('id', 'name');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').orderBy('id', 'name'));
+  });
+  it('addOrderByList two non-empty parameters 2', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderByList('id desc', 'name');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').orderBy('id desc', 'name'));
+  });
+
+  it('addOrderByList one non-empty parameter with comma seperated', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderByList('id desc,name');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').orderBy('id desc', 'name'));
+  });
+  it('addOrderByList one non-empty parameter with comma seperated 2', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderByList(' id desc , name ');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').orderBy('id desc', 'name'));
+  });
+  // #endregion
 
 
+  // #region method : clearOrderByList
+  it('clearOrderByList parameterless', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addOrderBy('id')
+      .addOrderByDesc('name')
+      .clearOrderByList();
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._columns).toEqual([]);
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  // #endregion
+
+  // #region method : top
+  it('top one parameter', () => {
+    const qb = new ODataQueryBuilder('category')
+      .top(5);
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._columns).toEqual([]);
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').top(5));
+  });
+  // #endregion
+
+  // #region method : skip
+  it('skip one parameter', () => {
+    const qb = new ODataQueryBuilder('category')
+      .skip(5);
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._columns).toEqual([]);
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').skip(5));
+  });
+  // #endregion
 });

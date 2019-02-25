@@ -32,6 +32,18 @@ describe('filter-builder tests', () => {
     expect(p).not.toBeUndefined();
     expect(p.text).toEqual('\'a\' eq \'a\'');
   });
+  it('equals Property, null parameters', () => {
+    const p = FilterBuilder.equals(FilterBuilder.prop('a'), null);
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p.text).toEqual('a eq null');
+  });
+  it('equals Property, undefined parameters', () => {
+    const p = FilterBuilder.equals(FilterBuilder.prop('a'), undefined);
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p.text).toEqual('a eq null');
+  });
   it('equals Property, string parameters', () => {
     const p = FilterBuilder.equals(FilterBuilder.prop('a'), 'a');
     expect(p).not.toBeNull();
