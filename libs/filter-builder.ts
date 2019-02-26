@@ -113,3 +113,17 @@ export function length(inside: IProperty): Expression {
 export function indexof(property: IProperty, searchText: string): Expression {
   return new Expression(`indexof(${write(property)}, ${write(searchText)})`);
 }
+
+export function any(collectionName: string, aliasName: string, ...subFilters: (string | Expression)[]): Expression | null {
+  if (_.isEmpty(collectionName) || _.isEmpty(aliasName) || _.isEmpty(subFilters)) {
+    return null;
+  }
+  return new Expression(`${collectionName}/any(${aliasName}:(${subFilters.join(')and(')}))`);
+}
+
+export function all(collectionName: string, aliasName: string, ...subFilters: (string | Expression)[]): Expression | null {
+  if (_.isEmpty(collectionName) || _.isEmpty(aliasName) || _.isEmpty(subFilters)) {
+    return null;
+  }
+  return new Expression(`${collectionName}/all(${aliasName}:(${subFilters.join(')and(')}))`);
+}

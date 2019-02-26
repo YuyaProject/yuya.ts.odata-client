@@ -515,4 +515,82 @@ describe('filter-builder tests', () => {
     expect(p.text).toEqual('endswith(name,\'a\')');
   });
   // #endregion
+
+  // #region method : length
+  it('length Expression parameter ', () => {
+    const p = FilterBuilder.length(FilterBuilder.prop('name'));
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p.text).toEqual('length(name)');
+  });
+  // #endregion
+
+  // #region method : indexof
+  it('indexof Expression parameter ', () => {
+    const p = FilterBuilder.indexof(FilterBuilder.prop('name'), 'asd');
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p.text).toEqual('indexof(name, \'asd\')');
+  });
+  // #endregion
+
+  // #region method : any
+  it('any Expression empty collectionName parameter', () => {
+    const p = FilterBuilder.any('', 'c', FilterBuilder.equals(FilterBuilder.prop('c/id'), 5));
+    expect(p).toBeNull();
+  });
+  it('any Expression empty aliasName parameter', () => {
+    const p = FilterBuilder.any('categories', '', FilterBuilder.equals(FilterBuilder.prop('c/id'), 5));
+    expect(p).toBeNull();
+  });
+  it('any Expression empty subFilters parameter', () => {
+    const p = FilterBuilder.any('categories', 'c');
+    expect(p).toBeNull();
+  });
+
+  it('any Expression one sub filter parameter', () => {
+    const p = FilterBuilder.any('categories', 'c', FilterBuilder.equals(FilterBuilder.prop('c/id'), 5));
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p!.text).toEqual('categories/any(c:(c/id eq 5))');
+  });
+  it('any Expression two sub filter parameters', () => {
+    const p = FilterBuilder.any('categories', 'c',
+      FilterBuilder.equals(FilterBuilder.prop('c/id'), 5),
+      FilterBuilder.equals(FilterBuilder.prop('c/name'), 'asd'));
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p!.text).toEqual('categories/any(c:(c/id eq 5)and(c/name eq \'asd\'))');
+  });
+  // #endregion
+
+  // #region method : all
+  it('all Expression empty collectionName parameter', () => {
+    const p = FilterBuilder.all('', 'c', FilterBuilder.equals(FilterBuilder.prop('c/id'), 5));
+    expect(p).toBeNull();
+  });
+  it('all Expression empty aliasName parameter', () => {
+    const p = FilterBuilder.all('categories', '', FilterBuilder.equals(FilterBuilder.prop('c/id'), 5));
+    expect(p).toBeNull();
+  });
+  it('all Expression empty subFilters parameter', () => {
+    const p = FilterBuilder.all('categories', 'c');
+    expect(p).toBeNull();
+  });
+
+  it('all Expression one sub filter parameter', () => {
+    const p = FilterBuilder.all('categories', 'c', FilterBuilder.equals(FilterBuilder.prop('c/id'), 5));
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p!.text).toEqual('categories/all(c:(c/id eq 5))');
+  });
+  it('all Expression two sub filter parameters', () => {
+    const p = FilterBuilder.all('categories', 'c',
+      FilterBuilder.equals(FilterBuilder.prop('c/id'), 5),
+      FilterBuilder.equals(FilterBuilder.prop('c/name'), 'asd'));
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p!.text).toEqual('categories/all(c:(c/id eq 5)and(c/name eq \'asd\'))');
+  });
+  // #endregion
 });
