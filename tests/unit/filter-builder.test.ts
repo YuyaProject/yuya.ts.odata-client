@@ -10,7 +10,7 @@ const dateConstant3 = new Date(2019, 1, 20, 8, 11, 0);
 const dateStringConstant3 = '2019-02-20T08:11:00.000Z';
 
 describe('filter-builder tests', () => {
-  // #region method : constructor
+  // #region method : prop
   it('prop empty parameter', () => {
     const p = FilterBuilder.prop('');
     expect(p).not.toBeNull();
@@ -22,6 +22,17 @@ describe('filter-builder tests', () => {
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.name).toEqual('a');
+  });
+  // #endregion
+
+  // #region method : param
+  it('param non empty parameters', () => {
+    const p = FilterBuilder.param('a', 'asd');
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p.name).toEqual('a');
+    expect(p.parameterName).toEqual('@a');
+    expect(p.toString()).toEqual('@a=\'asd\'');
   });
   // #endregion
 

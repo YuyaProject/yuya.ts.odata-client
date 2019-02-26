@@ -1,89 +1,54 @@
 import _ from 'lodash';
-import { OData } from '.';
-import moment, { Moment } from 'moment';
-
-export interface IProperty {
-  name: string;
-}
-
-export class Expression {
-  public text: string;
-  constructor(t: string) {
-    this.text = t;
-  }
-
-  public toString() {
-    return this.text;
-  }
-}
-
-export type FilterValue = IProperty | Expression | string | number | Date | boolean | Moment | null | undefined | any;
-
-export function isIProperty(val: any): val is IProperty {
-  const vproperty = val as IProperty;
-  return !!vproperty;
-}
-
-export function isExpression(val: any): val is Expression {
-  const vexpression = val as Expression;
-  return !!vexpression;
-}
-
-function write(val: FilterValue): string {
-  if (val === undefined || val === null) { return 'null'; }
-  if (isIProperty(val) && val.name !== undefined) { return val.name.trim(); }
-  if (isExpression(val) && val.text !== undefined) { return val.toString().trim(); }
-  if (_.isString(val)) { return `'${val.trim()}'`; }
-  if (_.isNumber(val)) { return `${val}`; }
-  if (_.isBoolean(val)) { return !val ? 'false' : 'true'; }
-  if (_.isDate(val) || moment.isMoment(val)) { return OData.getODataDateTimeString(val); }
-  return val.toString();
-}
+import { OData, IProperty, Expression, Parameter } from '.';
 
 export function prop(name: string): IProperty {
   return { name };
 }
 
-export function equals(left: FilterValue, right: FilterValue): Expression {
-  return new Expression(`${write(left)} eq ${write(right)}`);
+export function param(name: string, value: any): Parameter {
+  return new Parameter(name, value);
 }
 
-export function notEquals(left: FilterValue, right: FilterValue): Expression {
-  return new Expression(`${write(left)} ne ${write(right)}`);
+export function equals(left: any, right: any): Expression {
+  return new Expression(`${OData.encodeQueryValue(left)} eq ${OData.encodeQueryValue(right)}`);
 }
 
-export function gt(left: FilterValue, right: FilterValue): Expression {
-  return new Expression(`${write(left)} gt ${write(right)}`);
+export function notEquals(left: any, right: any): Expression {
+  return new Expression(`${OData.encodeQueryValue(left)} ne ${OData.encodeQueryValue(right)}`);
 }
 
-export function ge(left: FilterValue, right: FilterValue): Expression {
-  return new Expression(`${write(left)} ge ${write(right)}`);
+export function gt(left: any, right: any): Expression {
+  return new Expression(`${OData.encodeQueryValue(left)} gt ${OData.encodeQueryValue(right)}`);
 }
 
-export function lt(left: FilterValue, right: FilterValue): Expression {
-  return new Expression(`${write(left)} lt ${write(right)}`);
+export function ge(left: any, right: any): Expression {
+  return new Expression(`${OData.encodeQueryValue(left)} ge ${OData.encodeQueryValue(right)}`);
 }
 
-export function le(left: FilterValue, right: FilterValue): Expression {
-  return new Expression(`${write(left)} le ${write(right)}`);
+export function lt(left: any, right: any): Expression {
+  return new Expression(`${OData.encodeQueryValue(left)} lt ${OData.encodeQueryValue(right)}`);
+}
+
+export function le(left: any, right: any): Expression {
+  return new Expression(`${OData.encodeQueryValue(left)} le ${OData.encodeQueryValue(right)}`);
 }
 
 export function inList(left: IProperty, right: any[]): Expression | null {
   return (!right || !right.length)
     ? null
-    : new Expression(`${write(left)} in (${right.map((x: any) => write(x)).join(',')})`);
+    : new Expression(`${OData.encodeQueryValue(left)} in (${right.map((x: any) => OData.encodeQueryValue(x)).join(',')})`);
 }
 
-export function and(left: FilterValue, right: FilterValue): Expression {
-  return new Expression(`${write(left)} and ${write(right)}`);
+export function and(left: any, right: any): Expression {
+  return new Expression(`${OData.encodeQueryValue(left)} and ${OData.encodeQueryValue(right)}`);
 }
 
-export function or(left: FilterValue, right: FilterValue): Expression {
-  return new Expression(`${write(left)} or ${write(right)}`);
+export function or(left: any, right: any): Expression {
+  return new Expression(`${OData.encodeQueryValue(left)} or ${OData.encodeQueryValue(right)}`);
 }
 
 export function not(right: Expression): Expression {
-  let inner = write(right);
+  let inner = OData.encodeQueryValue(right);
   if (!inner.startsWith('(') || !inner.endsWith(')')) {
     inner = `(${inner})`;
   }
@@ -91,27 +56,27 @@ export function not(right: Expression): Expression {
 }
 
 export function group(inside: Expression): Expression {
-  return new Expression(`(${write(inside)})`);
+  return new Expression(`(${OData.encodeQueryValue(inside)})`);
 }
 
 export function contains(left: IProperty, right: string): Expression {
-  return new Expression(`contains(${write(left)},${write(right)})`);
+  return new Expression(`contains(${OData.encodeQueryValue(left)},${OData.encodeQueryValue(right)})`);
 }
 
 export function startswith(left: IProperty, right: string): Expression {
-  return new Expression(`startswith(${write(left)},${write(right)})`);
+  return new Expression(`startswith(${OData.encodeQueryValue(left)},${OData.encodeQueryValue(right)})`);
 }
 
 export function endswith(left: IProperty, right: string): Expression {
-  return new Expression(`endswith(${write(left)},${write(right)})`);
+  return new Expression(`endswith(${OData.encodeQueryValue(left)},${OData.encodeQueryValue(right)})`);
 }
 
 export function length(inside: IProperty): Expression {
-  return new Expression(`length(${write(inside)})`);
+  return new Expression(`length(${OData.encodeQueryValue(inside)})`);
 }
 
 export function indexof(property: IProperty, searchText: string): Expression {
-  return new Expression(`indexof(${write(property)}, ${write(searchText)})`);
+  return new Expression(`indexof(${OData.encodeQueryValue(property)}, ${OData.encodeQueryValue(searchText)})`);
 }
 
 export function any(collectionName: string, aliasName: string, ...subFilters: (string | Expression)[]): Expression | null {

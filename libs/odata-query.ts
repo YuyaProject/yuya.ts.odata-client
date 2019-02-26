@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import { getServiceUrl, request, requestT } from './default-connection-service';
-import { ExpandBuilder, DefaultConnectionService } from '.';
+import { ExpandBuilder, DefaultConnectionService, OData } from '.';
+import { Parameter } from './parameter';
 
 export interface IQuery {
   /**
@@ -212,6 +213,15 @@ export class ODataQuery implements IQuery {
     return this;
   }
 
+  public parameters(...val: string[]): IQuery {
+    this.queryStrings.push(...val);
+    return this;
+  }
+
+  public parameter(parameterName: string, value: any): IQuery {
+    this.queryStrings.push(new Parameter(parameterName, value).toString());
+    return this;
+  }
   /**
    * execute the query
    */

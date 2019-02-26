@@ -1,5 +1,6 @@
 import * as OData from '../../libs/odata';
 import moment from 'moment';
+import { Parameter, Expression } from '../../libs';
 
 // aylar 0 dan başlayarak sayıldığı için şubat için 1 değerini girdim.
 const dateConstant = new Date(2019, 1, 22, 8, 11, 0);
@@ -22,6 +23,12 @@ describe('odata tests', () => {
   });
   it('getODataDateTimeString boolean parameter', () => {
     const p = OData.getODataDateTimeString(true);
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual('');
+  });
+  it('getODataDateTimeString object parameter', () => {
+    const p = OData.getODataDateTimeString({ id: 5 });
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p).toEqual('');
@@ -67,6 +74,93 @@ describe('odata tests', () => {
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p).toEqual(dateStringConstant2);
+  });
+  // #endregion
+
+  // #region method : encodeQueryValue
+  it('encodeQueryValue undefined parameter', () => {
+    const p = OData.encodeQueryValue(undefined);
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual('null');
+  });
+  it('encodeQueryValue null parameter', () => {
+    const p = OData.encodeQueryValue(null);
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual('null');
+  });
+  it('encodeQueryValue empty string parameter', () => {
+    const p = OData.encodeQueryValue('');
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual("''");
+  });
+  it('encodeQueryValue string parameter', () => {
+    const p = OData.encodeQueryValue('asd');
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual("'asd'");
+  });
+  it('encodeQueryValue number parameter', () => {
+    const p = OData.encodeQueryValue(5);
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual('5');
+  });
+  it('encodeQueryValue boolean true parameter', () => {
+    const p = OData.encodeQueryValue(true);
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual('true');
+  });
+  it('encodeQueryValue boolean true parameter', () => {
+    const p = OData.encodeQueryValue(false);
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual('false');
+  });
+  it('encodeQueryValue date parameter', () => {
+    const p = OData.encodeQueryValue(new Date(2018, 1, 26, 14, 3, 0));
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual('2018-02-26T14:03:00.000Z');
+  });
+  it('encodeQueryValue moment parameter', () => {
+    const p = OData.encodeQueryValue(moment(new Date(2018, 1, 26, 14, 3, 0)));
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual('2018-02-26T14:03:00.000Z');
+  });
+  it('encodeQueryValue array parameter', () => {
+    const p = OData.encodeQueryValue([1, 2, 3]);
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual('[1,2,3]');
+  });
+  it('encodeQueryValue parameter parameter', () => {
+    const p = OData.encodeQueryValue(new Parameter('a', 1));
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual('@a');
+  });
+  it('encodeQueryValue property parameter', () => {
+    const p = OData.encodeQueryValue({ name: 'a' });
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual('a');
+  });
+  it('encodeQueryValue expression parameter', () => {
+    const p = OData.encodeQueryValue(new Expression('id eq 5'));
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual('id eq 5');
+  });
+  it('encodeQueryValue object parameter', () => {
+    const p = OData.encodeQueryValue({ id: 5 });
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual('{\"id\":5}');
   });
   // #endregion
 

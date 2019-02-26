@@ -1,7 +1,9 @@
 import { ExpandBuilder } from './expand-builder';
 import { ODataQuery } from './odata-query';
 import _ from 'lodash';
-import { isExpression, Expression } from './filter-builder';
+import { isExpression, Expression } from '.';
+import { OData } from '.';
+import { Parameter, isParameter } from './parameter';
 
 export enum OrderByDirection { Asc, Desc }
 
@@ -26,6 +28,8 @@ export class ODataQueryBuilder {
   private _top: number = 0;
   // tslint:disable-next-line:variable-name
   private _skip: number = 0;
+  // tslint:disable-next-line:variable-name
+  private _parameters: _.Dictionary<Parameter> = {};
 
   constructor(resource: string) {
     this._resource = resource;
@@ -97,9 +101,9 @@ export class ODataQueryBuilder {
     return this;
   }
 
-  public addFilters(...filters: (string | Expression | null)[]): ODataQueryBuilder {
+  public addFilters(...filters: (string | Expression)[]): ODataQueryBuilder {
     if (!filters || !filters.length) { return this; }
-    for (const c of filters) {
+    for (const c of filters.filter((x) => x !== null)) {
       if (_.isString(c) && !_.isEmpty(c)) {
         this._filters.push(c);
       } else if (isExpression(c) && !_.isEmpty(c.text)) {
@@ -136,7 +140,7 @@ export class ODataQueryBuilder {
         if ((c !== undefined && c !== null) && !_.isEmpty(c.trim())) {
           const cols = c.split(',')
             .map((x: string) => (x || '').trim())
-            .filter((x: string) => !_.isEmpty(x))            ;
+            .filter((x: string) => !_.isEmpty(x));
           this._orderByList.push(...cols);
         }
       }
@@ -156,6 +160,51 @@ export class ODataQueryBuilder {
 
   public skip(value: number): ODataQueryBuilder {
     this._skip = value;
+    return this;
+  }
+
+  public addParameter(parameterName: string, value: any): ODataQueryBuilder;
+  public addParameter(parameter: Parameter): ODataQueryBuilder;
+
+  public addParameter(parameterName: string | Parameter, value?: any): ODataQueryBuilder {
+    if (_.isString(parameterName)) {
+      const p = new Parameter(parameterName, value);
+      this._parameters[p.parameterName] = p;
+    } else if (isParameter(parameterName)) {
+      this._parameters[parameterName.parameterName] = parameterName;
+    }
+    return this;
+  }
+
+  public addParameters(parameter: Parameter): ODataQueryBuilder;
+  public addParameters(parameterList: Parameter[]): ODataQueryBuilder;
+  public addParameters(parameters: _.Dictionary<Parameter>): ODataQueryBuilder;
+
+  public addParameters(parameters: _.Dictionary<Parameter> | Parameter[] | Parameter): ODataQueryBuilder {
+    if (_.isArray(parameters)) {
+      for (const p of parameters) {
+        this._parameters[p.name] = p;
+      }
+    } else if (isParameter(parameters)) {
+      this._parameters[parameters.name] = parameters;
+    } else if (_.isObject(parameters)) {
+      this._parameters = {
+        ...this._parameters,
+        ...parameters
+      };
+    }
+    return this;
+  }
+
+  public removeParameter(parameterName: string) {
+    if (Object.keys(this._parameters).some((x) => x === parameterName)) {
+      delete this._parameters[parameterName];
+    }
+    return this;
+  }
+
+  public clearParameters(): ODataQueryBuilder {
+    this._parameters = {};
     return this;
   }
 
@@ -204,6 +253,12 @@ export class ODataQueryBuilder {
     if (this._getAllPagesRowCount) {
       q.allPagesRowCount(true);
     }
+
+    var parameters = Object.keys(this._parameters);
+    if (parameters.length > 0) {
+      q.parameters(...parameters.map((x) => this._parameters[x].toString()));
+    }
+
     return q;
   }
 
