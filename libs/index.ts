@@ -4,6 +4,7 @@ export { ExpandBuilder } from './expand-builder';
 export { Expression, isExpression } from './expression';
 export { IProperty, isIProperty } from './property';
 export { Parameter, isParameter } from './parameter';
+export { Guid } from './guid';
 
 import * as OData from './odata';
 import * as FilterBuilder from './filter-builder';

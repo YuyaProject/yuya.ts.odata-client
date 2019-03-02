@@ -1,6 +1,6 @@
 import * as OData from '../../libs/odata';
 import moment from 'moment';
-import { Parameter, Expression } from '../../libs';
+import { Parameter, Expression, Guid } from '../../libs';
 
 // aylar 0 dan başlayarak sayıldığı için şubat için 1 değerini girdim.
 const dateConstant = new Date(2019, 1, 22, 8, 11, 0);
@@ -161,6 +161,12 @@ describe('odata tests', () => {
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p).toEqual('{\"id\":5}');
+  });
+  it('encodeQueryValue guid parameter', () => {
+    const p = OData.encodeQueryValue(new Guid('2B7B96BB-4A11-45B5-B0BB-3A43174AF061'));
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual('2B7B96BB-4A11-45B5-B0BB-3A43174AF061');
   });
   // #endregion
 

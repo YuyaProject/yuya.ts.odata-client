@@ -1,6 +1,6 @@
 import moment from 'moment';
 import _ from 'lodash';
-import { isIProperty, isExpression, isParameter } from '.';
+import { isIProperty, isExpression, isParameter, Guid } from '.';
 
 export function getODataDateTimeString(val: any): string {
   try {
@@ -20,6 +20,7 @@ export function getODataDateTimeString(val: any): string {
 
 export function encodeQueryValue(val: any): string {
   if (val === undefined || val === null) { return 'null'; }
+  if (Guid.isGuid(val)) { return val.value; }
   if (isParameter(val)) { return val.parameterName; }
   if (isIProperty(val) && !_.isEmpty(val.name)) { return val.name.trim(); }
   if (isExpression(val) && val.text !== undefined) { return val.toString().trim(); }
