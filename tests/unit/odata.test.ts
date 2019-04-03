@@ -75,6 +75,13 @@ describe('odata tests', () => {
     expect(p).not.toBeUndefined();
     expect(p).toEqual(dateStringConstant2);
   });
+
+  it('getODataDateTimeString wrong formated string parameter', () => {
+    const p = OData.getODataDateTimeString('2019-22-22T08:11:00');
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual('');
+  });
   // #endregion
 
   // #region method : encodeQueryValue

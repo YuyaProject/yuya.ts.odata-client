@@ -2,8 +2,8 @@ import { ExpandBuilder } from './expand-builder';
 import { ODataQuery } from './odata-query';
 import _ from 'lodash';
 import { isExpression, Expression } from '.';
-import { OData } from '.';
 import { Parameter, isParameter } from './parameter';
+import { GroupByBuilder } from './group-by-builder';
 
 export enum OrderByDirection { Asc, Desc }
 
@@ -20,6 +20,8 @@ export class ODataQueryBuilder {
   private _expands: _.Dictionary<ExpandBuilder> = {};
   // tslint:disable-next-line:variable-name
   private _filters: any[] = [];
+  // tslint:disable-next-line:variable-name
+  private _groupByBuilder: GroupByBuilder | null = null;
   // tslint:disable-next-line:variable-name
   private _orderByList: string[] = [];
   // tslint:disable-next-line:variable-name
@@ -41,6 +43,15 @@ export class ODataQueryBuilder {
    */
   public apiVersion(val: string | null): ODataQueryBuilder {
     this._apiVersion = val;
+    return this;
+  }
+
+  /**
+   * get total row count with response
+   * @param val the value
+   */
+  public allPagesRowCount(val: boolean = true): ODataQueryBuilder {
+    this._getAllPagesRowCount = val;
     return this;
   }
 
@@ -87,7 +98,7 @@ export class ODataQueryBuilder {
       const split = cn.split('.');
       if (split.length === 1) {
         this.addColumns(cn);
-      } else if (split.length > 1) {
+      } else { // if (split.length > 1) sadece bu durum kalıyor
         let exp: ExpandBuilder;
         if (Object.keys(this._expands).indexOf(split[0]) < 0) {
           exp = new ExpandBuilder(split[0]);
@@ -170,7 +181,7 @@ export class ODataQueryBuilder {
     if (_.isString(parameterName)) {
       const p = new Parameter(parameterName, value);
       this._parameters[p.parameterName] = p;
-    } else if (isParameter(parameterName)) {
+    } else { // if (isParameter(parameterName))  sadece bu durum kalıyor. 
       this._parameters[parameterName.parameterName] = parameterName;
     }
     return this;
@@ -187,7 +198,7 @@ export class ODataQueryBuilder {
       }
     } else if (isParameter(parameters)) {
       this._parameters[parameters.name] = parameters;
-    } else if (_.isObject(parameters)) {
+    } else { // if (_.isObject(parameters))  sadece bu durum kalıyor. 
       this._parameters = {
         ...this._parameters,
         ...parameters
@@ -208,6 +219,17 @@ export class ODataQueryBuilder {
     return this;
   }
 
+  // #region Group By
+
+  public get groupBy(): GroupByBuilder {
+    if (this._groupByBuilder === null) {
+      this._groupByBuilder = new GroupByBuilder(this);
+    }
+    return this._groupByBuilder;
+  }
+
+  // #endregion
+
   public getQuery(): ODataQuery {
     const q = new ODataQuery(this._resource);
 
@@ -219,23 +241,22 @@ export class ODataQueryBuilder {
       q.select(this._columns.join(','));
     }
 
-    if (this._filters.length > 0) {
-      const filters = this._filters
-        .filter((x: any) => _.isString(x))
-        .map((x: any) => x as string);
-      const f2 = this._filters
-        .filter((x: any) => isExpression(x) && !_.isEmpty(x.text))
-        .map((x: Expression) => x.text);
-
-      if (f2.length > 0) { filters.push(...f2); }
-
-      q.filter(...filters);
+    if (this._groupByBuilder !== null && !this._groupByBuilder.isEmpty) {
+      q.apply(this._groupByBuilder.toString());
+      var havingString = this._groupByBuilder.havingString;
+      if (!_.isEmpty(havingString)) {
+        q.filter(havingString);
+      }
     }
+    else {
+      var filters = prepareFilterString(this._filters);
+      if (!_.isEmpty(filters)) { q.filter(filters); }
+    }
+
     if (this._orderByList.length > 0) {
       const orderByList = this._orderByList.filter((x: string) => !_.isEmpty(x.trim()));
-      if (orderByList.length > 0) {
-        q.orderBy(...orderByList);
-      }
+      // buradaki if'i this._orderByList içinde boş string olmamasını garantili hale getirmiş olduğum için sildim. 
+      q.orderBy(...orderByList);
     }
 
     if (_.isString(this._apiVersion) && !_.isEmpty(this._apiVersion)) {
@@ -262,7 +283,30 @@ export class ODataQueryBuilder {
     return q;
   }
 
+  public get filterString(): string {
+    return prepareFilterString(this._filters);
+  }
+
   public q(): Promise<any> {
     return this.getQuery().q();
   }
+}
+
+
+export function prepareFilterString(filterArray: any[]): string {
+  if (_.isEmpty(filterArray)) { return String(); }
+  const filters = filterArray
+    .filter((x: any) => _.isString(x))
+    .map((x: any) => x as string);
+  const f2 = filterArray
+    .filter((x: any) => isExpression(x) && !_.isEmpty(x.text))
+    .map((x: Expression) => x.text);
+
+  if (f2.length > 0) { filters.push(...f2); }
+  if (filters.length === 1) {
+    return filters[0];
+  } else if (filters.length > 1) {
+    return filters.join(' and ');
+  }
+  return String();
 }

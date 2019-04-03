@@ -1,4 +1,4 @@
-import { ODataQueryBuilder, OrderByDirection } from '../../libs/odata-query-builder';
+import { ODataQueryBuilder, OrderByDirection, prepareFilterString } from '../../libs/odata-query-builder';
 import { ODataQuery } from '../../libs/odata-query';
 import { Expression, FilterBuilder, Parameter, isIProperty } from '../../libs';
 
@@ -37,6 +37,17 @@ describe('odata-query-builder tests', () => {
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p._apiVersion).toBeNull();
+  });
+  it('apiVersion non-empty parameter on query', () => {
+    const qb = new ODataQueryBuilder('category');
+    qb.apiVersion('1.0');
+    const p: any = qb.getQuery();
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._queryStrings).not.toBeNull();
+    expect(p._queryStrings).not.toBeUndefined();
+    expect(p._queryStrings.length).toEqual(1);
+    expect(p._queryStrings[0]).toEqual('api-version=1.0');
   });
   // #endregion
 
@@ -357,6 +368,19 @@ describe('odata-query-builder tests', () => {
     expect(q).not.toBeUndefined();
     expect(q).toEqual(new ODataQuery('category').expand('products($select=id)'));
   });
+  it('addExpandColumns one expandable parameter', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addExpandColumns('products.category.id');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').expand('products($expand=category($select=id))'));
+  });
   it('addExpandColumns two expandable parameter', () => {
     const qb = new ODataQueryBuilder('category')
       .addExpandColumns('products.id', 'products.name');
@@ -589,6 +613,15 @@ describe('odata-query-builder tests', () => {
     expect(q).toEqual(new ODataQuery('category'));
   });
   // #endregion
+
+  // #region method : prepareFilterString
+  it('prepareFilterString one number array parameter', () => {
+    const p = prepareFilterString([1, 2, 3]);
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual(String());
+  });
+  // #endregion prepareFilterString
 
   // #region method : addOrderBy
   it('addOrderBy one empty parameter', () => {
@@ -1039,7 +1072,7 @@ describe('odata-query-builder tests', () => {
     expect(q).not.toBeUndefined();
     expect(q).toEqual(new ODataQuery('category'));
   });
-  // #endregion
+  // #endregion clearParameters
 
 
   // #region method : removeParameter
@@ -1071,6 +1104,89 @@ describe('odata-query-builder tests', () => {
     expect(q).not.toBeUndefined();
     expect(q).toEqual(new ODataQuery('category').parameters('@id=5', '@name=\'asd\''));
   });
-  // #endregion
+  // #endregion removeParameter
+
+  // #region method : groupBy
+  it('groupBy one parameter', () => {
+    const qb = new ODataQueryBuilder('category');
+    qb.groupBy.addColumn('name');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').groupBy('(name)'));
+  });
+  it('groupBy two parameter', () => {
+    const qb = new ODataQueryBuilder('category');
+    qb.groupBy.addColumn('name');
+    qb.groupBy.addColumn('id');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').groupBy('(name,id)'));
+  });
+
+  it('groupBy two parameter with having', () => {
+    const qb = new ODataQueryBuilder('category');
+    qb.groupBy.addColumn('name');
+    qb.groupBy.addColumn('id');
+    qb.groupBy.addSumColumn('price', 'totalPrice');
+    qb.groupBy.addHavings('totalPrice gt 10');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').groupBy('(name,id),aggregate(price with sum as totalPrice)').filter('totalPrice gt 10'));
+  });
+  // #endregion groupBy
+
+  // #region method : getQuery
+  it('getQuery one number array parameter', () => {
+    const qb = new ODataQueryBuilder('category')
+      .allPagesRowCount();
+    const p = qb.getQuery();
+    expect(qb).not.toBeNull();
+    expect(qb).not.toBeUndefined();
+    expect((qb as any)._getAllPagesRowCount).toEqual(true);
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual(new ODataQuery('category').allPagesRowCount(true));
+  });
+
+  it('getQuery one number array parameter 2', () => {
+    const qb = new ODataQueryBuilder('category')
+      .allPagesRowCount(true);
+    const p = qb.getQuery();
+    expect(qb).not.toBeNull();
+    expect(qb).not.toBeUndefined();
+    expect((qb as any)._getAllPagesRowCount).toEqual(true);
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual(new ODataQuery('category').allPagesRowCount(true));
+  });
+
+  it('getQuery one number array parameter 3', () => {
+    const qb = new ODataQueryBuilder('category')
+      .allPagesRowCount(true)
+      .allPagesRowCount(false);
+    const p = qb.getQuery();
+    expect(qb).not.toBeNull();
+    expect(qb).not.toBeUndefined();
+    expect((qb as any)._getAllPagesRowCount).toEqual(false);
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p).toEqual(new ODataQuery('category').allPagesRowCount(false));
+  });
+  // #endregion getQuery
 
 });

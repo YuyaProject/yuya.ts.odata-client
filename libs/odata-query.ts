@@ -1,7 +1,5 @@
 import * as _ from 'lodash';
-import { getServiceUrl, request, requestT } from './default-connection-service';
-import { ExpandBuilder, DefaultConnectionService, OData } from '.';
-import { Parameter } from './parameter';
+import { ExpandBuilder, ConnectionService, IConnectionService, DefaultConnectionServiceConfig, Parameter } from '.';
 
 export interface IQuery {
   /**
@@ -80,8 +78,30 @@ export interface IQuery {
 
   /** Clone the query */
   cloneQuery(): IQuery;
+  /**
+   * group by statement
+   * @param groupByString the group by statement string
+   */
+  groupBy(groupByString: string): IQuery;
 
-  groupBy(gbs: string): IQuery;
+  /**
+   * apply statement
+   * @param applyString the apply statement string
+   */
+  apply(applyString: string): IQuery;
+
+  /**
+   * add parameters to query
+   * @param val parameter string array
+   */
+  parameters(...val: string[]): IQuery;
+
+  /**
+   * add single parameter to query
+   * @param parameterName the parameter name
+   * @param value the parameter value
+   */
+  parameter(parameterName: string, value: any): IQuery;
 }
 
 export function canQuery(arg: any): arg is IQuery {
@@ -93,12 +113,24 @@ export function canQuery(arg: any): arg is IQuery {
  *  OData Query type. This type using to prepare odata query.
  */
 export class ODataQuery implements IQuery {
-  private resource: string;
-  private queryStrings: string[] = [];
-  private key: any | null = null;
-  private getAllPagesRowCount: boolean = false;
-  constructor(resource: string) {
-    this.resource = resource;
+  private _resource: string;
+  private _queryStrings: string[] = [];
+  private _key: any | null = null;
+  private _getAllPagesRowCount: boolean = false;
+  private _connectionService: IConnectionService;
+
+  /**
+   * create a new ODataQuery
+   * @param resource the resource name
+   * @param connectionService the connection service instance. If it is undefined, constructor use default connection service from connection service 
+   */
+  constructor(resource: string, connectionService?: IConnectionService) {
+    this._resource = resource;
+    if (connectionService) {
+      this._connectionService = connectionService;
+    } else {
+      this._connectionService = ConnectionService.DefaultConnectionService;
+    }
   }
 
   /**
@@ -106,7 +138,7 @@ export class ODataQuery implements IQuery {
    * @param val the api version
    */
   public apiVersion(val: string): IQuery {
-    this.queryStrings.push('api-version=' + val);
+    this._queryStrings.push('api-version=' + val);
     return this;
   }
 
@@ -116,8 +148,8 @@ export class ODataQuery implements IQuery {
    * @param val the top value
    */
   public top(val: number): IQuery {
-    this.queryStrings.push('$top=' + val);
-    this.getAllPagesRowCount = true;
+    this._queryStrings.push('$top=' + val);
+    this._getAllPagesRowCount = true;
     return this;
   }
 
@@ -128,8 +160,8 @@ export class ODataQuery implements IQuery {
    */
   public skip(val: number): IQuery {
     if (val !== 0) {
-      this.queryStrings.push('$skip=' + val);
-      this.getAllPagesRowCount = true;
+      this._queryStrings.push('$skip=' + val);
+      this._getAllPagesRowCount = true;
     }
     return this;
   }
@@ -140,14 +172,15 @@ export class ODataQuery implements IQuery {
    * @param val the filter statement
    */
   public filter(...val: string[]): IQuery {
-    const fi = this.queryStrings.findIndex((x: string) => x.startsWith('$filter='));
-    const af = '(' + val.join(') and (') + ')';
+    const af = val.map((x: string) => x.trim()).filter((x: string) => !_.isEmpty(x)).join(' and ');
+    if (_.isEmpty(af)) { return this; }
+    const fi = this._queryStrings.findIndex((x: string) => x.startsWith('$filter='));
     if (fi >= 0) {
-      const nf = `$filter=(${this.queryStrings[fi].substring(8)})and(${af})`;
-      this.queryStrings.splice(fi, 1);
-      this.queryStrings.push(nf);
+      const nf = `$filter=(${this._queryStrings[fi].substring(8)})and(${af})`;
+      this._queryStrings.splice(fi, 1);
+      this._queryStrings.push(nf);
     } else {
-      this.queryStrings.push('$filter=' + af);
+      this._queryStrings.push('$filter=' + af);
     }
     return this;
   }
@@ -159,14 +192,15 @@ export class ODataQuery implements IQuery {
    * @param val the order by statement
    */
   public orderBy(...val: string[]): IQuery {
-    const fi = this.queryStrings.findIndex((x: string) => x.startsWith('$orderby='));
-    const af = val.map((x: string) => x.replace(/\./gi, '/')).join(',');
+    const af = val.map((x: string) => x.split(',').map((y: string) => y.replace(/\./gi, '/').trim()).join(',')).join(',');
+    if (_.isEmpty(af)) { return this; }
+    const fi = this._queryStrings.findIndex((x: string) => x.startsWith('$orderby='));
     if (fi >= 0) {
-      const nf = `$orderby=${af}`;
-      this.queryStrings.splice(fi, 1);
-      this.queryStrings.push(nf);
+      const nf = `${this._queryStrings[fi]},${af}`;
+      this._queryStrings.splice(fi, 1);
+      this._queryStrings.push(nf);
     } else {
-      this.queryStrings.push('$orderby=' + af);
+      this._queryStrings.push('$orderby=' + af);
     }
     return this;
   }
@@ -177,12 +211,12 @@ export class ODataQuery implements IQuery {
    */
   public expand(val: string | ExpandBuilder | ExpandBuilder[]): IQuery {
     if (_.isString(val)) {
-      this.queryStrings.push('$expand=' + val);
+      this._queryStrings.push('$expand=' + val);
     } else if (!!val && _.isArray(val)) {
       const strArray = val.map((i) => i.toString());
-      this.queryStrings.push('$expand=' + strArray.join());
+      this._queryStrings.push('$expand=' + strArray.join());
     } else if (!!val && _.isObject(val)) {
-      this.queryStrings.push('$expand=' + val.toString());
+      this._queryStrings.push('$expand=' + val.toString());
     }
     return this;
   }
@@ -191,7 +225,7 @@ export class ODataQuery implements IQuery {
    * has expand statement
    */
   public hasExpand(): boolean {
-    return this.queryStrings.some((x: string) => x.startsWith('$expand='));
+    return this._queryStrings.some((x: string) => x.startsWith('$expand='));
   }
 
   /**
@@ -199,41 +233,48 @@ export class ODataQuery implements IQuery {
    * @param val the select statement
    */
   public select(val: string): IQuery {
-    this.queryStrings.push('$select=' + val);
+    this._queryStrings.push('$select=' + val);
     return this;
   }
 
   public allPagesRowCount(val: boolean = true): IQuery {
-    this.getAllPagesRowCount = val;
+    this._getAllPagesRowCount = val;
     return this;
   }
 
-  public groupBy(gbs: string): IQuery {
-    this.queryStrings.push(`$apply=groupby(${gbs.replace(/\./gi, '/')})`);
+  public groupBy(groupByString: string): IQuery {
+    if (_.isEmpty(groupByString) || _.isEmpty(groupByString.trim())) { return this; }
+    this._queryStrings.push(`$apply=groupby(${groupByString.trim().replace(/\./gi, '/')})`);
+    return this;
+  }
+
+  public apply(applyString: string): IQuery {
+    if (_.isEmpty(applyString) || _.isEmpty(applyString.trim())) { return this; }
+    this._queryStrings.push(`$apply=${applyString.replace(/\./gi, '/')}`);
     return this;
   }
 
   public parameters(...val: string[]): IQuery {
-    this.queryStrings.push(...val);
+    this._queryStrings.push(...val);
     return this;
   }
 
   public parameter(parameterName: string, value: any): IQuery {
-    this.queryStrings.push(new Parameter(parameterName, value).toString());
+    this._queryStrings.push(new Parameter(parameterName, value).toString());
     return this;
   }
   /**
    * execute the query
    */
   public q(): Promise<any> {
-    const conf = { method: 'get', url: getServiceUrl(this.createRelativeUrl()) };
-    return request(conf);
+    const conf = { method: 'get', url: this._connectionService.prepareServiceUrl(this.createRelativeUrl()) };
+    return this._connectionService.request(conf);
   }
 
   /** execute and get row count */
   public count(): Promise<number> {
-    const conf = { method: 'get', url: getServiceUrl(this.createRelativeUrl(true)) };
-    return requestT<number>(conf);
+    const conf = { method: 'get', url: this._connectionService.prepareServiceUrl(this.createRelativeUrl(true)) };
+    return this._connectionService.requestT<number>(conf);
   }
 
   /**
@@ -241,23 +282,24 @@ export class ODataQuery implements IQuery {
    * @param key the key
    */
   public getByKey(key: any): Promise<any> {
-    this.key = key;
-    const conf = { method: 'get', url: getServiceUrl(this.createRelativeUrl()) };
-    return request(conf);
+    this._key = key;
+    const conf = { method: 'get', url: this._connectionService.prepareServiceUrl(this.createRelativeUrl()) };
+    return this._connectionService.request(conf);
   }
 
   public cloneQuery(): IQuery {
-    const q = new ODataQuery(this.resource);
-    q.queryStrings = [...this.queryStrings];
-    q.key = this.key;
+    const q = new ODataQuery(this._resource, this._connectionService);
+    q._queryStrings = [...this._queryStrings];
+    q._key = this._key;
+    q._getAllPagesRowCount = this._getAllPagesRowCount;
     return q;
   }
 
   private createRelativeUrl(count: boolean = false): any {
-    let url = DefaultConnectionService.config.odataEndpoint + '/' + this.resource;
+    let url = DefaultConnectionServiceConfig.odataEndpoint + '/' + this._resource;
 
-    if (this.key) {
-      url += `(${this.key})`;
+    if (this._key) {
+      url += `(${this._key})`;
     }
 
     if (count) {
@@ -265,11 +307,11 @@ export class ODataQuery implements IQuery {
     }
 
     let qs: string[] = [];
-    if (this.queryStrings.length > 0) {
-      qs = [...this.queryStrings];
+    if (this._queryStrings.length > 0) {
+      qs = [...this._queryStrings];
     }
 
-    if (this.getAllPagesRowCount) {
+    if (this._getAllPagesRowCount) {
       qs.push('$count=true');
     }
 

@@ -5,9 +5,10 @@ export { Expression, isExpression } from './expression';
 export { IProperty, isIProperty } from './property';
 export { Parameter, isParameter } from './parameter';
 export { Guid } from './guid';
+export { GroupByBuilder, IGroupByAggregate, OperatorsEnum } from './group-by-builder';
+export { IConnectionService, ConnectionService, config as DefaultConnectionServiceConfig, IConnetionSettings } from './connection-service';
 
 import * as OData from './odata';
 import * as FilterBuilder from './filter-builder';
-import * as DefaultConnectionService from './default-connection-service';
 
-export { OData, FilterBuilder, DefaultConnectionService };
+export { OData, FilterBuilder };

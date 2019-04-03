@@ -9,9 +9,6 @@ export class Guid {
   public static readonly guidRegex = new RegExp(/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/);
 
   constructor(value: string | Guid) {
-    if (value === undefined) {
-      throw new Error('value not found');
-    }
     if (_.isString(value) && !_.isEmpty(value) && Guid.guidRegex.test(value)) {
       this._guid = value;
     } else if (Guid.isGuid(value)) {

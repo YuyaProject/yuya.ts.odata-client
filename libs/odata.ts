@@ -3,19 +3,16 @@ import _ from 'lodash';
 import { isIProperty, isExpression, isParameter, Guid } from '.';
 
 export function getODataDateTimeString(val: any): string {
-  try {
-    if (_.isNull(val)
-      || _.isUndefined(val)
-      || _.isBoolean(val)
-      || (_.isString(val) && _.isEmpty(val))
-      || (_.isObject(val) && !moment.isMoment(val) && !_.isDate(val) && !_.isString(val))
-    ) {
-      return String();
-    }
-    return moment(val).format('YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
-  } catch {
+  if (_.isNull(val)
+    || _.isUndefined(val)
+    || _.isBoolean(val)
+    || (_.isString(val) && _.isEmpty(val))
+    || (_.isObject(val) && !moment.isMoment(val) && !_.isDate(val) && !_.isString(val))
+  ) {
     return String();
   }
+  const m = moment(val);
+  return m.isValid() ? m.format('YYYY-MM-DD[T]HH:mm:ss.SSS[Z]') : String();
 }
 
 export function encodeQueryValue(val: any): string {

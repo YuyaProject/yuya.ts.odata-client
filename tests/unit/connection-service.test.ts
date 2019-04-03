@@ -1,5 +1,5 @@
-import * as DefaultConnectionService from '../../libs/default-connection-service';
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosPromise } from 'axios';
+import { ConnectionService } from '../../libs/connection-service';
+import axios, { AxiosResponse } from 'axios';
 import sinon from 'sinon';
 
 // TODO : @alper-2019-02-14: ErrorHandler ile ilgili kısım için bir test yazmadım. Bunun yazılması lazım.
@@ -7,15 +7,15 @@ import sinon from 'sinon';
 describe('default-connection-service tests', () => {
   // #region method : getServiceUrl
   it('getServiceUrl empty parameter', () => {
-    const response = DefaultConnectionService.getServiceUrl('');
+    const response = new ConnectionService().prepareServiceUrl('');
     expect(response).not.toBe('');
   });
   it('getServiceUrl with parameter', () => {
-    const response = DefaultConnectionService.getServiceUrl('deneme');
+    const response = new ConnectionService().prepareServiceUrl('deneme');
     expect(response.endsWith('/deneme')).toBe(true);
   });
   it('getServiceUrl with parameter 2', () => {
-    const response = DefaultConnectionService.getServiceUrl('/deneme');
+    const response = new ConnectionService().prepareServiceUrl('/deneme');
     expect(response.endsWith('/deneme')).toBe(true);
   });
   // #endregion
@@ -28,7 +28,7 @@ describe('default-connection-service tests', () => {
         resolve({ data: [], status: 200, statusText: 'OK', config: {}, headers: {} });
       }));
     try {
-      const response = await DefaultConnectionService.get('deneme');
+      const response = await new ConnectionService().get('deneme');
       // console.log(response);
       expect(response).toEqual([]);
     } finally {
@@ -46,7 +46,7 @@ describe('default-connection-service tests', () => {
         resolve({ data: returnData, status: 200, statusText: 'OK', config: {}, headers: {} });
       }));
     try {
-      const response = await DefaultConnectionService.getT<Array<{ id: number, name: string }>>('deneme');
+      const response = await new ConnectionService().getT<Array<{ id: number, name: string }>>('deneme');
       // console.log(response);
       expect(response).toEqual(returnData);
       expect(response.length).toBe(2);
@@ -64,7 +64,7 @@ describe('default-connection-service tests', () => {
         resolve({ data: [], status: 200, statusText: 'OK', config: {}, headers: {} });
       }));
     try {
-      const response = await DefaultConnectionService.request({ method: 'get', url: 'deneme' });
+      const response = await new ConnectionService().request({ method: 'get', url: 'deneme' });
       // console.log(response);
       expect(response).toEqual([]);
     } finally {
@@ -83,7 +83,7 @@ describe('default-connection-service tests', () => {
       }));
     try {
       const response =
-        await DefaultConnectionService
+        await new ConnectionService()
           .requestT<Array<{ id: number, name: string }>>({ method: 'get', url: 'deneme' });
       // console.log(response);
       expect(response).toEqual(returnData);
@@ -102,7 +102,7 @@ describe('default-connection-service tests', () => {
         resolve({ data: [], status: 200, statusText: 'OK', config: {}, headers: {} });
       }));
     try {
-      const response = await DefaultConnectionService.post('deneme', {});
+      const response = await new ConnectionService().post('deneme', {});
       // console.log(response);
       expect(response).not.toBeNull();
       expect(response.data).toEqual([]);
@@ -122,7 +122,7 @@ describe('default-connection-service tests', () => {
         resolve({ data: returnData, status: 200, statusText: 'OK', config: {}, headers: {} });
       }));
     try {
-      const response = await DefaultConnectionService.postT<Array<{ id: number, name: string }>>('deneme', {});
+      const response = await new ConnectionService().postT<Array<{ id: number, name: string }>>('deneme', {});
       // console.log(response);
       expect(response).toEqual(returnData);
       expect(response.length).toBe(2);
@@ -140,7 +140,7 @@ describe('default-connection-service tests', () => {
         resolve({ data: [], status: 200, statusText: 'OK', config: {}, headers: {} });
       }));
     try {
-      const response = await DefaultConnectionService.put('deneme', {});
+      const response = await new ConnectionService().put('deneme', {});
       // console.log(response);
       expect(response).not.toBeNull();
       expect(response.data).toEqual([]);
@@ -160,7 +160,7 @@ describe('default-connection-service tests', () => {
         resolve({ data: returnData, status: 200, statusText: 'OK', config: {}, headers: {} });
       }));
     try {
-      const response = await DefaultConnectionService.putT<Array<{ id: number, name: string }>>('deneme', {});
+      const response = await new ConnectionService().putT<Array<{ id: number, name: string }>>('deneme', {});
       // console.log(response);
       expect(response).toEqual(returnData);
       expect(response.length).toBe(2);
@@ -178,7 +178,7 @@ describe('default-connection-service tests', () => {
         resolve({ data: [], status: 200, statusText: 'OK', config: {}, headers: {} });
       }));
     try {
-      const response = await DefaultConnectionService.dele('deneme');
+      const response = await new ConnectionService().dele('deneme');
       // console.log(response);
       expect(response).not.toBeNull();
       expect(response.data).toEqual([]);
@@ -198,7 +198,7 @@ describe('default-connection-service tests', () => {
         resolve({ data: returnData, status: 200, statusText: 'OK', config: {}, headers: {} });
       }));
     try {
-      const response = await DefaultConnectionService.deleT<Array<{ id: number, name: string }>>('deneme');
+      const response = await new ConnectionService().deleT<Array<{ id: number, name: string }>>('deneme');
       // console.log(response);
       expect(response).toEqual(returnData);
       expect(response.length).toBe(2);
