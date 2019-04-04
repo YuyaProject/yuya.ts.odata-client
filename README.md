@@ -10,3 +10,15 @@ develop branch :
 [![Coverage Status](https://coveralls.io/repos/github/YuyaProject/yuya.ts.odata-client/badge.svg?branch=develop)](https://coveralls.io/github/YuyaProject/yuya.ts.odata-client?branch=develop)
 
 OData Client for Typescript with axios
+
+## Usage
+
+```
+npm i yuya.ts.odata-client
+or 
+yarn add yuya.ts.odata-client
+```
+
+## Change Log
+Version Change log : [CHANGELOG.md](CHANGELOG.md)
+
