@@ -33,3 +33,4 @@ packages/
 /coverage
 /dist
 node_modules
+/junit.xml
