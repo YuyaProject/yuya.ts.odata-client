@@ -6,6 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest",
+    "test2": "jest --ci --reporters=default --reporters=jest-junit",
     "build": "rm -r dist | tsc | tsc -m amd --outFile dist/yuya.ts.odata-client.amd.js | tsc -m system --outFile dist/yuya.ts.odata-client.system.js"
   },
   "repository": {
@@ -29,6 +30,7 @@
     "@types/sinon": "^7.0.5",
     "coveralls": "^3.0.3",
     "jest": "^23.6.0",
+    "jest-junit": "^6.3.0",
     "node-fetch": "^2.2.0",
     "sinon": "^7.2.3",
     "ts-jest": "^23.10.5",

@@ -42,6 +42,7 @@ module.exports = {
       userAgent: 'node'
     }
   },
+  reporters: ["default", "jest-junit"],
 
   setupTestFrameworkScriptFile: "<rootDir>/tests/jest-setup.ts",
   collectCoverage: true,
