@@ -1,9 +1,5 @@
-import { ExpandBuilder } from './expand-builder';
-import { ODataQuery } from './odata-query';
 import _ from 'lodash';
-import { isExpression, Expression } from '.';
-import { Parameter, isParameter } from './parameter';
-import { GroupByBuilder } from './group-by-builder';
+import { isExpression, Expression, Parameter, isParameter, GroupByBuilder, ExpandBuilder, ODataQuery  } from '.';
 
 export enum OrderByDirection { Asc, Desc }
 
@@ -179,10 +175,10 @@ export class ODataQueryBuilder {
 
   public addParameter(parameterName: string | Parameter, value?: any): ODataQueryBuilder {
     if (_.isString(parameterName)) {
-      const p = new Parameter(parameterName, value);
+      const p = new Parameter(parameterName as string, value);
       this._parameters[p.parameterName] = p;
     } else { // if (isParameter(parameterName))  sadece bu durum kalıyor. 
-      this._parameters[parameterName.parameterName] = parameterName;
+      this._parameters[(parameterName as Parameter).parameterName] = parameterName;
     }
     return this;
   }
@@ -259,7 +255,7 @@ export class ODataQueryBuilder {
       q.orderBy(...orderByList);
     }
 
-    if (_.isString(this._apiVersion) && !_.isEmpty(this._apiVersion)) {
+    if (this._apiVersion !== null && _.isString(this._apiVersion) && !_.isEmpty(this._apiVersion)) {
       q.apiVersion(this._apiVersion);
     }
 
