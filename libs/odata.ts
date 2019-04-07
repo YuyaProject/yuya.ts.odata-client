@@ -1,6 +1,6 @@
 import moment from 'moment';
 import _ from 'lodash';
-import { isIProperty, isExpression, isParameter, Guid } from '.';
+import { isIProperty, isExpression, isParameter, Guid, Expression } from './types';
 
 export function getODataDateTimeString(val: any): string {
   if (_.isNull(val)
@@ -29,3 +29,36 @@ export function encodeQueryValue(val: any): string {
   return JSON.stringify(val);
 }
 
+export function prepareFilterString(filterArray: any[]): string {
+  if (_.isEmpty(filterArray)) { return String(); }
+  const filters = filterArray
+    .filter((x: any) => _.isString(x))
+    .map((x: any) => x as string);
+  const f2 = filterArray
+    .filter((x: any) => isExpression(x) && !_.isEmpty(x.text))
+    .map((x: Expression) => x.text);
+
+  if (f2.length > 0) { filters.push(...f2); }
+  if (filters.length === 1) {
+    return filters[0];
+  } else if (filters.length > 1) {
+    return filters.join(' and ');
+  }
+  return String();
+}
+
+export function splitWithComma(stringArray: string[], trimItems: boolean = false, removeWhitespaces: boolean = false): string[] {
+  if (!stringArray || _.isEmpty(stringArray)) return [];
+  let result: string[] = [];
+  for (const item of stringArray) {
+    let items = item.split(',');
+    if (trimItems) {
+      items = items.map(i => i.trim());
+    }
+    if (removeWhitespaces) {
+      items = items.filter(i => !_.isEmpty(i));
+    }
+    result.push(...items);
+  }
+  return result;
+}

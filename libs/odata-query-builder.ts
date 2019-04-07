@@ -1,5 +1,7 @@
 import _ from 'lodash';
-import { isExpression, Expression, Parameter, isParameter, GroupByBuilder, ExpandBuilder, ODataQuery  } from '.';
+import { isExpression, Expression, Parameter, isParameter,  ODataQuery, OData } from '.';
+import { ColumnBuilder, GroupByBuilder, ExpandBuilder, ExpandQueryBuilder } from './query-builders';
+import { ExpandQuerydBuilder } from './query-builders/expand-query-builder';
 
 export enum OrderByDirection { Asc, Desc }
 
@@ -17,6 +19,10 @@ export class ODataQueryBuilder {
   // tslint:disable-next-line:variable-name
   private _filters: any[] = [];
   // tslint:disable-next-line:variable-name
+  private _columnBuilder: ColumnBuilder | null = null;
+  // tslint:disable-next-line:variable-name
+  private _expandBuilder: ExpandQueryBuilder | null = null;
+  // tslint:disable-next-line:variable-name
   private _groupByBuilder: GroupByBuilder | null = null;
   // tslint:disable-next-line:variable-name
   private _orderByList: string[] = [];
@@ -31,6 +37,14 @@ export class ODataQueryBuilder {
 
   constructor(resource: string) {
     this._resource = resource;
+  }
+
+  /**
+   * gets the filter string
+   * @returns the filter string
+   */
+  public get filterString(): string {
+    return OData.prepareFilterString(this._filters);
   }
 
   /**
@@ -51,63 +65,32 @@ export class ODataQueryBuilder {
     return this;
   }
 
-  public addColumn(columnName: string) {
-    if (!_.isString(columnName) || _.isEmpty(columnName)) { return this; }
-    for (const cn of columnName.split(',').map((x: string) => x.trim())) {
-      if (!_.isEmpty(cn) && !_.some(this._columns, cn)) {
-        this._columns.push(cn);
-      }
+  // #region columns
+
+
+  public get columns(): ColumnBuilder {
+    if (this._columnBuilder === null) {
+      this._columnBuilder = new ColumnBuilder(this);
     }
-    return this;
+    return this._columnBuilder;
   }
 
-  public addColumns(...columnNames: string[]): ODataQueryBuilder;
-  public addColumns(columnNames: string): ODataQueryBuilder;
 
-  public addColumns(...columnNames: string[]): ODataQueryBuilder {
-    if (!_.isArray(columnNames) || _.isEmpty(columnNames)) { return this; }
-    for (const cn of columnNames.map((x: string) => x.trim())) {
-      this.addColumn(cn);
+  // #endregion
+
+  // #region expand
+
+
+  public get expands(): ExpandQuerydBuilder {
+    if (this._expandBuilder === null) {
+      this._expandBuilder = new ExpandQuerydBuilder(this);
     }
-    return this;
+    return this._expandBuilder;
   }
 
-  public removeColumns(...columnNames: string[]): ODataQueryBuilder {
-    if (!columnNames || !columnNames.length) { return this; }
-    for (const cn of columnNames) {
-      const index = this._columns.indexOf(cn);
-      if (index >= 0) {
-        this._columns.splice(index, 1);
-      }
-    }
-    return this;
-  }
+  // #endregion
 
-  public clearColumns(): ODataQueryBuilder {
-    this._columns = [];
-    return this;
-  }
-
-  public addExpandColumns(...columnNames: string[]): ODataQueryBuilder {
-    if (!columnNames || !columnNames.length) { return this; }
-    for (const cn of columnNames) {
-      const split = cn.split('.');
-      if (split.length === 1) {
-        this.addColumns(cn);
-      } else { // if (split.length > 1) sadece bu durum kalıyor
-        let exp: ExpandBuilder;
-        if (Object.keys(this._expands).indexOf(split[0]) < 0) {
-          exp = new ExpandBuilder(split[0]);
-          this._expands[split[0]] = exp;
-        } else {
-          exp = this._expands[split[0]];
-        }
-        exp.addExpandFromString(cn);
-      }
-    }
-    return this;
-  }
-
+  // #region filter
   public addFilters(...filters: (string | Expression)[]): ODataQueryBuilder {
     if (!filters || !filters.length) { return this; }
     for (const c of filters.filter((x) => x !== null)) {
@@ -124,7 +107,9 @@ export class ODataQueryBuilder {
     this._filters = [];
     return this;
   }
+  // #endregion
 
+  // #region order by
   public addOrderBy(column: string, direction: OrderByDirection = OrderByDirection.Asc): ODataQueryBuilder {
     const c = column.trim();
     if (!_.isEmpty(c)) {
@@ -159,6 +144,7 @@ export class ODataQueryBuilder {
     this._orderByList = [];
     return this;
   }
+  // #endregion
 
   public top(value: number): ODataQueryBuilder {
     this._top = value;
@@ -170,6 +156,7 @@ export class ODataQueryBuilder {
     return this;
   }
 
+  // #region Parameters
   public addParameter(parameterName: string, value: any): ODataQueryBuilder;
   public addParameter(parameter: Parameter): ODataQueryBuilder;
 
@@ -214,6 +201,7 @@ export class ODataQueryBuilder {
     this._parameters = {};
     return this;
   }
+  // #endregion
 
   // #region Group By
 
@@ -245,7 +233,7 @@ export class ODataQueryBuilder {
       }
     }
     else {
-      var filters = prepareFilterString(this._filters);
+      var filters = OData.prepareFilterString(this._filters);
       if (!_.isEmpty(filters)) { q.filter(filters); }
     }
 
@@ -279,30 +267,8 @@ export class ODataQueryBuilder {
     return q;
   }
 
-  public get filterString(): string {
-    return prepareFilterString(this._filters);
-  }
 
   public q(): Promise<any> {
     return this.getQuery().q();
   }
-}
-
-
-export function prepareFilterString(filterArray: any[]): string {
-  if (_.isEmpty(filterArray)) { return String(); }
-  const filters = filterArray
-    .filter((x: any) => _.isString(x))
-    .map((x: any) => x as string);
-  const f2 = filterArray
-    .filter((x: any) => isExpression(x) && !_.isEmpty(x.text))
-    .map((x: Expression) => x.text);
-
-  if (f2.length > 0) { filters.push(...f2); }
-  if (filters.length === 1) {
-    return filters[0];
-  } else if (filters.length > 1) {
-    return filters.join(' and ');
-  }
-  return String();
 }

@@ -1,6 +1,5 @@
 import _ from 'lodash';
-import { ODataQueryBuilder, Expression, isExpression } from '.';
-import { prepareFilterString } from './odata-query-builder';
+import { ODataQueryBuilder, Expression, isExpression, OData } from '..';
 
 export class GroupByBuilder {
   private _odataQueryBuilder: ODataQueryBuilder;
@@ -21,7 +20,7 @@ export class GroupByBuilder {
   }
 
   public get havingString(): string {
-    return prepareFilterString(this._havings);
+    return OData.prepareFilterString(this._havings);
   }
 
   public addColumn(columnName: string) {
