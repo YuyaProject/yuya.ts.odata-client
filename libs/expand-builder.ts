@@ -1,15 +1,19 @@
 import _ from 'lodash';
 
 export class ExpandBuilder {
-  private propertyName: string;
-  private selectColumns: string[] = [];
-  private filter: string = '';
-  private sort: string = '';
-  private expands: ExpandBuilder[] = [];
+  private _propertyName: string;
+  private _selectColumns: string[] = [];
+  private _filter: string = '';
+  private _sort: string = '';
+  private _expands: ExpandBuilder[] = [];
 
   constructor(propertyName: string) {
     if (!_.isString(propertyName) || _.isEmpty(propertyName)) { throw new Error('property name is null or empty'); }
-    this.propertyName = propertyName;
+    this._propertyName = propertyName;
+  }
+
+  public get propertyName(): string {
+    return this._propertyName;
   }
 
   public addColumn(columnName: string): ExpandBuilder {
@@ -18,16 +22,16 @@ export class ExpandBuilder {
       this.addColumns(...(columnName.split(',')));
       return this;
     }
-    if (this.selectColumns.some((x: string) => x === columnName)) { return this; }
-    this.selectColumns.push(columnName);
+    if (this._selectColumns.some((x: string) => x === columnName)) { return this; }
+    this._selectColumns.push(columnName);
     return this;
   }
 
   public addColumns(...columnNames: string[]): ExpandBuilder {
     if (!columnNames || !(columnNames.length)) { return this; }
     for (const cn of columnNames.filter((x: string) => x && x.length)) {
-      if (this.selectColumns.some((x: string) => x === cn)) { continue; }
-      this.selectColumns.push(cn);
+      if (this._selectColumns.some((x: string) => x === cn)) { continue; }
+      this._selectColumns.push(cn);
     }
     return this;
   }
@@ -36,9 +40,9 @@ export class ExpandBuilder {
     if (!!filters && !!filters.length) {
       filters = filters.filter((x: string) => !!x && !_.isEmpty(x));
       if (filters.length === 1) {
-        this.filter = filters[0];
+        this._filter = filters[0];
       } else if (filters.length > 1) {
-        this.filter = '(' + filters.join(')and(') + ')';
+        this._filter = '(' + filters.join(')and(') + ')';
       }
     }
     return this;
@@ -48,7 +52,7 @@ export class ExpandBuilder {
     if (!!orderbys && !!orderbys.length) {
       orderbys = orderbys.filter((x: string) => !!x && !_.isEmpty(x));
       if (orderbys.length > 0) {
-        this.sort = orderbys.join(',');
+        this._sort = orderbys.join(',');
       }
     }
     return this;
@@ -58,7 +62,7 @@ export class ExpandBuilder {
     if (!!expands && !_.isEmpty(expands)) {
       expands = expands.filter((x: ExpandBuilder) => !!x);
       if (!_.isEmpty(expands)) {
-        this.expands.push(...expands);
+        this._expands.push(...expands);
       }
     }
     return this;
@@ -68,14 +72,14 @@ export class ExpandBuilder {
     if (!expandString || _.isEmpty(expandString)) { return this; }
     const el = expandString.split('.');
     if (el.length === 1) {
-      if (el[0] !== this.propertyName) { this.addColumn(el[0]); }
+      if (el[0] !== this._propertyName) { this.addColumn(el[0]); }
       return this;
     }
     if (el.length === 2) {
-      if (el[0] === this.propertyName) {
+      if (el[0] === this._propertyName) {
         this.addColumn(el[1]);
       } else {
-        const exp = this.expands.find((x: ExpandBuilder) => x.propertyName === el[0]);
+        const exp = this._expands.find((x: ExpandBuilder) => x._propertyName === el[0]);
         if (!exp) {
           this.addExpand(new ExpandBuilder(el[0]).addColumn(el[1]));
         } else {
@@ -86,9 +90,9 @@ export class ExpandBuilder {
     }
 
     let nextExpand = el.filter((x: string, i: number) => i !== 0).join('.');
-    if (el[0] !== this.propertyName) {
+    if (el[0] !== this._propertyName) {
       nextExpand = expandString;
-      let exp = this.expands.find((x: ExpandBuilder) => x.propertyName === el[0]);
+      let exp = this._expands.find((x: ExpandBuilder) => x._propertyName === el[0]);
       if (exp) {
         exp.addExpandFromString(nextExpand);
       } else {
@@ -97,7 +101,7 @@ export class ExpandBuilder {
         // this.addColumn(el[0]);
       }
     } else {
-      let exp = this.expands.find((x: ExpandBuilder) => x.propertyName === el[1]);
+      let exp = this._expands.find((x: ExpandBuilder) => x._propertyName === el[1]);
       if (exp) {
         exp.addExpandFromString(nextExpand);
       } else {
@@ -111,25 +115,25 @@ export class ExpandBuilder {
 
   public toString(): string {
     const list: string[] = [];
-    if (this.expands.length) {
-      list.push('$expand=' + this.expands.map((x: ExpandBuilder) => x.toString()).join(','));
+    if (this._expands.length) {
+      list.push('$expand=' + this._expands.map((x: ExpandBuilder) => x.toString()).join(','));
     }
-    if (!!this.filter && !_.isEmpty(this.filter)) {
-      list.push('$filter=' + this.filter);
+    if (!!this._filter && !_.isEmpty(this._filter)) {
+      list.push('$filter=' + this._filter);
     }
-    if (!!this.sort && !_.isEmpty(this.sort)) {
-      list.push('$orderby=' + this.sort);
+    if (!!this._sort && !_.isEmpty(this._sort)) {
+      list.push('$orderby=' + this._sort);
     }
-    if (!!this.selectColumns && !_.isEmpty(this.selectColumns)) {
-      this.selectColumns = this.selectColumns.map((x: string) => x.trim()).filter((x: string) => !_.isEmpty(x));
-      if (!_.isEmpty(this.selectColumns)) {
-        list.push('$select=' + this.selectColumns.join(','));
+    if (!!this._selectColumns && !_.isEmpty(this._selectColumns)) {
+      this._selectColumns = this._selectColumns.map((x: string) => x.trim()).filter((x: string) => !_.isEmpty(x));
+      if (!_.isEmpty(this._selectColumns)) {
+        list.push('$select=' + this._selectColumns.join(','));
       }
     }
     if (list.length) {
-      return `${this.propertyName}(${list.join(';')})`;
+      return `${this._propertyName}(${list.join(';')})`;
     } else {
-      return this.propertyName;
+      return this._propertyName;
     }
   }
 }

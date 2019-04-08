@@ -37,6 +37,29 @@ describe('GroupByBuilder tests', () => {
   });
   // #endregion havingString
 
+
+  // #region method : clone
+  it('clone with new odataQueryBuilder', () => {
+    const gbb = new GroupByBuilder(odataQueryBuilder);
+    gbb.addColumn('category/id');
+    gbb.addCountColumn('count');
+
+    const odqb = new ODataQueryBuilder("product");
+    const r = gbb.clone(odqb);
+    const p: any = r;
+
+    expect(r).not.toBeNull();
+    expect(r).not.toBeUndefined();
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p.havingString).toEqual(gbb.havingString);
+    expect(p._columns).toEqual((gbb as any)._columns);
+    expect(p._aggregates).toEqual((gbb as any)._aggregates);
+    expect(p._havings).toEqual((gbb as any)._havings);
+  });
+  // #endregion havingString
+
+
   // #region method : addColumn
   it('addColumn with empty string parameter', () => {
     const gbb = new GroupByBuilder(odataQueryBuilder);
@@ -471,6 +494,38 @@ describe('GroupByBuilder tests', () => {
     expect(p._aggregates[0].alias).toEqual('b');
   });
   // #endregion addAverageColumn
+
+  // #region method : addCountColumn
+  it('addCountColumn with two empty parameters', () => {
+    const gbb = new GroupByBuilder(odataQueryBuilder);
+    gbb.addCountColumn('');
+    const p: any = gbb;
+    expect(gbb).not.toBeNull();
+    expect(gbb).not.toBeUndefined();
+    expect(p._aggregates).not.toBeNull();
+    expect(p._aggregates).not.toBeUndefined();
+    expect(p._aggregates.length).not.toBeNull();
+    expect(p._aggregates.length).not.toBeUndefined();
+    expect(p._aggregates.length).toEqual(0);
+  });
+  it('addCountColumn with two non-empty parameters', () => {
+    const gbb = new GroupByBuilder(odataQueryBuilder);
+    gbb.addCountColumn('b');
+    const p: any = gbb;
+    expect(gbb).not.toBeNull();
+    expect(gbb).not.toBeUndefined();
+    expect(p._aggregates).not.toBeNull();
+    expect(p._aggregates).not.toBeUndefined();
+    expect(p._aggregates.length).not.toBeNull();
+    expect(p._aggregates.length).not.toBeUndefined();
+    expect(p._aggregates.length).toEqual(1);
+    expect(p._aggregates[0]).not.toBeNull();
+    expect(p._aggregates[0]).not.toBeUndefined();
+    expect(p._aggregates[0].operator).toEqual(OperatorsEnum.Count);
+    expect(p._aggregates[0].alias).toEqual('b');
+    expect(p._aggregates[0].toString()).toEqual('$count as b');
+  });
+  // #endregion addCountColumn
 
   // #region method : addHavings
   it('addHavings with parameterless', () => {

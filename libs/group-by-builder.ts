@@ -24,6 +24,14 @@ export class GroupByBuilder {
     return prepareFilterString(this._havings);
   }
 
+  public clone(odataQueryBuilder: ODataQueryBuilder): GroupByBuilder {
+    const n = new GroupByBuilder(odataQueryBuilder);
+    n._columns = [...this._columns];
+    n._aggregates = [...this._aggregates];
+    n._havings = [...this._havings];
+    return n;
+  }
+
   public addColumn(columnName: string) {
     if (!_.isString(columnName) || _.isEmpty(columnName)) { return this; }
     for (const cn of columnName.split(',').map((x: string) => x.trim())) {
@@ -68,6 +76,14 @@ export class GroupByBuilder {
   public addAverageColumn(columnOrExpression: string, alias: string): GroupByBuilder {
     if (_.isEmpty(columnOrExpression) || _.isEmpty(alias)) { return this; }
     var aggregate: IGroupByAggregate = new AverageGroupByAggreage(columnOrExpression, alias);
+    this._aggregates.push(aggregate);
+    return this;
+  }
+
+
+  public addCountColumn(alias: string): GroupByBuilder {
+    if (_.isEmpty(alias)) { return this; }
+    var aggregate: IGroupByAggregate = new CountGroupByAggreage( alias);
     this._aggregates.push(aggregate);
     return this;
   }
@@ -181,5 +197,21 @@ class AverageGroupByAggreage implements IGroupByAggregate {
 
   public toString(): string {
     return `${this.columnOrExpression} with average as ${this.alias}`;
+  }
+}
+
+class CountGroupByAggreage implements IGroupByAggregate {
+  public columnOrExpression: string;
+  public operator: OperatorsEnum;
+  public alias: string;
+
+  constructor(alias: string) {
+    this.columnOrExpression = String();
+    this.alias = alias;
+    this.operator = OperatorsEnum.Count;
+  }
+
+  public toString(): string {
+    return `$count as ${this.alias}`;
   }
 }

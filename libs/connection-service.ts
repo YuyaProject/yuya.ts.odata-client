@@ -143,6 +143,10 @@ export class ConnectionService implements IConnectionService {
     return this._defaultConnectionService;
   }
 
+  public get connetionSettings(): IConnetionSettings {
+    return this._config;
+  }
+
   /**
    * Prepare the request configuration
    * @param conf the request configuration

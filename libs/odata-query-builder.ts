@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { isExpression, Expression, Parameter, isParameter, GroupByBuilder, ExpandBuilder, ODataQuery  } from '.';
+import { isExpression, Expression, Parameter, isParameter, GroupByBuilder, ExpandBuilder, ODataQuery } from '.';
 
 export enum OrderByDirection { Asc, Desc }
 
@@ -31,6 +31,21 @@ export class ODataQueryBuilder {
 
   constructor(resource: string) {
     this._resource = resource;
+  }
+
+  public clone(): ODataQueryBuilder {
+    const n = new ODataQueryBuilder(this._resource);
+    n._getAllPagesRowCount = this._getAllPagesRowCount;
+    n._columns = [...this._columns];
+    n._expands = { ...this._expands };
+    n._filters = [...this._filters];
+    n._groupByBuilder = this._groupByBuilder === null ? null : this._groupByBuilder.clone(n);
+    n._orderByList = [...this._orderByList];
+    n._apiVersion = this._apiVersion;
+    n._top = this._top;
+    n._skip = this._skip;
+    n._parameters = { ...this._parameters };
+    return n;
   }
 
   /**
@@ -104,6 +119,14 @@ export class ODataQueryBuilder {
         }
         exp.addExpandFromString(cn);
       }
+    }
+    return this;
+  }
+
+  public addExpand(...expands: ExpandBuilder[]): ODataQueryBuilder {
+    if (!expands || !expands.length) { return this; }
+    for (const expand of expands) {
+      this._expands[expand.propertyName] = expand;
     }
     return this;
   }

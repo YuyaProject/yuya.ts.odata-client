@@ -16,6 +16,15 @@ describe('parameter tests', () => {
     expect(p.value).toEqual(5);
   });
 
+  it('constructor non-empty parameter without value', () => {
+    const p = new Parameter('asd');
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p.name).toEqual('asd');
+    expect(p.parameterName).toEqual('@asd');
+    expect(p.value).toBeNull();
+  });
+
   it('constructor non-empty parameter with @ sign', () => {
     const p = new Parameter('@asd', 5);
     expect(p).not.toBeNull();

@@ -1,11 +1,23 @@
-import { ConnectionService } from '../../libs/connection-service';
+import { ConnectionService, config, IConnetionSettings } from '../../libs/connection-service';
 import axios, { AxiosResponse } from 'axios';
 import sinon from 'sinon';
 
 // TODO : @alper-2019-02-14: ErrorHandler ile ilgili kısım için bir test yazmadım. Bunun yazılması lazım.
 
 describe('default-connection-service tests', () => {
-  // #region method : getServiceUrl
+  // #region method : constructor
+  it('constructor empty parameter', () => {
+    const r = new ConnectionService();
+    expect(r.connetionSettings).toBe(config);
+  });
+  it('constructor non-empty parameter', () => {
+    const connectionSettings: IConnetionSettings = { baseUrl: '/api', odataEndpoint: 'odata' };
+    const r = new ConnectionService(connectionSettings);
+    expect(r.connetionSettings).toBe(connectionSettings);
+  });
+  // #endregion prepareServiceUrl
+
+  // #region method : prepareServiceUrl
   it('getServiceUrl empty parameter', () => {
     const response = new ConnectionService().prepareServiceUrl('');
     expect(response).not.toBe('');
@@ -18,7 +30,7 @@ describe('default-connection-service tests', () => {
     const response = new ConnectionService().prepareServiceUrl('/deneme');
     expect(response.endsWith('/deneme')).toBe(true);
   });
-  // #endregion
+  // #endregion prepareServiceUrl
 
   // #region methods : get, getT
   it('get with empty parameter', async () => {

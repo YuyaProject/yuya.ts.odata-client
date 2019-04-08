@@ -44,7 +44,7 @@ module.exports = {
   },
   reporters: ["default", "jest-junit"],
 
-  setupTestFrameworkScriptFile: "<rootDir>/tests/jest-setup.ts",
+  setupFilesAfterEnv : ["<rootDir>/tests/jest-setup.ts"],
   collectCoverage: true,
   coverageReporters: ["json", "lcov", "cobertura"]
 };

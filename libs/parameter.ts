@@ -4,13 +4,13 @@ export class Parameter {
   private _name: string;
   private _value: any;
 
-  constructor(name: string, value: any) {
+  constructor(name: string, value?: any) {
     this._name = this.clearName(name);
     this._value = value === undefined ? null : value;
   }
 
   public get parameterName() {
-    return ((!this._name.startsWith('@')) ? '@' : '') + this._name;
+    return '@' + this._name;
   }
 
   public get name() {
@@ -30,11 +30,7 @@ export class Parameter {
   }
 
   public toString(): string {
-    let s = '';
-    if (!this._name.startsWith('@')) s += '@';
-    s += this._name + '=';
-    s += encodeQueryValue(this._value);
-    return s;
+    return `${this.parameterName}=${encodeQueryValue(this._value)}`;
   }
 
   private clearName(name: string): string {

@@ -1,6 +1,6 @@
 import { ODataQueryBuilder, OrderByDirection, prepareFilterString } from '../../libs/odata-query-builder';
 import { ODataQuery } from '../../libs/odata-query';
-import { Expression, FilterBuilder, Parameter, isIProperty } from '../../libs';
+import { Expression, FilterBuilder, Parameter, isIProperty, ExpandBuilder } from '../../libs';
 
 describe('odata-query-builder tests', () => {
   // #region method : constructor
@@ -17,6 +17,29 @@ describe('odata-query-builder tests', () => {
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p._resource).toEqual('category');
+  });
+  // #endregion
+
+  // #region method : clone
+  it('clone', () => {
+    const qb = new ODataQueryBuilder('category');
+    qb.apiVersion('1.0');
+    qb.addColumn('id,name');
+    const r = qb.clone();
+    expect(r).not.toBeNull();
+    expect(r).not.toBeUndefined();
+    expect(r).not.toBe(qb);
+    expect(r).toEqual(qb);
+  });
+  it('clone with group by', () => {
+    const qb = new ODataQueryBuilder('category');
+    qb.apiVersion('1.0');
+    qb.groupBy.addColumn('name');
+    const r = qb.clone();
+    expect(r).not.toBeNull();
+    expect(r).not.toBeUndefined();
+    expect(r).not.toBe(qb);
+    expect(r).toEqual(qb);
   });
   // #endregion
 
@@ -393,6 +416,61 @@ describe('odata-query-builder tests', () => {
     expect(q).not.toBeNull();
     expect(q).not.toBeUndefined();
     expect(q).toEqual(new ODataQuery('category').expand('products($select=id,name)'));
+  });
+  // #endregion
+
+  // #region method : addExpand
+  it('addExpand parameterless', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addExpand();
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category'));
+  });
+  it('addExpand one expandable parameter', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addExpand(new ExpandBuilder('products').addColumn('id'));
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').expand('products($select=id)'));
+  });
+  it('addExpand one expandable parameter 2', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addExpand(new ExpandBuilder('products').addExpandFromString('products.category.id'));
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').expand('products($expand=category($select=id))'));
+  });
+  it('addExpand two expandable parameter', () => {
+    const qb = new ODataQueryBuilder('category')
+      .addExpand(new ExpandBuilder('products').addColumn('id'), new ExpandBuilder('group').addColumn('name'));
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p._expands).not.toBeNull();
+
+    const q = qb.getQuery();
+    expect(q).not.toBeNull();
+    expect(q).not.toBeUndefined();
+    expect(q).toEqual(new ODataQuery('category').expand('products($select=id),group($select=name)'));
   });
   // #endregion
 
