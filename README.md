@@ -18,7 +18,7 @@ develop branch :
 [![Coverage Status](https://coveralls.io/repos/github/YuyaProject/yuya.ts.odata-client/badge.svg?branch=develop)](https://coveralls.io/github/YuyaProject/yuya.ts.odata-client?branch=develop)
 
 
-## Usage
+## Install
 
 ```
 npm i yuya.ts.odata-client
@@ -26,6 +26,9 @@ or
 yarn add yuya.ts.odata-client
 ```
 
+## Documentation
+For Api Documentation : [Api Documentation](docs/ApiDoc.md)
+
 ## Change Log
-Version Change log : [CHANGELOG.md](CHANGELOG.md)
+Version Change log : [CHANGELOG.md](docs/CHANGELOG.md)
 
