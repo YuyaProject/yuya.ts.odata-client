@@ -7,7 +7,9 @@
   "scripts": {
     "test": "jest",
     "test2": "jest --ci --reporters=default --reporters=jest-junit",
-    "build": "rm -r dist | tsc | tsc -m amd --outFile dist/yuya.ts.odata-client.amd.js | tsc -m system --outFile dist/yuya.ts.odata-client.system.js"
+    "build": "rm -r dist | tsc | tsc -m amd --outFile dist/yuya.ts.odata-client.amd.js | tsc -m system --outFile dist/yuya.ts.odata-client.system.js",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -41,6 +43,8 @@
   "dependencies": {
     "axios": "^0.18.0",
     "lodash": "^4.17.11",
-    "moment": "^2.22.2"
-  }
+    "moment": "^2.22.2",
+    "snyk": "^1.161.1"
+  },
+  "snyk": true
 }
