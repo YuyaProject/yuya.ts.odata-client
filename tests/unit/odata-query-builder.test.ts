@@ -9,21 +9,21 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._resource).toEqual('');
+    expect(p.resource).toEqual('');
   });
   it('constructor non-empty parameter', () => {
     const qb = new ODataQueryBuilder('category');
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._resource).toEqual('category');
+    expect(p.resource).toEqual('category');
   });
   // #endregion
 
   // #region method : clone
   it('clone', () => {
     const qb = new ODataQueryBuilder('category');
-    qb.apiVersion('1.0');
+    qb.setApiVersion('1.0');
     qb.addColumn('id,name');
     const r = qb.clone();
     expect(r).not.toBeNull();
@@ -33,7 +33,7 @@ describe('odata-query-builder tests', () => {
   });
   it('clone with group by', () => {
     const qb = new ODataQueryBuilder('category');
-    qb.apiVersion('1.0');
+    qb.setApiVersion('1.0');
     qb.groupBy.addColumn('name');
     const r = qb.clone();
     expect(r).not.toBeNull();
@@ -46,31 +46,31 @@ describe('odata-query-builder tests', () => {
   // #region method : apiVersion
   it('apiVersion non-empty parameter', () => {
     const qb = new ODataQueryBuilder('category');
-    qb.apiVersion('1.0');
+    qb.setApiVersion('1.0');
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._apiVersion).toEqual('1.0');
+    expect(p.apiVersion).toEqual('1.0');
   });
   it('apiVersion empty after non-empty parameter', () => {
     const qb = new ODataQueryBuilder('category');
-    qb.apiVersion('1.0');
-    qb.apiVersion(null);
+    qb.setApiVersion('1.0');
+    qb.setApiVersion(null);
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._apiVersion).toBeNull();
+    expect(p.apiVersion).toBeNull();
   });
   it('apiVersion non-empty parameter on query', () => {
     const qb = new ODataQueryBuilder('category');
-    qb.apiVersion('1.0');
+    qb.setApiVersion('1.0');
     const p: any = qb.getQuery();
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._queryStrings).not.toBeNull();
-    expect(p._queryStrings).not.toBeUndefined();
-    expect(p._queryStrings.length).toEqual(1);
-    expect(p._queryStrings[0]).toEqual('api-version=1.0');
+    expect(p.queryStrings).not.toBeNull();
+    expect(p.queryStrings).not.toBeUndefined();
+    expect(p.queryStrings.length).toEqual(1);
+    expect(p.queryStrings[0]).toEqual('api-version=1.0');
   });
   // #endregion
 
@@ -81,7 +81,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -94,7 +94,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual(['id']);
+    expect(p.columns).toEqual(['id']);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -107,7 +107,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual(['id', 'name']);
+    expect(p.columns).toEqual(['id', 'name']);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -120,7 +120,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual(['id', 'name']);
+    expect(p.columns).toEqual(['id', 'name']);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -134,7 +134,7 @@ describe('odata-query-builder tests', () => {
       const p: any = qb;
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
-      expect(p._columns).toEqual(['name']);
+      expect(p.columns).toEqual(['name']);
 
       const q = qb.getQuery();
       expect(q).not.toBeNull();
@@ -150,7 +150,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
     const q = qb.getQuery();
     expect(q).not.toBeNull();
     expect(q).not.toBeUndefined();
@@ -162,7 +162,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -175,7 +175,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual(['id']);
+    expect(p.columns).toEqual(['id']);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -189,7 +189,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -202,7 +202,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual(['name']);
+    expect(p.columns).toEqual(['name']);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -215,7 +215,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual(['id', 'name']);
+    expect(p.columns).toEqual(['id', 'name']);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -228,7 +228,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual(['id', 'name']);
+    expect(p.columns).toEqual(['id', 'name']);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -241,7 +241,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual(['id', 'name']);
+    expect(p.columns).toEqual(['id', 'name']);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -257,7 +257,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -270,7 +270,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -283,7 +283,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -297,7 +297,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual(['name']);
+    expect(p.columns).toEqual(['name']);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -311,7 +311,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual(['name']);
+    expect(p.columns).toEqual(['name']);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -325,7 +325,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual(['title']);
+    expect(p.columns).toEqual(['title']);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -342,7 +342,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -358,7 +358,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -371,7 +371,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -384,7 +384,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -397,7 +397,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -410,7 +410,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -426,7 +426,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -439,7 +439,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -452,7 +452,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -465,7 +465,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -481,7 +481,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -494,7 +494,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -507,7 +507,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -515,13 +515,13 @@ describe('odata-query-builder tests', () => {
     expect(q).toEqual(new ODataQuery('category'));
   });
   // addFilters null bir değer kabul etmemekte. o yüzden burayı yorum haline getirdim.
-  // it('addFilters one null parameter', () => { 
+  // it('addFilters one null parameter', () => {
   //   const qb = new ODataQueryBuilder('category')
   //     .addFilters(null);
   //   const p: any = qb;
   //   expect(p).not.toBeNull();
   //   expect(p).not.toBeUndefined();
-  //   expect(p._expands).not.toBeNull();
+  //   expect(p.expands).not.toBeNull();
 
   //   const q = qb.getQuery();
   //   expect(q).not.toBeNull();
@@ -534,7 +534,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -547,7 +547,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -561,7 +561,7 @@ describe('odata-query-builder tests', () => {
   //   const p: any = qb;
   //   expect(p).not.toBeNull();
   //   expect(p).not.toBeUndefined();
-  //   expect(p._expands).not.toBeNull();
+  //   expect(p.expands).not.toBeNull();
 
   //   const q = qb.getQuery();
   //   expect(q).not.toBeNull();
@@ -574,7 +574,7 @@ describe('odata-query-builder tests', () => {
   //   const p: any = qb;
   //   expect(p).not.toBeNull();
   //   expect(p).not.toBeUndefined();
-  //   expect(p._expands).not.toBeNull();
+  //   expect(p.expands).not.toBeNull();
 
   //   const q = qb.getQuery();
   //   expect(q).not.toBeNull();
@@ -587,7 +587,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -600,7 +600,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -613,7 +613,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -626,7 +626,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -639,7 +639,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -652,7 +652,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -666,7 +666,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -683,7 +683,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -708,7 +708,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -721,7 +721,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -734,7 +734,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -747,7 +747,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -760,7 +760,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -773,7 +773,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -787,7 +787,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -803,7 +803,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -816,7 +816,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -829,7 +829,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -843,7 +843,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -859,7 +859,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -872,7 +872,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -885,7 +885,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -898,7 +898,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -911,7 +911,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -924,7 +924,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -937,7 +937,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -951,7 +951,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -964,7 +964,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._expands).not.toBeNull();
+    expect(p.expands).not.toBeNull();
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -983,7 +983,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -995,11 +995,11 @@ describe('odata-query-builder tests', () => {
   // #region method : top
   it('top one parameter', () => {
     const qb = new ODataQueryBuilder('category')
-      .top(5);
+      .setTop(5);
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -1011,11 +1011,11 @@ describe('odata-query-builder tests', () => {
   // #region method : skip
   it('skip one parameter', () => {
     const qb = new ODataQueryBuilder('category')
-      .skip(5);
+      .setSkip(5);
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -1031,7 +1031,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -1044,7 +1044,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -1058,7 +1058,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -1074,7 +1074,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -1087,7 +1087,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -1100,7 +1100,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -1113,7 +1113,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -1126,7 +1126,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -1143,7 +1143,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -1161,7 +1161,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -1175,7 +1175,7 @@ describe('odata-query-builder tests', () => {
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p._columns).toEqual([]);
+    expect(p.columns).toEqual([]);
 
     const q = qb.getQuery();
     expect(q).not.toBeNull();
@@ -1231,11 +1231,11 @@ describe('odata-query-builder tests', () => {
   // #region method : getQuery
   it('getQuery one number array parameter', () => {
     const qb = new ODataQueryBuilder('category')
-      .allPagesRowCount();
+      .setAllPagesRowCount();
     const p = qb.getQuery();
     expect(qb).not.toBeNull();
     expect(qb).not.toBeUndefined();
-    expect((qb as any)._getAllPagesRowCount).toEqual(true);
+    expect((qb as any).getAllPagesRowCount).toEqual(true);
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p).toEqual(new ODataQuery('category').allPagesRowCount(true));
@@ -1243,11 +1243,11 @@ describe('odata-query-builder tests', () => {
 
   it('getQuery one number array parameter 2', () => {
     const qb = new ODataQueryBuilder('category')
-      .allPagesRowCount(true);
+      .setAllPagesRowCount(true);
     const p = qb.getQuery();
     expect(qb).not.toBeNull();
     expect(qb).not.toBeUndefined();
-    expect((qb as any)._getAllPagesRowCount).toEqual(true);
+    expect((qb as any).getAllPagesRowCount).toEqual(true);
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p).toEqual(new ODataQuery('category').allPagesRowCount(true));
@@ -1255,12 +1255,12 @@ describe('odata-query-builder tests', () => {
 
   it('getQuery one number array parameter 3', () => {
     const qb = new ODataQueryBuilder('category')
-      .allPagesRowCount(true)
-      .allPagesRowCount(false);
+      .setAllPagesRowCount(true)
+      .setAllPagesRowCount(false);
     const p = qb.getQuery();
     expect(qb).not.toBeNull();
     expect(qb).not.toBeUndefined();
-    expect((qb as any)._getAllPagesRowCount).toEqual(false);
+    expect((qb as any).getAllPagesRowCount).toEqual(false);
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p).toEqual(new ODataQuery('category').allPagesRowCount(false));

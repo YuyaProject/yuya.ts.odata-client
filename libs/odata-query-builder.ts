@@ -4,47 +4,32 @@ import { isExpression, Expression, Parameter, isParameter, GroupByBuilder, Expan
 export enum OrderByDirection { Asc, Desc }
 
 export class ODataQueryBuilder {
-  // tslint:disable-next-line:variable-name
-  private _resource: string;
-  // private queryStrings: string[] = [];
-  // private key: any | null = null;
-  // tslint:disable-next-line:variable-name
-  private _getAllPagesRowCount: boolean = false;
-  // tslint:disable-next-line:variable-name
-  private _columns: string[] = [];
-  // tslint:disable-next-line:variable-name
-  private _expands: _.Dictionary<ExpandBuilder> = {};
-  // tslint:disable-next-line:variable-name
-  private _filters: any[] = [];
-  // tslint:disable-next-line:variable-name
-  private _groupByBuilder: GroupByBuilder | null = null;
-  // tslint:disable-next-line:variable-name
-  private _orderByList: string[] = [];
-  // tslint:disable-next-line:variable-name
-  private _apiVersion: string | null = null;
-  // tslint:disable-next-line:variable-name
-  private _top: number = 0;
-  // tslint:disable-next-line:variable-name
-  private _skip: number = 0;
-  // tslint:disable-next-line:variable-name
-  private _parameters: _.Dictionary<Parameter> = {};
+  private getAllPagesRowCount: boolean = false;
+  private columns: string[] = [];
+  private expands: _.Dictionary<ExpandBuilder> = {};
+  private filters: any[] = [];
+  private groupByBuilder: GroupByBuilder | null = null;
+  private orderByList: string[] = [];
+  private apiVersion: string | null = null;
+  private top: number = 0;
+  private skip: number = 0;
+  private parameters: _.Dictionary<Parameter> = {};
 
-  constructor(resource: string) {
-    this._resource = resource;
+  constructor(public readonly resource: string) {
   }
 
   public clone(): ODataQueryBuilder {
-    const n = new ODataQueryBuilder(this._resource);
-    n._getAllPagesRowCount = this._getAllPagesRowCount;
-    n._columns = [...this._columns];
-    n._expands = { ...this._expands };
-    n._filters = [...this._filters];
-    n._groupByBuilder = this._groupByBuilder === null ? null : this._groupByBuilder.clone(n);
-    n._orderByList = [...this._orderByList];
-    n._apiVersion = this._apiVersion;
-    n._top = this._top;
-    n._skip = this._skip;
-    n._parameters = { ...this._parameters };
+    const n = new ODataQueryBuilder(this.resource);
+    n.getAllPagesRowCount = this.getAllPagesRowCount;
+    n.columns = [...this.columns];
+    n.expands = { ...this.expands };
+    n.filters = [...this.filters];
+    n.groupByBuilder = this.groupByBuilder === null ? null : this.groupByBuilder.clone(n);
+    n.orderByList = [...this.orderByList];
+    n.apiVersion = this.apiVersion;
+    n.top = this.top;
+    n.skip = this.skip;
+    n.parameters = { ...this.parameters };
     return n;
   }
 
@@ -52,8 +37,8 @@ export class ODataQueryBuilder {
    * set the api version.
    * @param val the api version
    */
-  public apiVersion(val: string | null): ODataQueryBuilder {
-    this._apiVersion = val;
+  public setApiVersion(val: string | null): ODataQueryBuilder {
+    this.apiVersion = val;
     return this;
   }
 
@@ -61,16 +46,16 @@ export class ODataQueryBuilder {
    * get total row count with response
    * @param val the value
    */
-  public allPagesRowCount(val: boolean = true): ODataQueryBuilder {
-    this._getAllPagesRowCount = val;
+  public setAllPagesRowCount(val: boolean = true): ODataQueryBuilder {
+    this.getAllPagesRowCount = val;
     return this;
   }
 
   public addColumn(columnName: string) {
     if (!_.isString(columnName) || _.isEmpty(columnName)) { return this; }
     for (const cn of columnName.split(',').map((x: string) => x.trim())) {
-      if (!_.isEmpty(cn) && !_.some(this._columns, cn)) {
-        this._columns.push(cn);
+      if (!_.isEmpty(cn) && !_.some(this.columns, cn)) {
+        this.columns.push(cn);
       }
     }
     return this;
@@ -90,16 +75,16 @@ export class ODataQueryBuilder {
   public removeColumns(...columnNames: string[]): ODataQueryBuilder {
     if (!columnNames || !columnNames.length) { return this; }
     for (const cn of columnNames) {
-      const index = this._columns.indexOf(cn);
+      const index = this.columns.indexOf(cn);
       if (index >= 0) {
-        this._columns.splice(index, 1);
+        this.columns.splice(index, 1);
       }
     }
     return this;
   }
 
   public clearColumns(): ODataQueryBuilder {
-    this._columns = [];
+    this.columns = [];
     return this;
   }
 
@@ -111,11 +96,11 @@ export class ODataQueryBuilder {
         this.addColumns(cn);
       } else { // if (split.length > 1) sadece bu durum kalıyor
         let exp: ExpandBuilder;
-        if (Object.keys(this._expands).indexOf(split[0]) < 0) {
+        if (Object.keys(this.expands).indexOf(split[0]) < 0) {
           exp = new ExpandBuilder(split[0]);
-          this._expands[split[0]] = exp;
+          this.expands[split[0]] = exp;
         } else {
-          exp = this._expands[split[0]];
+          exp = this.expands[split[0]];
         }
         exp.addExpandFromString(cn);
       }
@@ -126,32 +111,32 @@ export class ODataQueryBuilder {
   public addExpand(...expands: ExpandBuilder[]): ODataQueryBuilder {
     if (!expands || !expands.length) { return this; }
     for (const expand of expands) {
-      this._expands[expand.propertyName] = expand;
+      this.expands[expand.propertyName] = expand;
     }
     return this;
   }
 
-  public addFilters(...filters: (string | Expression)[]): ODataQueryBuilder {
+  public addFilters(...filters: Array<string | Expression>): ODataQueryBuilder {
     if (!filters || !filters.length) { return this; }
     for (const c of filters.filter((x) => x !== null)) {
       if (_.isString(c) && !_.isEmpty(c)) {
-        this._filters.push(c);
+        this.filters.push(c);
       } else if (isExpression(c) && !_.isEmpty(c.text)) {
-        this._filters.push(c);
+        this.filters.push(c);
       }
     }
     return this;
   }
 
   public clearFilters() {
-    this._filters = [];
+    this.filters = [];
     return this;
   }
 
   public addOrderBy(column: string, direction: OrderByDirection = OrderByDirection.Asc): ODataQueryBuilder {
     const c = column.trim();
     if (!_.isEmpty(c)) {
-      this._orderByList.push(c + (direction === OrderByDirection.Asc ? '' : ' desc'));
+      this.orderByList.push(c + (direction === OrderByDirection.Asc ? '' : ' desc'));
     }
     return this;
   }
@@ -159,7 +144,7 @@ export class ODataQueryBuilder {
   public addOrderByDesc(column: string): ODataQueryBuilder {
     const c = column.trim();
     if (!_.isEmpty(c)) {
-      this._orderByList.push(c + ' desc');
+      this.orderByList.push(c + ' desc');
     }
     return this;
   }
@@ -171,7 +156,7 @@ export class ODataQueryBuilder {
           const cols = c.split(',')
             .map((x: string) => (x || '').trim())
             .filter((x: string) => !_.isEmpty(x));
-          this._orderByList.push(...cols);
+          this.orderByList.push(...cols);
         }
       }
     }
@@ -179,17 +164,17 @@ export class ODataQueryBuilder {
   }
 
   public clearOrderByList(): ODataQueryBuilder {
-    this._orderByList = [];
+    this.orderByList = [];
     return this;
   }
 
-  public top(value: number): ODataQueryBuilder {
-    this._top = value;
+  public setTop(value: number): ODataQueryBuilder {
+    this.top = value;
     return this;
   }
 
-  public skip(value: number): ODataQueryBuilder {
-    this._skip = value;
+  public setSkip(value: number): ODataQueryBuilder {
+    this.skip = value;
     return this;
   }
 
@@ -199,9 +184,9 @@ export class ODataQueryBuilder {
   public addParameter(parameterName: string | Parameter, value?: any): ODataQueryBuilder {
     if (_.isString(parameterName)) {
       const p = new Parameter(parameterName as string, value);
-      this._parameters[p.parameterName] = p;
-    } else { // if (isParameter(parameterName))  sadece bu durum kalıyor. 
-      this._parameters[(parameterName as Parameter).parameterName] = parameterName;
+      this.parameters[p.parameterName] = p;
+    } else { // if (isParameter(parameterName))  sadece bu durum kalıyor.
+      this.parameters[(parameterName as Parameter).parameterName] = parameterName;
     }
     return this;
   }
@@ -213,97 +198,96 @@ export class ODataQueryBuilder {
   public addParameters(parameters: _.Dictionary<Parameter> | Parameter[] | Parameter): ODataQueryBuilder {
     if (_.isArray(parameters)) {
       for (const p of parameters) {
-        this._parameters[p.name] = p;
+        this.parameters[p.name] = p;
       }
     } else if (isParameter(parameters)) {
-      this._parameters[parameters.name] = parameters;
-    } else { // if (_.isObject(parameters))  sadece bu durum kalıyor. 
-      this._parameters = {
-        ...this._parameters,
-        ...parameters
+      this.parameters[parameters.name] = parameters;
+    } else { // if (_.isObject(parameters))  sadece bu durum kalıyor.
+      this.parameters = {
+        ...this.parameters,
+        ...parameters,
       };
     }
     return this;
   }
 
   public removeParameter(parameterName: string) {
-    if (Object.keys(this._parameters).some((x) => x === parameterName)) {
-      delete this._parameters[parameterName];
+    if (Object.keys(this.parameters).some((x) => x === parameterName)) {
+      delete this.parameters[parameterName];
     }
     return this;
   }
 
   public clearParameters(): ODataQueryBuilder {
-    this._parameters = {};
+    this.parameters = {};
     return this;
   }
 
   // #region Group By
 
   public get groupBy(): GroupByBuilder {
-    if (this._groupByBuilder === null) {
-      this._groupByBuilder = new GroupByBuilder(this);
+    if (this.groupByBuilder === null) {
+      this.groupByBuilder = new GroupByBuilder(this);
     }
-    return this._groupByBuilder;
+    return this.groupByBuilder;
   }
 
   // #endregion
 
   public getQuery(): ODataQuery {
-    const q = new ODataQuery(this._resource);
+    const q = new ODataQuery(this.resource);
 
-    if (Object.keys(this._expands).length > 0) {
-      q.expand(Object.keys(this._expands).map((x: string) => this._expands[x]));
+    if (Object.keys(this.expands).length > 0) {
+      q.expand(Object.keys(this.expands).map((x: string) => this.expands[x]));
     }
 
-    if (!_.isEmpty(this._columns)) {
-      q.select(this._columns.join(','));
+    if (!_.isEmpty(this.columns)) {
+      q.select(this.columns.join(','));
     }
 
-    if (this._groupByBuilder !== null && !this._groupByBuilder.isEmpty) {
-      q.apply(this._groupByBuilder.toString());
-      var havingString = this._groupByBuilder.havingString;
+    if (this.groupByBuilder !== null && !this.groupByBuilder.isEmpty) {
+      q.apply(this.groupByBuilder.toString());
+      const havingString = this.groupByBuilder.havingString;
       if (!_.isEmpty(havingString)) {
         q.filter(havingString);
       }
-    }
-    else {
-      var filters = prepareFilterString(this._filters);
+    } else {
+      const filters = prepareFilterString(this.filters);
       if (!_.isEmpty(filters)) { q.filter(filters); }
     }
 
-    if (this._orderByList.length > 0) {
-      const orderByList = this._orderByList.filter((x: string) => !_.isEmpty(x.trim()));
-      // buradaki if'i this._orderByList içinde boş string olmamasını garantili hale getirmiş olduğum için sildim. 
+    if (this.orderByList.length > 0) {
+      const orderByList = this.orderByList.filter((x: string) => !_.isEmpty(x.trim()));
+      // buradaki if'i this._orderByList içinde boş string olmamasını garantili hale getirmiş olduğum için sildim.
       q.orderBy(...orderByList);
     }
 
-    if (this._apiVersion !== null && _.isString(this._apiVersion) && !_.isEmpty(this._apiVersion)) {
-      q.apiVersion(this._apiVersion);
+    if (this.apiVersion !== null && _.isString(this.apiVersion) && !_.isEmpty(this.apiVersion)) {
+      q.apiVersion(this.apiVersion);
     }
 
-    if (this._top > 0) {
-      q.top(this._top);
+    if (this.top > 0) {
+      q.top(this.top);
     }
 
-    if (this._skip > 0) {
-      q.skip(this._skip);
+    if (this.skip > 0) {
+      q.skip(this.skip);
     }
 
-    if (this._getAllPagesRowCount) {
+    if (this.getAllPagesRowCount) {
       q.allPagesRowCount(true);
     }
 
-    var parameters = Object.keys(this._parameters);
+    const parameters = Object.keys(this.parameters);
     if (parameters.length > 0) {
-      q.parameters(...parameters.map((x) => this._parameters[x].toString()));
+      q.parameters(...parameters.map((x) => this.parameters[x].toString()));
     }
 
     return q;
   }
 
   public get filterString(): string {
-    return prepareFilterString(this._filters);
+    return prepareFilterString(this.filters);
   }
 
   public q(): Promise<any> {

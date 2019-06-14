@@ -1,4 +1,5 @@
 # yuya.ts.odata-client
+
 OData Client for Typescript with axios
 
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/yuyaproject/yuya.ts.odata-client.svg?logo=github)
@@ -8,27 +9,26 @@ OData Client for Typescript with axios
 ![Azure DevOps tests](https://img.shields.io/azure-devops/tests/yuya-project/7ac5d672-dd0e-43d4-b760-435e8ae7311f/2.svg?logo=azure-devops)
 [![Known Vulnerabilities](https://snyk.io/test/github/YuyaProject/yuya.ts.odata-client/badge.svg?targetFile=package.json)](https://snyk.io/test/github/YuyaProject/yuya.ts.odata-client?targetFile=package.json)
 
-master branch : 
+master branch :
 [![Build Status](https://dev.azure.com/yuya-project/yuya.ts.odata-client/_apis/build/status/yuya.ts.odata-client-CI?branchName=master)](https://dev.azure.com/yuya-project/yuya.ts.odata-client/_build/latest?definitionId=2&branchName=master)
 [![Coverage Status](https://coveralls.io/repos/github/YuyaProject/yuya.ts.odata-client/badge.svg?branch=master)](https://coveralls.io/github/YuyaProject/yuya.ts.odata-client?branch=master)
 
-
-develop branch : 
+develop branch :
 [![Build Status](https://dev.azure.com/yuya-project/yuya.ts.odata-client/_apis/build/status/yuya.ts.odata-client-CI?branchName=develop)](https://dev.azure.com/yuya-project/yuya.ts.odata-client/_build/latest?definitionId=2&branchName=develop)
 [![Coverage Status](https://coveralls.io/repos/github/YuyaProject/yuya.ts.odata-client/badge.svg?branch=develop)](https://coveralls.io/github/YuyaProject/yuya.ts.odata-client?branch=develop)
 
-
 ## Install
 
-```
+```console
 npm i yuya.ts.odata-client
-or 
+or
 yarn add yuya.ts.odata-client
 ```
 
 ## Documentation
+
 For Api Documentation : [Api Documentation](docs/ApiDoc.md)
 
 ## Change Log
-Version Change log : [CHANGELOG.md](docs/CHANGELOG.md)
 
+Version Change log : [CHANGELOG.md](docs/CHANGELOG.md)

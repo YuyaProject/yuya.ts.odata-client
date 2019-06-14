@@ -49,7 +49,7 @@ export interface IConnectionService {
   // #region gets
   /**
    * Make GET request the service
-   * @param relativeUrl the relative service url 
+   * @param relativeUrl the relative service url
    * @param conf the optional request configurations
    * @returns the promise for service response
    */
@@ -104,6 +104,26 @@ export interface IConnectionService {
   putT<T>(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<T>;
   // #endregion
 
+  // #region patchs
+  /**
+   * Make PUT request the service
+   * @param relativeUrl the relative service url
+   * @param data the send data for post operation
+   * @param conf the optional request configurations
+   * @returns the promise for service response
+   */
+  patch(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<AxiosResponse>;
+
+  /**
+   * Make PUT request the service and receive response with T type
+   * @param relativeUrl the relative service url
+   * @param data the send data for post operation
+   * @param conf the optional request configurations
+   * @returns the promise for service response with T response type
+   */
+  patchT<T>(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<T>;
+  // #endregion
+
   // #region deletes
   /**
    * Make DELETE request the service
@@ -132,7 +152,8 @@ export class ConnectionService implements IConnectionService {
 
   /**
    * Create a new connection service.
-   * @param configuration If this value is not undefined, connection service use this configuration, otherwise connection service use default connection configuration.
+   * @param configuration If this value is not undefined, connection service use this configuration,
+   *    otherwise connection service use default connection configuration.
    */
   constructor(configuration?: IConnetionSettings) {
     this._config = (!!configuration) ? configuration : config;
@@ -201,12 +222,13 @@ export class ConnectionService implements IConnectionService {
   // #region gets
   /**
    * Make GET request the service
-   * @param relativeUrl the relative service url 
+   * @param relativeUrl the relative service url
    * @param conf the optional request configurations
    * @returns the promise for service response
    */
   public get(relativeUrl: string, conf?: AxiosRequestConfig): Promise<any> {
-    return this.handleAxiosPromise<any>(axios.get(this.prepareServiceUrl(relativeUrl), this.prepareRequestConfig(conf)));
+    return this.handleAxiosPromise<any>(
+      axios.get(this.prepareServiceUrl(relativeUrl), this.prepareRequestConfig(conf)));
   }
 
   /**
@@ -216,7 +238,8 @@ export class ConnectionService implements IConnectionService {
    * @returns the promise for service response with T response type
    */
   public getT<T>(relativeUrl: string, conf?: AxiosRequestConfig): Promise<T> {
-    return this.handleAxiosPromise<T>(axios.get(this.prepareServiceUrl(relativeUrl), this.prepareRequestConfig(conf)));
+    return this.handleAxiosPromise<T>(
+      axios.get(this.prepareServiceUrl(relativeUrl), this.prepareRequestConfig(conf)));
   }
   // #endregion
 
@@ -229,7 +252,8 @@ export class ConnectionService implements IConnectionService {
    * @returns the promise for service response
    */
   public post(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<AxiosResponse> {
-    return this.handleAxiosResponsePromise(axios.post(this.prepareServiceUrl(relativeUrl), data, this.prepareRequestConfig(conf)));
+    return this.handleAxiosResponsePromise(
+      axios.post(this.prepareServiceUrl(relativeUrl), data, this.prepareRequestConfig(conf)));
   }
 
   /**
@@ -240,7 +264,8 @@ export class ConnectionService implements IConnectionService {
    * @returns the promise for service response with T response type
    */
   public postT<T>(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<T> {
-    return this.handleAxiosPromise<T>(axios.post(this.prepareServiceUrl(relativeUrl), data, this.prepareRequestConfig(conf)));
+    return this.handleAxiosPromise<T>(
+      axios.post(this.prepareServiceUrl(relativeUrl), data, this.prepareRequestConfig(conf)));
   }
   // #endregion
 
@@ -253,7 +278,8 @@ export class ConnectionService implements IConnectionService {
    * @returns the promise for service response
    */
   public put(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<AxiosResponse> {
-    return this.handleAxiosResponsePromise(axios.put(this.prepareServiceUrl(relativeUrl), data, this.prepareRequestConfig(conf)));
+    return this.handleAxiosResponsePromise(
+      axios.put(this.prepareServiceUrl(relativeUrl), data, this.prepareRequestConfig(conf)));
   }
 
   /**
@@ -264,7 +290,36 @@ export class ConnectionService implements IConnectionService {
    * @returns the promise for service response with T response type
    */
   public putT<T>(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<T> {
-    return this.handleAxiosPromise<T>(axios.put(this.prepareServiceUrl(relativeUrl), data, this.prepareRequestConfig(conf)));
+    return this.handleAxiosPromise<T>(axios.put(
+      this.prepareServiceUrl(relativeUrl), data, this.prepareRequestConfig(conf)));
+  }
+  // #endregion
+
+
+
+  // #region patchs
+  /**
+   * Make PUT request the service
+   * @param relativeUrl the relative service url
+   * @param data the send data for post operation
+   * @param conf the optional request configurations
+   * @returns the promise for service response
+   */
+  public patch(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<AxiosResponse> {
+    return this.handleAxiosResponsePromise(
+      axios.patch(this.prepareServiceUrl(relativeUrl), data, this.prepareRequestConfig(conf)));
+  }
+
+  /**
+   * Make PUT request the service and receive response with T type
+   * @param relativeUrl the relative service url
+   * @param data the send data for post operation
+   * @param conf the optional request configurations
+   * @returns the promise for service response with T response type
+   */
+  public patchT<T>(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<T> {
+    return this.handleAxiosPromise<T>(axios.patch(
+      this.prepareServiceUrl(relativeUrl), data, this.prepareRequestConfig(conf)));
   }
   // #endregion
 
@@ -276,7 +331,8 @@ export class ConnectionService implements IConnectionService {
    * @returns the promise for service response
    */
   public dele(relativeUrl: string, conf?: AxiosRequestConfig): Promise<AxiosResponse> {
-    return this.handleAxiosResponsePromise(axios.delete(this.prepareServiceUrl(relativeUrl), this.prepareRequestConfig(conf)));
+    return this.handleAxiosResponsePromise(
+      axios.delete(this.prepareServiceUrl(relativeUrl), this.prepareRequestConfig(conf)));
   }
 
   /**
@@ -286,7 +342,8 @@ export class ConnectionService implements IConnectionService {
    * @returns the promise for service response with T response type
    */
   public deleT<T>(relativeUrl: string, conf?: AxiosRequestConfig): Promise<T> {
-    return this.handleAxiosPromise<T>(axios.delete(this.prepareServiceUrl(relativeUrl), this.prepareRequestConfig(conf)));
+    return this.handleAxiosPromise<T>(
+      axios.delete(this.prepareServiceUrl(relativeUrl), this.prepareRequestConfig(conf)));
   }
   // #endregion
 
@@ -294,14 +351,20 @@ export class ConnectionService implements IConnectionService {
     return e;
   }
 
-  private handleAxiosResponsePromise(p: AxiosPromise): Promise<AxiosResponse> {
-    return p
-      .catch((err: any) => this.errorHandler(err));
+  private async handleAxiosResponsePromise(p: AxiosPromise): Promise<AxiosResponse> {
+    try {
+      return p;
+    } catch (err) {
+      return this.errorHandler(err);
+    }
   }
 
-  private handleAxiosPromise<T>(p: AxiosPromise<T>): Promise<T> {
-    return p
-      .then((res: AxiosResponse<T>) => res.data)
-      .catch((err: any) => this.errorHandler(err));
+  private async handleAxiosPromise<T>(p: AxiosPromise<T>): Promise<T> {
+    try {
+      const res = await p;
+      return res.data;
+    } catch (err) {
+      return this.errorHandler(err);
+    }
   }
 }

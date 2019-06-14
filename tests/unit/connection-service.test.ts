@@ -182,6 +182,44 @@ describe('default-connection-service tests', () => {
   });
   // #endregion
 
+  // #region methods : patch, patchT
+  it('patch with empty parameter', async () => {
+    const axiosStub = sinon.stub(axios, 'patch');
+    axiosStub
+      .returns(new Promise<AxiosResponse<any>>((resolve) => {
+        resolve({ data: [], status: 200, statusText: 'OK', config: {}, headers: {} });
+      }));
+    try {
+      const response = await new ConnectionService().patch('deneme', {});
+      // console.log(response);
+      expect(response).not.toBeNull();
+      expect(response.data).toEqual([]);
+      expect(response.status).toBe(200);
+    } finally {
+      axiosStub.restore();
+    }
+  });
+  it('patchT with empty parameter', async () => {
+    const axiosStub = sinon.stub(axios, 'patch');
+    const returnData: Array<{ id: number, name: string }> = [
+      { id: 1, name: 'A' },
+      { id: 2, name: 'B' },
+    ];
+    axiosStub
+      .returns(new Promise<AxiosResponse<any>>((resolve) => {
+        resolve({ data: returnData, status: 200, statusText: 'OK', config: {}, headers: {} });
+      }));
+    try {
+      const response = await new ConnectionService().patchT<Array<{ id: number, name: string }>>('deneme', {});
+      // console.log(response);
+      expect(response).toEqual(returnData);
+      expect(response.length).toBe(2);
+    } finally {
+      axiosStub.restore();
+    }
+  });
+  // #endregion
+
   // #region methods : delete, deleteT
   it('delete with empty parameter', async () => {
     const axiosStub = sinon.stub(axios, 'delete');
