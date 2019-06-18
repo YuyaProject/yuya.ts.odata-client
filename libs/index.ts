@@ -12,6 +12,10 @@ export {
   IConnetionSettings,
 } from './connection-service';
 
+export {
+  IMutationResult, MutationResultStatus
+} from './mutation';
+
 import * as OData from './odata';
 import * as FilterBuilder from './filter-builder';
 
