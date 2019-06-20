@@ -1,5 +1,13 @@
 # yuya.ts.odata-client Change Log
 
+## v1.1.2
+
+1. I fixed ConnectionService.prepareServiceUrl full url bug.
+
+## v1.1.1
+
+1. I added mutation public types at index.ts (IMutationResult, MutationResultStatus).
+
 ## v1.1.0
 
 1. I added mutation methods in ODataQuery.

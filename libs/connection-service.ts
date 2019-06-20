@@ -190,6 +190,7 @@ export class ConnectionService implements IConnectionService {
    * @returns the full service url
    */
   public prepareServiceUrl(relativeUrl: string): string {
+    if (relativeUrl.startsWith('http://') || relativeUrl.startsWith('https://')) return relativeUrl;
     if (relativeUrl.startsWith('/')) { relativeUrl = relativeUrl.substr(1); }
     return `${this._config.baseUrl}${relativeUrl}`;
   }

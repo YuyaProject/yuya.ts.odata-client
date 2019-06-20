@@ -30,6 +30,14 @@ describe('default-connection-service tests', () => {
     const response = new ConnectionService().prepareServiceUrl('/deneme');
     expect(response.endsWith('/deneme')).toBe(true);
   });
+  it('getServiceUrl with full url parameter-http', () => {
+    const response = new ConnectionService().prepareServiceUrl('http://aaa.com/deneme');
+    expect(response).toBe('http://aaa.com/deneme');
+  });
+  it('getServiceUrl with full url parameter-https', () => {
+    const response = new ConnectionService().prepareServiceUrl('https://aaa.com/deneme');
+    expect(response).toBe('https://aaa.com/deneme');
+  });
   // #endregion prepareServiceUrl
 
   // #region methods : get, getT
