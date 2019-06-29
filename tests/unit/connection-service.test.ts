@@ -38,6 +38,12 @@ describe('default-connection-service tests', () => {
     const response = new ConnectionService().prepareServiceUrl('https://aaa.com/deneme');
     expect(response).toBe('https://aaa.com/deneme');
   });
+  it('getServiceUrl with short', () => {
+    const service = new ConnectionService();
+    service.connetionSettings.baseUrl = '/api/';
+    const response = service.prepareServiceUrl('odata');
+    expect(response).toBe('/api/odata');
+  });
   // #endregion prepareServiceUrl
 
   // #region methods : get, getT

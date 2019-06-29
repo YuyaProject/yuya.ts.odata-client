@@ -1,5 +1,9 @@
 # yuya.ts.odata-client Change Log
 
+## v1.1.3
+
+1. I fixed ODataQuery manipulation methods url bugs.
+
 ## v1.1.2
 
 1. I fixed ConnectionService.prepareServiceUrl full url bug.

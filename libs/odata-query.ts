@@ -191,7 +191,7 @@ export class ODataQuery implements IQuery {
 
   // #region Mutations
   public post<TEntity = any>(entity: any, conf?: AxiosRequestConfig): Promise<IMutationResult<TEntity>> {
-    const url = this.connectionService.prepareServiceUrl(this.createRelativeUrl());
+    const url = this.createRelativeUrl();
     return new Promise<IMutationResult<TEntity>>((resolve, reject) => {
       this.connectionService
         .post(url, entity, conf)
@@ -202,7 +202,7 @@ export class ODataQuery implements IQuery {
 
   public put<TEntity = any>(key: any, entity: any, conf?: AxiosRequestConfig): Promise<IMutationResult<TEntity>> {
     this.key = key;
-    const url = this.connectionService.prepareServiceUrl(this.createRelativeUrl());
+    const url = this.createRelativeUrl();
     return new Promise<IMutationResult<TEntity>>((resolve, reject) => {
       this.connectionService
         .put(url, entity, conf)
@@ -213,7 +213,7 @@ export class ODataQuery implements IQuery {
 
   public patch<TEntity = any>(key: any, entity: any, conf?: AxiosRequestConfig): Promise<IMutationResult<TEntity>> {
     this.key = key;
-    const url = this.connectionService.prepareServiceUrl(this.createRelativeUrl());
+    const url = this.createRelativeUrl();
     return new Promise<IMutationResult<TEntity>>((resolve, reject) => {
       this.connectionService
         .patch(url, entity, conf)
@@ -224,7 +224,7 @@ export class ODataQuery implements IQuery {
 
   public delete<TEntity = any>(key: any, conf?: AxiosRequestConfig): Promise<IMutationResult<TEntity>> {
     this.key = key;
-    const url = this.connectionService.prepareServiceUrl(this.createRelativeUrl());
+    const url = this.createRelativeUrl();
     return new Promise<IMutationResult<TEntity>>((resolve, reject) => {
       this.connectionService
         .dele(url, conf)
