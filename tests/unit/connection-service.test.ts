@@ -137,6 +137,30 @@ describe('default-connection-service tests', () => {
       axiosStub.restore();
     }
   });
+  it('post with empty parameter with error', async () => {
+    const axiosStub = sinon.stub(axios, 'post');
+    axiosStub
+      .returns(new Promise<AxiosResponse<any>>((resolve, reject) => {
+        reject({
+          data: [],
+          status: 404,
+          statusText: 'Not Found',
+          config: {},
+          headers: { Server: 'Kestrel', 'Content-Length': 0, 'Access-Control-Allow-Origin': '*' }
+        });
+      }));
+    try {
+      const response = await new ConnectionService().post('deneme', {});
+      expect(response).toBeNull();
+    } catch (err) {
+      // console.log(response);
+      expect(err).not.toBeNull();
+      expect(err.data).toEqual([]);
+      expect(err.status).toBe(404);
+    } finally {
+      axiosStub.restore();
+    }
+  });
   it('postT with empty parameter', async () => {
     const axiosStub = sinon.stub(axios, 'post');
     const returnData: Array<{ id: number, name: string }> = [
@@ -152,6 +176,28 @@ describe('default-connection-service tests', () => {
       // console.log(response);
       expect(response).toEqual(returnData);
       expect(response.length).toBe(2);
+    } finally {
+      axiosStub.restore();
+    }
+  });
+  it('postT with empty parameter with error', async () => {
+    const axiosStub = sinon.stub(axios, 'post');
+    const returnData: Array<{ id: number, name: string }> = [
+      { id: 1, name: 'A' },
+      { id: 2, name: 'B' },
+    ];
+    axiosStub
+      .returns(new Promise<AxiosResponse<any>>((resolve, reject) => {
+        reject({ data: returnData, status: 404, statusText: 'Not Found', config: {}, headers: {} });
+      }));
+    try {
+      const response = await new ConnectionService().postT<Array<{ id: number, name: string }>>('deneme', {});
+      expect(response).toBeNull();
+    } catch (err) {
+      // console.log(response);
+      expect(err).not.toBeNull();
+      expect(err.data).toEqual(returnData);
+      expect(err.status).toBe(404);
     } finally {
       axiosStub.restore();
     }

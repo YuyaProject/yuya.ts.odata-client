@@ -356,7 +356,7 @@ export class ConnectionService implements IConnectionService {
     try {
       return p;
     } catch (err) {
-      return this.errorHandler(err);
+      throw this.errorHandler(err);
     }
   }
 
@@ -365,7 +365,7 @@ export class ConnectionService implements IConnectionService {
       const res = await p;
       return res.data;
     } catch (err) {
-      return this.errorHandler(err);
+      throw this.errorHandler(err);
     }
   }
 }

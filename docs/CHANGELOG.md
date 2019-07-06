@@ -1,5 +1,9 @@
 # yuya.ts.odata-client Change Log
 
+## v1.1.4
+
+1. I fixed to ConnectionService manipulation methods didn't return exceptions/errors.
+
 ## v1.1.3
 
 1. I fixed ODataQuery manipulation methods url bugs.
