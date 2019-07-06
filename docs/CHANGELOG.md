@@ -3,6 +3,7 @@
 ## v1.1.4
 
 1. I fixed to ConnectionService manipulation methods didn't return exceptions/errors.
+2. I Updated snyk package.
 
 ## v1.1.3
 
