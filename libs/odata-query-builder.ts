@@ -1,5 +1,8 @@
 import _ from 'lodash';
-import { isExpression, Expression, Parameter, isParameter, GroupByBuilder, ExpandBuilder, ODataQuery } from '.';
+import {
+  isExpression, Expression, Parameter, isParameter, GroupByBuilder, ExpandBuilder, ODataQuery,
+  IConnectionService, ConnectionService,
+} from '.';
 
 export enum OrderByDirection { Asc, Desc }
 
@@ -15,7 +18,11 @@ export class ODataQueryBuilder {
   private skip: number = 0;
   private parameters: _.Dictionary<Parameter> = {};
 
-  constructor(public readonly resource: string) {
+  constructor(
+    public readonly resource: string,
+    public readonly connectionService: IConnectionService = ConnectionService.DefaultConnectionService,
+    public readonly aditionalQueryStrings: Record<string, string> = {},
+  ) {
   }
 
   public clone(): ODataQueryBuilder {
@@ -235,7 +242,7 @@ export class ODataQueryBuilder {
   // #endregion
 
   public getQuery(): ODataQuery {
-    const q = new ODataQuery(this.resource);
+    const q = new ODataQuery(this.resource, this.connectionService, this.aditionalQueryStrings);
 
     if (Object.keys(this.expands).length > 0) {
       q.expand(Object.keys(this.expands).map((x: string) => this.expands[x]));

@@ -23,10 +23,13 @@ export class ODataQuery implements IQuery {
    * @param resource the resource name
    * @param connectionService the connection service instance. If it is undefined,
    *    constructor use default connection service from connection service
+   * @param additionalQueryStrings if we send additional query string on the request,
+   *    we add it in this collection.
    */
   constructor(
     public readonly resource: string,
     public readonly connectionService: IConnectionService = ConnectionService.DefaultConnectionService,
+    public readonly aditionalQueryStrings: Record<string, string> = {},
   ) {
   }
 
@@ -263,6 +266,11 @@ export class ODataQuery implements IQuery {
 
     if (this.getAllPagesRowCount) {
       qs.push('$count=true');
+    }
+
+    for (const k of Object.keys(this.aditionalQueryStrings)) {
+      const aqs = this.aditionalQueryStrings[k];
+      qs.push(`${k}=${aqs}`);
     }
 
     if (qs.length > 0) {
