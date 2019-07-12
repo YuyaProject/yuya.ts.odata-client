@@ -1,5 +1,10 @@
 # yuya.ts.odata-client Change Log
 
+## v1.1.5
+
+1. I added additional query string parameter functionality at ODataQuery and ODataQueryBuilder classes.
+2. I Updated some packages.
+
 ## v1.1.4
 
 1. I fixed to ConnectionService manipulation methods didn't return exceptions/errors.
