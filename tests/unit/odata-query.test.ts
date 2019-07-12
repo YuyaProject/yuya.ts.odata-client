@@ -5,11 +5,11 @@ import { MutationResultStatus, IMutationResult } from '../../libs/mutation';
 
 describe('odata-query tests', () => {
   // #region method : canQuery
-  it('constructor non-query parameter', () => {
+  it('canQuery return false', () => {
     const p = canQuery('');
     expect(p).toBe(false);
   });
-  it('constructor query parameter', () => {
+  it('canQuery return true', () => {
     const p = canQuery(new ODataQuery('a'));
     expect(p).toBe(true);
   });
@@ -29,10 +29,26 @@ describe('odata-query tests', () => {
     expect(qb.resource).toEqual('category');
   });
   it('constructor non-empty and connection service parameter', () => {
-    const qb = new ODataQuery('category', new ConnectionService());
+    const connectionService = new ConnectionService();
+    const qb = new ODataQuery('category', connectionService);
     expect(qb).not.toBeNull();
     expect(qb).not.toBeUndefined();
     expect(qb.resource).toEqual('category');
+    expect(qb.connectionService).toEqual(connectionService);
+  });
+  it('constructor with additionalQueryString parameter', () => {
+    const qb = new ODataQuery('category', undefined, { a: 'b' });
+    expect(qb).not.toBeNull();
+    expect(qb).not.toBeUndefined();
+    expect(qb.resource).toEqual('category');
+    expect((qb as any).createRelativeUrl()).toEqual('odata/category?a=b');
+  });
+  it('constructor with additionalQueryString parameter(two item)', () => {
+    const qb = new ODataQuery('category', undefined, { a: 'b', c: '10' });
+    expect(qb).not.toBeNull();
+    expect(qb).not.toBeUndefined();
+    expect(qb.resource).toEqual('category');
+    expect((qb as any).createRelativeUrl()).toEqual('odata/category?a=b&c=10');
   });
   // #endregion
 
@@ -87,6 +103,17 @@ describe('odata-query tests', () => {
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
     expect(p.queryStrings[0]).toEqual('$filter=id eq 5');
+  });
+  it('filter one non-empty string parameter with additional query string parameter', () => {
+    const qb = new ODataQuery('category', undefined, { a: 'b', c: '10' }).filter('id eq 5');
+    const p: any = qb;
+    expect(p).not.toBeNull();
+    expect(p).not.toBeUndefined();
+    expect(p.queryStrings).not.toBeNull();
+    expect(p.queryStrings).not.toBeUndefined();
+    expect(p.queryStrings.length).toEqual(1);
+    expect(p.queryStrings[0]).toEqual('$filter=id eq 5');
+    expect((qb as any).createRelativeUrl()).toEqual('odata/category?$filter=id eq 5&a=b&c=10');
   });
   it('filter two non-empty string parameters', () => {
     const qb = new ODataQuery('category').filter('id eq 5', 'name eq \'John\'');

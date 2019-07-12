@@ -21,7 +21,7 @@ export class ODataQueryBuilder {
   constructor(
     public readonly resource: string,
     public readonly connectionService: IConnectionService = ConnectionService.DefaultConnectionService,
-    public readonly aditionalQueryStrings: Record<string, string> = {},
+    public readonly additionalQueryStrings: Record<string, string> = {},
   ) {
   }
 
@@ -242,7 +242,7 @@ export class ODataQueryBuilder {
   // #endregion
 
   public getQuery(): ODataQuery {
-    const q = new ODataQuery(this.resource, this.connectionService, this.aditionalQueryStrings);
+    const q = new ODataQuery(this.resource, this.connectionService, this.additionalQueryStrings);
 
     if (Object.keys(this.expands).length > 0) {
       q.expand(Object.keys(this.expands).map((x: string) => this.expands[x]));

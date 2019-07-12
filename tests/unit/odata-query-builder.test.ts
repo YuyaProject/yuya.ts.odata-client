@@ -1,6 +1,6 @@
 import { ODataQueryBuilder, OrderByDirection, prepareFilterString } from '../../libs/odata-query-builder';
 import { ODataQuery } from '../../libs/odata-query';
-import { Expression, FilterBuilder, Parameter, isIProperty, ExpandBuilder } from '../../libs';
+import { Expression, FilterBuilder, Parameter, ExpandBuilder, ConnectionService } from '../../libs';
 
 describe('odata-query-builder tests', () => {
   // #region method : constructor
@@ -17,6 +17,36 @@ describe('odata-query-builder tests', () => {
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.resource).toEqual('category');
+  });
+  it('constructor non-empty and connection service parameter', () => {
+    const connectionService = new ConnectionService();
+    const qb = new ODataQueryBuilder('category', connectionService);
+    expect(qb).not.toBeNull();
+    expect(qb).not.toBeUndefined();
+    expect(qb.resource).toEqual('category');
+    expect(qb.connectionService).toEqual(connectionService);
+  });
+  it('constructor with additionalQueryString parameter', () => {
+    const additionalQueryString = { a: 'b' };
+    const qb = new ODataQueryBuilder('category', undefined, additionalQueryString);
+    const q = qb.getQuery();
+    expect(qb).not.toBeNull();
+    expect(qb).not.toBeUndefined();
+    expect(qb.resource).toEqual('category');
+    expect(qb.additionalQueryStrings).toEqual(additionalQueryString);
+    expect(q.aditionalQueryStrings).toEqual(additionalQueryString);
+    expect((q as any).createRelativeUrl()).toEqual('odata/category?a=b');
+  });
+  it('constructor with additionalQueryString parameter(two item)', () => {
+    const additionalQueryString = { a: 'b', c: '10' };
+    const qb = new ODataQueryBuilder('category', undefined, additionalQueryString);
+    const q = qb.getQuery();
+    expect(qb).not.toBeNull();
+    expect(qb).not.toBeUndefined();
+    expect(qb.resource).toEqual('category');
+    expect(qb.additionalQueryStrings).toEqual(additionalQueryString);
+    expect(q.aditionalQueryStrings).toEqual(additionalQueryString);
+    expect((q as any).createRelativeUrl()).toEqual('odata/category?a=b&c=10');
   });
   // #endregion
 
