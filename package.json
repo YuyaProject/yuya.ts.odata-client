@@ -1,6 +1,6 @@
 {
   "name": "yuya.ts.odata-client",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "OData Client for Typescript with axios",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
