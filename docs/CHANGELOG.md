@@ -1,5 +1,9 @@
 # yuya.ts.odata-client Change Log
 
+## v1.1.6
+
+1. I Updated lodash and snyk packages.
+
 ## v1.1.5
 
 1. I added additional query string parameter functionality at ODataQuery and ODataQueryBuilder classes.
