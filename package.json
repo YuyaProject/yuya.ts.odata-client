@@ -1,6 +1,6 @@
 {
   "name": "yuya.ts.odata-client",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "OData Client for Typescript with axios",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -27,24 +27,24 @@
   },
   "homepage": "https://github.com/YuyaProject/yuya.ts.odata-client",
   "devDependencies": {
-    "@types/jest": "^24.0.11",
-    "@types/lodash": "^4.14.120",
-    "@types/sinon": "^7.0.5",
-    "coveralls": "^3.0.3",
-    "jest": "^24.7.1",
+    "@types/jest": "^24.0.18",
+    "@types/lodash": "^4.14.138",
+    "@types/sinon": "^7.0.13",
+    "coveralls": "^3.0.6",
+    "jest": "^25.0.0",
     "jest-junit": "^8.0.0",
-    "node-fetch": "^2.2.0",
-    "sinon": "^7.2.3",
-    "ts-jest": "^24.0.1",
-    "ts-node": "^8.0.3",
+    "node-fetch": "^2.6.0",
+    "sinon": "^7.4.2",
+    "ts-jest": "^24.1.0",
+    "ts-node": "^8.3.0",
     "tslint": "~5.20.0",
-    "typescript": "^3.3.3333"
+    "typescript": "^3.6.3"
   },
   "dependencies": {
-    "axios": "^0.18.0",
-    "lodash": "^4.17.11",
-    "moment": "^2.22.2",
-    "snyk": "^1.192.3"
+    "axios": "^0.19.0",
+    "lodash": "^4.17.15",
+    "moment": "^2.24.0",
+    "snyk": "^1.226.2"
   },
   "snyk": true
 }
