@@ -1,5 +1,9 @@
 # yuya.ts.odata-client Change Log
 
+## v1.1.7
+
+1. I've updated the packages and corrected the unit test issues after the package update.
+
 ## v1.1.6
 
 1. I Updated lodash and snyk packages.
@@ -59,7 +63,7 @@
 
 ## v1.0.7
 
-1. I added parameter class and update all related class. 
+1. I added parameter class and update all related class.
 2. I added unit tests.
 
 ## v1.0.6
