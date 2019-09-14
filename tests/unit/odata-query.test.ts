@@ -716,6 +716,7 @@ describe('odata-query tests', () => {
       name: 'NotFound',
       message: 'Not Found',
       config: {},
+      isAxiosError: true,
     };
     const baseConnectionService = new ConnectionService();
     let url = '';
@@ -886,6 +887,7 @@ describe('odata-query tests', () => {
       name: 'NotFound',
       message: 'Not Found',
       config: {},
+      isAxiosError: true,
     };
     const baseConnectionService = new ConnectionService();
     let url = '';
@@ -1056,6 +1058,7 @@ describe('odata-query tests', () => {
       name: 'NotFound',
       message: 'Not Found',
       config: {},
+      isAxiosError: true,
     };
     const baseConnectionService = new ConnectionService();
     let url = '';
@@ -1224,6 +1227,7 @@ describe('odata-query tests', () => {
       name: 'NotFound',
       message: 'Not Found',
       config: {},
+      isAxiosError: true,
     };
     const baseConnectionService = new ConnectionService();
     let url = '';

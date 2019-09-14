@@ -4,7 +4,7 @@ import {
   DefaultConnectionServiceConfig, Parameter,
 } from '.';
 import { IMutationResult, getMutationResult, MutationErrorResult } from './mutation';
-import { AxiosRequestConfig } from 'axios';
+import { AxiosRequestConfig, Method } from 'axios';
 
 export function canQuery(arg: any): arg is IQuery {
   return arg.q !== undefined;
@@ -172,13 +172,19 @@ export class ODataQuery implements IQuery {
    * execute the query
    */
   public q(): Promise<any> {
-    const conf = { method: 'get', url: this.connectionService.prepareServiceUrl(this.createRelativeUrl()) };
+    const conf: AxiosRequestConfig = {
+      method: 'GET',
+      url: this.connectionService.prepareServiceUrl(this.createRelativeUrl()),
+    };
     return this.connectionService.request(conf);
   }
 
   /** execute and get row count */
   public count(): Promise<number> {
-    const conf = { method: 'get', url: this.connectionService.prepareServiceUrl(this.createRelativeUrl(true)) };
+    const conf: AxiosRequestConfig = {
+      method: 'get',
+      url: this.connectionService.prepareServiceUrl(this.createRelativeUrl(true)),
+    };
     return this.connectionService.requestT<number>(conf);
   }
 
@@ -188,7 +194,10 @@ export class ODataQuery implements IQuery {
    */
   public getByKey(key: any): Promise<any> {
     this.key = key;
-    const conf = { method: 'get', url: this.connectionService.prepareServiceUrl(this.createRelativeUrl()) };
+    const conf: AxiosRequestConfig = {
+      method: 'get',
+      url: this.connectionService.prepareServiceUrl(this.createRelativeUrl()),
+    };
     return this.connectionService.request(conf);
   }
 
