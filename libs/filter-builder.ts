@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import { OData, IProperty, Expression, Parameter } from '.';
+import { OData, IProperty, Expression, Parameter, isIProperty } from '.';
+import moment from 'moment';
 
 export function prop(name: string): IProperty {
   return { name };
@@ -79,16 +80,55 @@ export function indexof(property: IProperty, searchText: string): Expression {
   return new Expression(`indexof(${OData.encodeQueryValue(property)}, ${OData.encodeQueryValue(searchText)})`);
 }
 
-export function any(collectionName: string, aliasName: string, ...subFilters: (string | Expression)[]): Expression | null {
+export function any(collectionName: string, aliasName: string, ...subFilters: Array<string | Expression>)
+  : Expression | null {
   if (_.isEmpty(collectionName) || _.isEmpty(aliasName) || _.isEmpty(subFilters)) {
     return null;
   }
   return new Expression(`${collectionName}/any(${aliasName}:(${subFilters.join(')and(')}))`);
 }
 
-export function all(collectionName: string, aliasName: string, ...subFilters: (string | Expression)[]): Expression | null {
+export function all(collectionName: string, aliasName: string, ...subFilters: Array<string | Expression>)
+  : Expression | null {
   if (_.isEmpty(collectionName) || _.isEmpty(aliasName) || _.isEmpty(subFilters)) {
     return null;
   }
   return new Expression(`${collectionName}/all(${aliasName}:(${subFilters.join(')and(')}))`);
+}
+
+export function dateValue(date: any): Expression | null {
+  try {
+    const m = moment(date);
+    return m.isValid() ? new Expression(m.format('YYYY-MM-DD')) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function dateFunction(date: Expression | IProperty): Expression {
+  if (isIProperty(date) && !_.isEmpty(date.name)) {
+    return new Expression(`date(${date.name.trim()})`);
+  }
+  return new Expression(`date(${date.toString()})`);
+}
+
+export function yearFunction(date: Expression | IProperty): Expression {
+  if (isIProperty(date) && !_.isEmpty(date.name)) {
+    return new Expression(`year(${date.name.trim()})`);
+  }
+  return new Expression(`year(${date.toString()})`);
+}
+
+export function monthFunction(date: Expression | IProperty): Expression {
+  if (isIProperty(date) && !_.isEmpty(date.name)) {
+    return new Expression(`month(${date.name.trim()})`);
+  }
+  return new Expression(`month(${date.toString()})`);
+}
+
+export function dayFunction(date: Expression | IProperty): Expression {
+  if (isIProperty(date) && !_.isEmpty(date.name)) {
+    return new Expression(`day(${date.name.trim()})`);
+  }
+  return new Expression(`day(${date.toString()})`);
 }
