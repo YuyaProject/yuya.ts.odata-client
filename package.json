@@ -7,7 +7,7 @@
     "scripts": {
         "test": "jest",
         "test2": "jest --ci --reporters=default --reporters=jest-junit",
-        "build": "rm -r dist | tsc | tsc -m amd --outFile dist/yuya.ts.odata-client.amd.js | tsc -m system --outFile dist/yuya.ts.odata-client.system.js"
+        "build": "rimraf -r dist | tsc | tsc -m amd --outFile dist/yuya.ts.odata-client.amd.js | tsc -m system --outFile dist/yuya.ts.odata-client.system.js"
     },
     "repository": {
         "type": "git",
@@ -34,13 +34,14 @@
         "coveralls": "^3.0.6",
         "jest": "^24.9.0",
         "jest-junit": "^10.0.0",
+        "lodash": "^4.17.15",
+        "moment": "^2.24.0",
         "node-fetch": "^2.6.0",
+        "rimraf": "^3.0.2",
         "sinon": "^8.0.4",
         "ts-jest": "^24.1.0",
         "ts-node": "^8.3.0",
         "tslint": "~5.20.0",
-        "typescript": "^3.6.3",
-        "lodash": "^4.17.15",
-        "moment": "^2.24.0"
+        "typescript": "^3.6.3"
     }
 }

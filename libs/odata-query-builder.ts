@@ -61,7 +61,7 @@ export class ODataQueryBuilder {
   public addColumn(columnName: string) {
     if (!_.isString(columnName) || _.isEmpty(columnName)) { return this; }
     for (const cn of columnName.split(',').map((x: string) => x.trim())) {
-      if (!_.isEmpty(cn) && !_.some(this.columns, cn)) {
+      if (!_.isEmpty(cn) && !_.includes(this.columns, cn)) {
         this.columns.push(cn);
       }
     }
