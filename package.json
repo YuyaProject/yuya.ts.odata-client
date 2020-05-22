@@ -30,7 +30,7 @@
     "devDependencies": {
         "@types/jest": "^25.1.2",
         "@types/lodash": "^4.14.138",
-        "@types/sinon": "^7.0.13",
+        "@types/sinon": "^9.0.4",
         "coveralls": "^3.0.6",
         "jest": "^25.1.0",
         "jest-junit": "^10.0.0",
