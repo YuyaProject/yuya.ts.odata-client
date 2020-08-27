@@ -1,47 +1,47 @@
 {
-    "name": "yuya.ts.odata-client",
-    "version": "1.1.9",
-    "description": "OData Client for Typescript with axios",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "scripts": {
-        "test": "jest",
-        "test2": "jest --ci --reporters=default --reporters=jest-junit",
-        "build": "rimraf -r dist | tsc | tsc -m amd --outFile dist/yuya.ts.odata-client.amd.js | tsc -m system --outFile dist/yuya.ts.odata-client.system.js"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/YuyaProject/yuya.ts.odata-client"
-    },
-    "keywords": [
-        "typescript",
-        "yuya",
-        "odata-client"
-    ],
-    "author": "Alper Konuralp",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/YuyaProject/yuya.ts.odata-client/issues"
-    },
-    "homepage": "https://github.com/YuyaProject/yuya.ts.odata-client",
-    "dependencies": {
-        "axios": "^0.19.0"
-    },
-    "devDependencies": {
-        "@types/jest": "^26.0.10",
-        "@types/lodash": "^4.14.138",
-        "@types/sinon": "^9.0.5",
-        "coveralls": "^3.0.6",
-        "jest": "^25.1.0",
-        "jest-junit": "^10.0.0",
-        "lodash": "^4.17.15",
-        "moment": "^2.24.0",
-        "node-fetch": "^2.6.0",
-        "rimraf": "^3.0.2",
-        "sinon": "^9.0.0",
-        "ts-jest": "^25.2.1",
-        "ts-node": "^9.0.0",
-        "tslint": "~6.1.3",
-        "typescript": "^3.6.3"
-    }
+  "name": "yuya.ts.odata-client",
+  "version": "1.1.10",
+  "description": "OData Client for Typescript with axios",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "jest",
+    "test2": "jest --ci --reporters=default --reporters=jest-junit",
+    "build": "rimraf -r dist | npx tsc | npx tsc -m amd --outFile dist/yuya.ts.odata-client.amd.js | npx tsc -m system --outFile dist/yuya.ts.odata-client.system.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YuyaProject/yuya.ts.odata-client"
+  },
+  "keywords": [
+    "typescript",
+    "yuya",
+    "odata-client"
+  ],
+  "author": "Alper Konuralp",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YuyaProject/yuya.ts.odata-client/issues"
+  },
+  "homepage": "https://github.com/YuyaProject/yuya.ts.odata-client",
+  "dependencies": {
+    "@types/lodash": "4.14.160",
+    "axios": "0.20.0",
+    "lodash": "4.17.20",
+    "moment": "2.27.0"
+  },
+  "devDependencies": {
+    "@types/jest": "26.0.10",
+    "@types/sinon": "9.0.5",
+    "coveralls": "3.1.0",
+    "jest": "26.4.2",
+    "jest-junit": "11.1.0",
+    "node-fetch": "2.6.0",
+    "rimraf": "3.0.2",
+    "sinon": "9.0.3",
+    "ts-jest": "26.3.0",
+    "ts-node": "9.0.0",
+    "tslint": "6.1.3",
+    "typescript": "3.9.7"
+  }
 }
