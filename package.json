@@ -25,7 +25,7 @@
     },
     "homepage": "https://github.com/YuyaProject/yuya.ts.odata-client",
     "dependencies": {
-        "axios": "^0.19.0"
+        "axios": "^0.21.0"
     },
     "devDependencies": {
         "@types/jest": "^26.0.10",
