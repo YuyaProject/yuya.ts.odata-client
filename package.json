@@ -29,7 +29,7 @@
     "@types/lodash": "4.14.165",
     "axios": "0.21.0",
     "lodash": "4.17.20",
-    "moment": "2.29.1"
+    "moment": "2.29.2"
   },
   "devDependencies": {
     "@types/jest": "26.0.15",
