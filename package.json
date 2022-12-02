@@ -36,7 +36,7 @@
         "jest-junit": "^12.2.0",
         "lodash": "^4.17.15",
         "moment": "^2.24.0",
-        "node-fetch": "^2.6.0",
+        "node-fetch": "^3.3.0",
         "rimraf": "^3.0.2",
         "sinon": "^11.1.2",
         "ts-jest": "^25.2.1",
