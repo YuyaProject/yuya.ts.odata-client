@@ -8,7 +8,7 @@
     "test": "jest",
     "test2": "jest --ci --reporters=default --reporters=jest-junit",
     "build": "rimraf -r dist | npx tsc | npx tsc -m amd --outFile dist/yuya.ts.odata-client.amd.js | npx tsc -m system --outFile dist/yuya.ts.odata-client.system.js",
-    "buildtest": "rimraf -r dist | npx tsc | npx tsc -m amd --outFile dist/yuya.ts.odata-client.amd.js | npx tsc -m system --outFile dist/yuya.ts.odata-client.system.js && cpx dist/**/* 'C:\\Projects\\TurkuazGO.VehicleShipment\\src\\TurkuazGO.VehicleShipment\\TurkuazGO.VehicleShipment.Web\\node_modules\\yuya.ts.odata-client\\dist\\'"
+    "buildtest": "rimraf -r dist | npx tsc | npx tsc -m amd --outFile dist/yuya.ts.odata-client.amd.js | npx tsc -m system --outFile dist/yuya.ts.odata-client.system.js && cpx dist/**/* C:\\Projects\\TurkuazGO.VehicleShipment\\src\\TurkuazGO.VehicleShipment\\TurkuazGO.VehicleShipment.Web\\node_modules\\yuya.ts.odata-client\\dist\\"
   },
   "repository": {
     "type": "git",
