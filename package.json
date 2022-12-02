@@ -27,8 +27,8 @@
   "homepage": "https://github.com/YuyaProject/yuya.ts.odata-client",
   "dependencies": {
     "@types/lodash": "4.14.165",
-    "axios": "0.21.0",
-    "lodash": "4.17.20",
+    "axios": "0.21.1",
+    "lodash": "4.17.21",
     "moment": "2.29.1"
   },
   "devDependencies": {
