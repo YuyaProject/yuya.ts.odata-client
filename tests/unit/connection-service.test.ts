@@ -152,7 +152,7 @@ describe('default-connection-service tests', () => {
     try {
       const response = await new ConnectionService().post('deneme', {});
       expect(response).toBeNull();
-    } catch (err) {
+    } catch (err: any) {
       // console.log(response);
       expect(err).not.toBeNull();
       expect(err.data).toEqual([]);
@@ -193,7 +193,7 @@ describe('default-connection-service tests', () => {
     try {
       const response = await new ConnectionService().postT<Array<{ id: number, name: string }>>('deneme', {});
       expect(response).toBeNull();
-    } catch (err) {
+    } catch (err: any) {
       // console.log(response);
       expect(err).not.toBeNull();
       expect(err.data).toEqual(returnData);

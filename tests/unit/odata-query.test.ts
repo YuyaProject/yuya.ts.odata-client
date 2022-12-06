@@ -1,7 +1,7 @@
-import { ODataQuery, canQuery, ConnectionService, ExpandBuilder, IConnectionService } from '../../libs';
+import { ODataQuery, canQuery, ConnectionService, ExpandBuilder } from '../../libs';
 import sinon from 'sinon';
 import { AxiosResponse, AxiosError, AxiosRequestConfig } from 'axios';
-import { MutationResultStatus, IMutationResult } from '../../libs/mutation';
+import { MutationResultStatus } from '../../libs/mutation';
 
 describe('odata-query tests', () => {
   // #region method : canQuery
@@ -582,13 +582,13 @@ describe('odata-query tests', () => {
       data: returnObject,
       status: 200,
       statusText: 'OK',
-      headers: [],
+      headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
     let url = '';
     const stubPost = sinon.stub(baseConnectionService, 'post')
-      .callsFake((x, y, z) => {
+      .callsFake((x) => {
         url = x;
         return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
       });
@@ -614,13 +614,13 @@ describe('odata-query tests', () => {
       data: returnObject,
       status: 201,
       statusText: 'Created',
-      headers: [],
+      headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
     let url = '';
     const stubPost = sinon.stub(baseConnectionService, 'post')
-      .callsFake((x, y, z) => {
+      .callsFake((x) => {
         url = x;
         return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
       });
@@ -646,13 +646,13 @@ describe('odata-query tests', () => {
       data: returnObject,
       status: 204,
       statusText: 'No Content',
-      headers: [],
+      headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
     let url = '';
     const stubPost = sinon.stub(baseConnectionService, 'post')
-      .callsFake((x, y, z) => {
+      .callsFake((x) => {
         url = x;
         return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
       });
@@ -678,14 +678,14 @@ describe('odata-query tests', () => {
       data: returnObject,
       status: 299,
       statusText: 'No Supported',
-      headers: [],
+      headers: {},
       config: {},
       request: { config: {} },
     };
     const baseConnectionService = new ConnectionService();
     let url = '';
     const stubPost = sinon.stub(baseConnectionService, 'post')
-      .callsFake((x, y, z) => {
+      .callsFake((x) => {
         url = x;
         return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
       });
@@ -697,9 +697,9 @@ describe('odata-query tests', () => {
       expect(p.status).toEqual(MutationResultStatus.Error);
       expect(p.error).not.toBeNull();
       expect(p.error).not.toBeUndefined();
-      expect(p.error!.code).toEqual('599');
-      expect(p.error!.name).toEqual('NotSupported');
-      expect(p.error!.message).toEqual('Not supported http status : 299');
+      expect(p.error?.code).toEqual('599');
+      expect(p.error?.name).toEqual('NotSupported');
+      expect(p.error?.message).toEqual('Not supported http status : 299');
       expect(stubPost.called).toBe(true);
       expect(url).toBe('odata/category');
     } finally {
@@ -710,7 +710,6 @@ describe('odata-query tests', () => {
   // 404 error
   it('post response status 404', async () => {
     const requestObject: { name: string } = { name: 'aaa' };
-    const returnObject = {};
     const error: AxiosError = {
       code: '404',
       name: 'NotFound',
@@ -722,14 +721,14 @@ describe('odata-query tests', () => {
     const baseConnectionService = new ConnectionService();
     let url = '';
     const stubPost = sinon.stub(baseConnectionService, 'post')
-      .callsFake((x, y, z) => {
+      .callsFake((x) => {
         url = x;
         return new Promise<AxiosResponse>((resolve, reject) => { reject(error); });
       });
     try {
       const qb = new ODataQuery('category', baseConnectionService);
       await qb.post<{ id: number, name: string }>(requestObject);
-    } catch (ex) {
+    } catch (ex: any) {
       expect(ex).not.toBeNull();
       expect(ex).not.toBeUndefined();
       expect(ex.status).toEqual(MutationResultStatus.Error);
@@ -754,13 +753,13 @@ describe('odata-query tests', () => {
       data: returnObject,
       status: 200,
       statusText: 'OK',
-      headers: [],
+      headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
     let url = '';
     const stubPut = sinon.stub(baseConnectionService, 'put')
-      .callsFake((x, y, z) => {
+      .callsFake((x) => {
         url = x;
         return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
       });
@@ -786,13 +785,13 @@ describe('odata-query tests', () => {
       data: returnObject,
       status: 201,
       statusText: 'Created',
-      headers: [],
+      headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
     let url = '';
     const stubPut = sinon.stub(baseConnectionService, 'put')
-      .callsFake((x, y, z) => {
+      .callsFake((x) => {
         url = x;
         return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
       });
@@ -818,13 +817,13 @@ describe('odata-query tests', () => {
       data: returnObject,
       status: 204,
       statusText: 'No Content',
-      headers: [],
+      headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
     let url = '';
     const stubPut = sinon.stub(baseConnectionService, 'put')
-      .callsFake((x, y, z) => {
+      .callsFake((x) => {
         url = x;
         return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
       });
@@ -850,14 +849,14 @@ describe('odata-query tests', () => {
       data: returnObject,
       status: 299,
       statusText: 'No Supported',
-      headers: [],
+      headers: {},
       config: {},
       request: { config: {} },
     };
     const baseConnectionService = new ConnectionService();
     let url = '';
     const stubPut = sinon.stub(baseConnectionService, 'put')
-      .callsFake((x, y, z) => {
+      .callsFake((x) => {
         url = x;
         return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
       });
@@ -869,9 +868,9 @@ describe('odata-query tests', () => {
       expect(p.status).toEqual(MutationResultStatus.Error);
       expect(p.error).not.toBeNull();
       expect(p.error).not.toBeUndefined();
-      expect(p.error!.code).toEqual('599');
-      expect(p.error!.name).toEqual('NotSupported');
-      expect(p.error!.message).toEqual('Not supported http status : 299');
+      expect(p.error?.code).toEqual('599');
+      expect(p.error?.name).toEqual('NotSupported');
+      expect(p.error?.message).toEqual('Not supported http status : 299');
       expect(stubPut.called).toBe(true);
       expect(url).toBe(`odata/category(${requestObject.id})`);
     } finally {
@@ -882,7 +881,6 @@ describe('odata-query tests', () => {
   // 404 error
   it('put response status 404', async () => {
     const requestObject: { id: number, name: string } = { id: 1, name: 'aaa' };
-    const returnObject = {};
     const error: AxiosError = {
       code: '404',
       name: 'NotFound',
@@ -894,14 +892,14 @@ describe('odata-query tests', () => {
     const baseConnectionService = new ConnectionService();
     let url = '';
     const stubPut = sinon.stub(baseConnectionService, 'put')
-      .callsFake((x, y, z) => {
+      .callsFake((x) => {
         url = x;
         return new Promise<AxiosResponse>((resolve, reject) => { reject(error); });
       });
     try {
       const qb = new ODataQuery('category', baseConnectionService);
       await qb.put<{ id: number, name: string }>(requestObject.id, requestObject);
-    } catch (ex) {
+    } catch (ex: any) {
       expect(ex).not.toBeNull();
       expect(ex).not.toBeUndefined();
       expect(ex.status).toEqual(MutationResultStatus.Error);
@@ -926,13 +924,13 @@ describe('odata-query tests', () => {
       data: returnObject,
       status: 200,
       statusText: 'OK',
-      headers: [],
+      headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
     let url = '';
     const stubPatch = sinon.stub(baseConnectionService, 'patch')
-      .callsFake((x, y, z) => {
+      .callsFake((x) => {
         url = x;
         return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
       });
@@ -958,13 +956,13 @@ describe('odata-query tests', () => {
       data: returnObject,
       status: 201,
       statusText: 'Created',
-      headers: [],
+      headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
     let url = '';
     const stubPatch = sinon.stub(baseConnectionService, 'patch')
-      .callsFake((x, y, z) => {
+      .callsFake((x) => {
         url = x;
         return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
       });
@@ -990,13 +988,13 @@ describe('odata-query tests', () => {
       data: returnObject,
       status: 204,
       statusText: 'No Content',
-      headers: [],
+      headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
     let url = '';
     const stubPatch = sinon.stub(baseConnectionService, 'patch')
-      .callsFake((x, y, z) => {
+      .callsFake((x) => {
         url = x;
         return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
       });
@@ -1022,14 +1020,14 @@ describe('odata-query tests', () => {
       data: returnObject,
       status: 299,
       statusText: 'No Supported',
-      headers: [],
+      headers: {},
       config: {},
       request: { config: {} },
     };
     const baseConnectionService = new ConnectionService();
     let url = '';
     const stubPatch = sinon.stub(baseConnectionService, 'patch')
-      .callsFake((x, y, z) => {
+      .callsFake((x) => {
         url = x;
         return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
       });
@@ -1041,9 +1039,9 @@ describe('odata-query tests', () => {
       expect(p.status).toEqual(MutationResultStatus.Error);
       expect(p.error).not.toBeNull();
       expect(p.error).not.toBeUndefined();
-      expect(p.error!.code).toEqual('599');
-      expect(p.error!.name).toEqual('NotSupported');
-      expect(p.error!.message).toEqual('Not supported http status : 299');
+      expect(p.error?.code).toEqual('599');
+      expect(p.error?.name).toEqual('NotSupported');
+      expect(p.error?.message).toEqual('Not supported http status : 299');
       expect(stubPatch.called).toBe(true);
       expect(url).toBe(`odata/category(${requestObject.id})`);
     } finally {
@@ -1054,7 +1052,6 @@ describe('odata-query tests', () => {
   // 404 error
   it('patch response status 404', async () => {
     const requestObject: { id: number, name: string } = { id: 1, name: 'aaa' };
-    const returnObject = {};
     const error: AxiosError = {
       code: '404',
       name: 'NotFound',
@@ -1067,14 +1064,14 @@ describe('odata-query tests', () => {
     let url = '';
     const stubPatch = sinon.stub(baseConnectionService, 'patch')
 
-      .callsFake((x, y, z) => {
+      .callsFake((x) => {
         url = x;
         return new Promise<AxiosResponse>((resolve, reject) => { reject(error); });
       });
     try {
       const qb = new ODataQuery('category', baseConnectionService);
       await qb.patch<{ id: number, name: string }>(requestObject.id, requestObject);
-    } catch (ex) {
+    } catch (ex: any) {
       expect(ex).not.toBeNull();
       expect(ex).not.toBeUndefined();
       expect(ex.status).toEqual(MutationResultStatus.Error);
@@ -1098,13 +1095,13 @@ describe('odata-query tests', () => {
       data: returnObject,
       status: 200,
       statusText: 'OK',
-      headers: [],
+      headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
     let url = '';
     const stubDelete = sinon.stub(baseConnectionService, 'dele')
-      .callsFake((x, y) => {
+      .callsFake((x) => {
         url = x;
         return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
       });
@@ -1129,13 +1126,13 @@ describe('odata-query tests', () => {
       data: returnObject,
       status: 201,
       statusText: 'Created',
-      headers: [],
+      headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
     let url = '';
     const stubDelete = sinon.stub(baseConnectionService, 'dele')
-      .callsFake((x, y) => {
+      .callsFake((x) => {
         url = x;
         return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
       });
@@ -1160,14 +1157,14 @@ describe('odata-query tests', () => {
       data: returnObject,
       status: 204,
       statusText: 'No Content',
-      headers: [],
+      headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
     let url = '';
     const stubDelete = sinon.stub(baseConnectionService, 'dele')
 
-      .callsFake((x, y) => {
+      .callsFake((x) => {
         url = x;
         return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
       });
@@ -1194,14 +1191,14 @@ describe('odata-query tests', () => {
       data: returnObject,
       status: 299,
       statusText: 'No Supported',
-      headers: [],
+      headers: {},
       config: {},
       request: { config: {} },
     };
     const baseConnectionService = new ConnectionService();
     let url = '';
     const stubDelete = sinon.stub(baseConnectionService, 'dele')
-      .callsFake((x, y) => {
+      .callsFake((x) => {
         url = x;
         return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
       });
@@ -1213,9 +1210,9 @@ describe('odata-query tests', () => {
       expect(p.status).toEqual(MutationResultStatus.Error);
       expect(p.error).not.toBeNull();
       expect(p.error).not.toBeUndefined();
-      expect(p.error!.code).toEqual('599');
-      expect(p.error!.name).toEqual('NotSupported');
-      expect(p.error!.message).toEqual('Not supported http status : 299');
+      expect(p.error?.code).toEqual('599');
+      expect(p.error?.name).toEqual('NotSupported');
+      expect(p.error?.message).toEqual('Not supported http status : 299');
       expect(stubDelete.called).toBe(true);
       expect(url).toBe(`odata/category(${requestObject.id})`);
     } finally {
@@ -1236,14 +1233,14 @@ describe('odata-query tests', () => {
     const baseConnectionService = new ConnectionService();
     let url = '';
     const stubDelete = sinon.stub(baseConnectionService, 'dele')
-      .callsFake((x, y) => {
+      .callsFake((x) => {
         url = x;
         return new Promise<AxiosResponse>((resolve, reject) => { reject(error); });
       });
     try {
       const qb = new ODataQuery('category', baseConnectionService);
       await qb.delete(1);
-    } catch (ex) {
+    } catch (ex: any) {
       expect(ex).not.toBeNull();
       expect(ex).not.toBeUndefined();
       expect(ex.status).toEqual(MutationResultStatus.Error);

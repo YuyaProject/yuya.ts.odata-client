@@ -382,70 +382,70 @@ describe('filter-builder tests', () => {
     const p = FilterBuilder.inList(FilterBuilder.prop('a'), [1]);
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p!.text).toEqual('a in (1)');
+    expect(p?.text).toEqual('a in (1)');
   });
   it('inList Property, two number items array parameters', () => {
     const p = FilterBuilder.inList(FilterBuilder.prop('a'), [1, 2]);
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p!.text).toEqual('a in (1,2)');
+    expect(p?.text).toEqual('a in (1,2)');
   });
   it('inList Property, three number items array parameters', () => {
     const p = FilterBuilder.inList(FilterBuilder.prop('a'), [1, 2, 3]);
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p!.text).toEqual('a in (1,2,3)');
+    expect(p?.text).toEqual('a in (1,2,3)');
   });
 
   it('inList Property, one string item array parameters', () => {
     const p = FilterBuilder.inList(FilterBuilder.prop('a'), ['1']);
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p!.text).toEqual('a in (\'1\')');
+    expect(p?.text).toEqual('a in (\'1\')');
   });
   it('inList Property, two string items array parameters', () => {
     const p = FilterBuilder.inList(FilterBuilder.prop('a'), ['1', '2']);
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p!.text).toEqual('a in (\'1\',\'2\')');
+    expect(p?.text).toEqual('a in (\'1\',\'2\')');
   });
   it('inList Property, three string items array parameters', () => {
     const p = FilterBuilder.inList(FilterBuilder.prop('a'), ['1', '2', '3']);
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p!.text).toEqual('a in (\'1\',\'2\',\'3\')');
+    expect(p?.text).toEqual('a in (\'1\',\'2\',\'3\')');
   });
 
   it('inList Property, one boolean item array parameters', () => {
     const p = FilterBuilder.inList(FilterBuilder.prop('a'), [true]);
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p!.text).toEqual('a in (true)');
+    expect(p?.text).toEqual('a in (true)');
   });
   it('inList Property, two boolean items array parameters', () => {
     const p = FilterBuilder.inList(FilterBuilder.prop('a'), [true, false]);
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p!.text).toEqual('a in (true,false)');
+    expect(p?.text).toEqual('a in (true,false)');
   });
 
   it('inList Property, one date item array parameters', () => {
     const p = FilterBuilder.inList(FilterBuilder.prop('a'), [dateConstant]);
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p!.text).toEqual('a in (' + dateStringConstant + ')');
+    expect(p?.text).toEqual('a in (' + dateStringConstant + ')');
   });
   it('inList Property, two date items array parameters', () => {
     const p = FilterBuilder.inList(FilterBuilder.prop('a'), [dateConstant, dateConstant2]);
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p!.text).toEqual(`a in (${dateStringConstant},${dateStringConstant2})`);
+    expect(p?.text).toEqual(`a in (${dateStringConstant},${dateStringConstant2})`);
   });
   it('inList Property, three date items array parameters', () => {
     const p = FilterBuilder.inList(FilterBuilder.prop('a'), [dateConstant, dateConstant2, dateConstant3]);
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p!.text).toEqual(`a in (${dateStringConstant},${dateStringConstant2},${dateStringConstant3})`);
+    expect(p?.text).toEqual(`a in (${dateStringConstant},${dateStringConstant2},${dateStringConstant3})`);
   });
 
   // #endregion
@@ -563,7 +563,7 @@ describe('filter-builder tests', () => {
     const p = FilterBuilder.any('categories', 'c', FilterBuilder.equals(FilterBuilder.prop('c/id'), 5));
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p!.text).toEqual('categories/any(c:(c/id eq 5))');
+    expect(p?.text).toEqual('categories/any(c:(c/id eq 5))');
   });
   it('any Expression two sub filter parameters', () => {
     const p = FilterBuilder.any('categories', 'c',
@@ -571,7 +571,7 @@ describe('filter-builder tests', () => {
       FilterBuilder.equals(FilterBuilder.prop('c/name'), 'asd'));
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p!.text).toEqual('categories/any(c:(c/id eq 5)and(c/name eq \'asd\'))');
+    expect(p?.text).toEqual('categories/any(c:(c/id eq 5)and(c/name eq \'asd\'))');
   });
   // #endregion
 
@@ -593,7 +593,7 @@ describe('filter-builder tests', () => {
     const p = FilterBuilder.all('categories', 'c', FilterBuilder.equals(FilterBuilder.prop('c/id'), 5));
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p!.text).toEqual('categories/all(c:(c/id eq 5))');
+    expect(p?.text).toEqual('categories/all(c:(c/id eq 5))');
   });
   it('all Expression two sub filter parameters', () => {
     const p = FilterBuilder.all('categories', 'c',
@@ -601,7 +601,7 @@ describe('filter-builder tests', () => {
       FilterBuilder.equals(FilterBuilder.prop('c/name'), 'asd'));
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p!.text).toEqual('categories/all(c:(c/id eq 5)and(c/name eq \'asd\'))');
+    expect(p?.text).toEqual('categories/all(c:(c/id eq 5)and(c/name eq \'asd\'))');
   });
   // #endregion
 });

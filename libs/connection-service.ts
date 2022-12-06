@@ -156,7 +156,7 @@ export class ConnectionService implements IConnectionService {
    *    otherwise connection service use default connection configuration.
    */
   constructor(configuration?: IConnetionSettings) {
-    this._config = (!!configuration) ? configuration : config;
+    this._config = configuration ?? config;
   }
 
   /** The Default Connection Service instance */

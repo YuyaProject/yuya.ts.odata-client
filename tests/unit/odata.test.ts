@@ -167,7 +167,7 @@ describe('odata tests', () => {
     const p = OData.encodeQueryValue({ id: 5 });
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
-    expect(p).toEqual('{\"id\":5}');
+    expect(p).toEqual('{"id":5}');
   });
   it('encodeQueryValue guid parameter', () => {
     const p = OData.encodeQueryValue(new Guid('2B7B96BB-4A11-45B5-B0BB-3A43174AF061'));
