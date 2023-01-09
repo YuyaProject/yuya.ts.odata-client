@@ -1,6 +1,6 @@
 {
   "name": "yuya.ts.odata-client",
-  "version": "1.1.11",
+  "version": "1.3.6",
   "description": "OData Client for Typescript with axios",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -26,13 +26,13 @@
   },
   "homepage": "https://github.com/YuyaProject/yuya.ts.odata-client",
   "dependencies": {
-    "@types/lodash": "4.14.165",
-    "axios": "0.21.0",
-    "lodash": "4.17.20",
-    "moment": "2.29.1"
+    "axios": "1.2.2",
+    "lodash": "4.17.21",
+    "moment": "2.29.4"
   },
   "devDependencies": {
     "@types/jest": "26.0.15",
+    "@types/lodash": "4.14.165",
     "@types/sinon": "9.0.8",
     "coveralls": "3.1.0",
     "cpx": "1.5.0",
@@ -44,6 +44,6 @@
     "ts-jest": "26.4.4",
     "ts-node": "9.0.0",
     "tslint": "6.1.3",
-    "typescript": "4.0.5"
+    "typescript": "4.2.3"
   }
 }

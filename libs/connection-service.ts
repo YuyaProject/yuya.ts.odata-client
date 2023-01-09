@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosPromise } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosPromise, RawAxiosRequestHeaders } from 'axios';
 
 // const baseUrl: string = process.env.VUE_APP_BASE_URL_API || 'http://localhost:5000/';
 
@@ -180,7 +180,7 @@ export class ConnectionService implements IConnectionService {
       headers: {
         'Content-Type': 'application/json',
         ...conf.headers,
-      },
+      } as RawAxiosRequestHeaders,
     };
   }
 
@@ -214,7 +214,7 @@ export class ConnectionService implements IConnectionService {
     return new Promise<T>((resolve, reject) => {
       axios.request(this.prepareRequestConfig(conf))
         .then((res: AxiosResponse<T>) => { resolve(res.data); })
-        .catch((err) => { reject(this.errorHandler(err)); });
+        .catch((err: any) => { reject(this.errorHandler(err)); });
     });
   }
   // #endregion
