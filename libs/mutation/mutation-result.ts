@@ -1,4 +1,5 @@
-import { AxiosError, AxiosResponse, MutationResultStatus } from '.';
+import { AxiosError, AxiosResponse } from 'axios';
+import { MutationResultStatus } from '.';
 
 export interface IMutationResult<T = any> {
   readonly axiosResponse?: AxiosResponse<T>;

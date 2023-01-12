@@ -1,4 +1,5 @@
-import { AxiosResponse, MutationResultStatus, IMutationResult, MutationSuccessResult, AxiosError } from '.';
+import { AxiosError, AxiosResponse } from 'axios';
+import { MutationResultStatus, IMutationResult, MutationSuccessResult } from '.';
 import { MutationErrorResult } from './mutation-error-result';
 
 export function getMutationResult<T = any>(response: AxiosResponse<T>): IMutationResult<T> {

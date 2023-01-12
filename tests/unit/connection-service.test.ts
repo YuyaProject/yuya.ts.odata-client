@@ -1,6 +1,7 @@
 import { ConnectionService, config, IConnetionSettings } from '../../libs/connection-service';
 import axios, { AxiosResponse } from 'axios';
 import sinon from 'sinon';
+import HttpResponse from '../../libs/http-response';
 
 // TODO : @alper-2019-02-14: ErrorHandler ile ilgili kısım için bir test yazmadım. Bunun yazılması lazım.
 
@@ -74,8 +75,8 @@ describe('default-connection-service tests', () => {
     try {
       const response = await new ConnectionService().getT<Array<{ id: number, name: string }>>('deneme');
       // console.log(response);
-      expect(response).toEqual(returnData);
-      expect(response.length).toBe(2);
+      expect(response.data).toEqual(returnData);
+      expect(response.data.length).toBe(2);
     } finally {
       axiosStub.restore();
     }
@@ -112,8 +113,8 @@ describe('default-connection-service tests', () => {
         await new ConnectionService()
           .requestT<Array<{ id: number, name: string }>>({ method: 'get', url: 'deneme' });
       // console.log(response);
-      expect(response).toEqual(returnData);
-      expect(response.length).toBe(2);
+      expect(response.data).toEqual(returnData);
+      expect(response.data.length).toBe(2);
     } finally {
       axiosStub.restore();
     }
@@ -152,7 +153,7 @@ describe('default-connection-service tests', () => {
     try {
       const response = await new ConnectionService().post('deneme', {});
       expect(response).toBeNull();
-    } catch (err) {
+    } catch (err: any) {
       // console.log(response);
       expect(err).not.toBeNull();
       expect(err.data).toEqual([]);
@@ -174,8 +175,8 @@ describe('default-connection-service tests', () => {
     try {
       const response = await new ConnectionService().postT<Array<{ id: number, name: string }>>('deneme', {});
       // console.log(response);
-      expect(response).toEqual(returnData);
-      expect(response.length).toBe(2);
+      expect(response.data).toEqual(returnData);
+      expect(response.data.length).toBe(2);
     } finally {
       axiosStub.restore();
     }
@@ -193,7 +194,7 @@ describe('default-connection-service tests', () => {
     try {
       const response = await new ConnectionService().postT<Array<{ id: number, name: string }>>('deneme', {});
       expect(response).toBeNull();
-    } catch (err) {
+    } catch (err: any) {
       // console.log(response);
       expect(err).not.toBeNull();
       expect(err.data).toEqual(returnData);
@@ -234,8 +235,8 @@ describe('default-connection-service tests', () => {
     try {
       const response = await new ConnectionService().putT<Array<{ id: number, name: string }>>('deneme', {});
       // console.log(response);
-      expect(response).toEqual(returnData);
-      expect(response.length).toBe(2);
+      expect(response.data).toEqual(returnData);
+      expect(response.data.length).toBe(2);
     } finally {
       axiosStub.restore();
     }
@@ -272,8 +273,8 @@ describe('default-connection-service tests', () => {
     try {
       const response = await new ConnectionService().patchT<Array<{ id: number, name: string }>>('deneme', {});
       // console.log(response);
-      expect(response).toEqual(returnData);
-      expect(response.length).toBe(2);
+      expect(response.data).toEqual(returnData);
+      expect(response.data.length).toBe(2);
     } finally {
       axiosStub.restore();
     }
@@ -310,8 +311,8 @@ describe('default-connection-service tests', () => {
     try {
       const response = await new ConnectionService().deleT<Array<{ id: number, name: string }>>('deneme');
       // console.log(response);
-      expect(response).toEqual(returnData);
-      expect(response.length).toBe(2);
+      expect(response.data).toEqual(returnData);
+      expect(response.data.length).toBe(2);
     } finally {
       axiosStub.restore();
     }

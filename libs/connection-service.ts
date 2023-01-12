@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosPromise, RawAxiosRequestHeaders } from 'axios';
+import HttpResponse from './http-response'
 
 // const baseUrl: string = process.env.VUE_APP_BASE_URL_API || 'http://localhost:5000/';
 
@@ -43,7 +44,7 @@ export interface IConnectionService {
    * @param conf the optional request configurations
    * @returns the promise for service response with T response type
    */
-  requestT<T>(conf?: AxiosRequestConfig): Promise<T>;
+  requestT<T>(conf?: AxiosRequestConfig): Promise<HttpResponse<T>>;
   // #endregion
 
   // #region gets
@@ -61,7 +62,7 @@ export interface IConnectionService {
    * @param conf the optional request configurations
    * @returns the promise for service response with T response type
    */
-  getT<T>(relativeUrl: string, conf?: AxiosRequestConfig): Promise<T>;
+  getT<T>(relativeUrl: string, conf?: AxiosRequestConfig): Promise<HttpResponse<T>>;
   // #endregion
 
   // #region posts
@@ -81,7 +82,7 @@ export interface IConnectionService {
    * @param conf the optional request configurations
    * @returns the promise for service response with T response type
    */
-  postT<T>(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<T>;
+  postT<T>(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<HttpResponse<T>>;
   // #endregion
 
   // #region puts
@@ -101,7 +102,7 @@ export interface IConnectionService {
    * @param conf the optional request configurations
    * @returns the promise for service response with T response type
    */
-  putT<T>(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<T>;
+  putT<T>(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<HttpResponse<T>>;
   // #endregion
 
   // #region patchs
@@ -121,7 +122,7 @@ export interface IConnectionService {
    * @param conf the optional request configurations
    * @returns the promise for service response with T response type
    */
-  patchT<T>(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<T>;
+  patchT<T>(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<HttpResponse<T>>;
   // #endregion
 
   // #region deletes
@@ -139,7 +140,7 @@ export interface IConnectionService {
    * @param conf the optional request configurations
    * @returns the promise for service response with T response type
    */
-  deleT<T>(relativeUrl: string, conf?: AxiosRequestConfig): Promise<T>;
+  deleT<T>(relativeUrl: string, conf?: AxiosRequestConfig): Promise<HttpResponse<T>>;
   // #endregion
 }
 
@@ -210,10 +211,10 @@ export class ConnectionService implements IConnectionService {
    * @param conf the optional request configurations
    * @returns the promise for service response with T response type
    */
-  public requestT<T>(conf?: AxiosRequestConfig): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
+  public requestT<T>(conf?: AxiosRequestConfig): Promise<HttpResponse<T>> {
+    return new Promise<HttpResponse<T>>((resolve, reject) => {
       axios.request(this.prepareRequestConfig(conf))
-        .then((res: AxiosResponse<T>) => { resolve(res.data); })
+        .then((res: AxiosResponse<T>) => { resolve( { data: res.data, headers: res.headers }); })
         .catch((err: any) => { reject(this.errorHandler(err)); });
     });
   }
@@ -238,7 +239,7 @@ export class ConnectionService implements IConnectionService {
    * @param conf the optional request configurations
    * @returns the promise for service response with T response type
    */
-  public getT<T>(relativeUrl: string, conf?: AxiosRequestConfig): Promise<T> {
+  public getT<T>(relativeUrl: string, conf?: AxiosRequestConfig): Promise<HttpResponse<T>> {
     return this.handleAxiosPromise<T>(
       axios.get(this.prepareServiceUrl(relativeUrl), this.prepareRequestConfig(conf)));
   }
@@ -264,7 +265,7 @@ export class ConnectionService implements IConnectionService {
    * @param conf the optional request configurations
    * @returns the promise for service response with T response type
    */
-  public postT<T>(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<T> {
+  public postT<T>(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<HttpResponse<T>> {
     return this.handleAxiosPromise<T>(
       axios.post(this.prepareServiceUrl(relativeUrl), data, this.prepareRequestConfig(conf)));
   }
@@ -290,7 +291,7 @@ export class ConnectionService implements IConnectionService {
    * @param conf the optional request configurations
    * @returns the promise for service response with T response type
    */
-  public putT<T>(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<T> {
+  public putT<T>(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<HttpResponse<T>> {
     return this.handleAxiosPromise<T>(axios.put(
       this.prepareServiceUrl(relativeUrl), data, this.prepareRequestConfig(conf)));
   }
@@ -318,7 +319,7 @@ export class ConnectionService implements IConnectionService {
    * @param conf the optional request configurations
    * @returns the promise for service response with T response type
    */
-  public patchT<T>(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<T> {
+  public patchT<T>(relativeUrl: string, data: any, conf?: AxiosRequestConfig): Promise<HttpResponse<T>> {
     return this.handleAxiosPromise<T>(axios.patch(
       this.prepareServiceUrl(relativeUrl), data, this.prepareRequestConfig(conf)));
   }
@@ -342,7 +343,7 @@ export class ConnectionService implements IConnectionService {
    * @param conf the optional request configurations
    * @returns the promise for service response with T response type
    */
-  public deleT<T>(relativeUrl: string, conf?: AxiosRequestConfig): Promise<T> {
+  public deleT<T>(relativeUrl: string, conf?: AxiosRequestConfig): Promise<HttpResponse<T>> {
     return this.handleAxiosPromise<T>(
       axios.delete(this.prepareServiceUrl(relativeUrl), this.prepareRequestConfig(conf)));
   }
@@ -360,10 +361,10 @@ export class ConnectionService implements IConnectionService {
     }
   }
 
-  private async handleAxiosPromise<T>(p: AxiosPromise<T>): Promise<T> {
+  private async handleAxiosPromise<T>(p: AxiosPromise<T>): Promise<HttpResponse<T>> {
     try {
       const res = await p;
-      return res.data;
+      return  { data: res.data, headers: res.headers };
     } catch (err) {
       throw this.errorHandler(err);
     }

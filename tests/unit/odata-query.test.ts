@@ -2,6 +2,7 @@ import { ODataQuery, canQuery, ConnectionService, ExpandBuilder } from '../../li
 import sinon from 'sinon';
 import { AxiosResponse, AxiosError, AxiosRequestConfig } from 'axios';
 import { MutationResultStatus } from '../../libs/mutation';
+import HttpResponse from '../../libs/http-response';
 
 describe('odata-query tests', () => {
   // #region method : canQuery
@@ -529,7 +530,7 @@ describe('odata-query tests', () => {
     const stubRequest = sinon.stub(baseConnectionService, 'requestT')
       .callsFake((x: AxiosRequestConfig) => {
         url = x.url;
-        return new Promise<number>((resolve) => { resolve(returnNumber); });
+        return new Promise<HttpResponse<number>>((resolve) => { resolve( { data: returnNumber, headers: {} }); });
       });
     try {
       const qb = new ODataQuery('category', baseConnectionService);

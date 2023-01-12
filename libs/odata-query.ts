@@ -5,6 +5,7 @@ import {
 } from '.';
 import { IMutationResult, getMutationResult, MutationErrorResult } from './mutation';
 import { AxiosRequestConfig, Method } from 'axios';
+import HttpResponse from './http-response';
 
 export function canQuery(arg: any): arg is IQuery {
   return arg.q !== undefined;
@@ -180,7 +181,7 @@ export class ODataQuery implements IQuery {
   }
 
   /** execute and get row count */
-  public count(): Promise<number> {
+  public count(): Promise<HttpResponse<number>> {
     const conf: AxiosRequestConfig = {
       method: 'get',
       url: this.connectionService.prepareServiceUrl(this.createRelativeUrl(true)),

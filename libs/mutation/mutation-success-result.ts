@@ -1,4 +1,5 @@
-import { AxiosResponse, MutationResultStatus, IMutationResult } from '.';
+import { AxiosResponse } from 'axios';
+import { MutationResultStatus, IMutationResult } from '.';
 
 export class MutationSuccessResult<T = any> implements IMutationResult<T> {
   constructor(
