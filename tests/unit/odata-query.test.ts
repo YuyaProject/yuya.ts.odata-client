@@ -1,75 +1,80 @@
-import { ODataQuery, canQuery, ConnectionService, ExpandBuilder } from '../../libs';
-import sinon from 'sinon';
-import { AxiosResponse, AxiosError, AxiosRequestConfig } from 'axios';
-import { MutationResultStatus } from '../../libs/mutation';
-import HttpResponse from '../../libs/http-response';
+import {
+  ODataQuery,
+  canQuery,
+  ConnectionService,
+  ExpandBuilder,
+} from "../../libs";
+import sinon from "sinon";
+import { AxiosResponse, AxiosError, AxiosRequestConfig } from "axios";
+import { MutationResultStatus } from "../../libs/mutation";
+import HttpResponse from "../../libs/http-response";
 
-describe('odata-query tests', () => {
+describe("odata-query tests", () => {
   // #region method : canQuery
-  it('canQuery return false', () => {
-    const p = canQuery('');
+  it("canQuery return false", () => {
+    const p = canQuery("");
     expect(p).toBe(false);
   });
-  it('canQuery return true', () => {
-    const p = canQuery(new ODataQuery('a'));
+  it("canQuery return true", () => {
+    const p = canQuery(new ODataQuery("a"));
     expect(p).toBe(true);
   });
   // #endregion
 
   // #region method : constructor
-  it('constructor empty parameter', () => {
-    const qb = new ODataQuery('');
+  it("constructor empty parameter", () => {
+    const qb = new ODataQuery("");
     expect(qb).not.toBeNull();
     expect(qb).not.toBeUndefined();
-    expect(qb.resource).toEqual('');
+    expect(qb.resource).toEqual("");
   });
-  it('constructor non-empty parameter', () => {
-    const qb = new ODataQuery('category');
+  it("constructor non-empty parameter", () => {
+    const qb = new ODataQuery("category");
     expect(qb).not.toBeNull();
     expect(qb).not.toBeUndefined();
-    expect(qb.resource).toEqual('category');
+    expect(qb.resource).toEqual("category");
   });
-  it('constructor non-empty and connection service parameter', () => {
+  it("constructor non-empty and connection service parameter", () => {
     const connectionService = new ConnectionService();
-    const qb = new ODataQuery('category', connectionService);
+    const qb = new ODataQuery("category", connectionService);
     expect(qb).not.toBeNull();
     expect(qb).not.toBeUndefined();
-    expect(qb.resource).toEqual('category');
+    expect(qb.resource).toEqual("category");
     expect(qb.connectionService).toEqual(connectionService);
   });
-  it('constructor with additionalQueryString parameter', () => {
-    const qb = new ODataQuery('category', undefined, { a: 'b' });
+  it("constructor with additionalQueryString parameter", () => {
+    const qb = new ODataQuery("category", undefined, { a: "b" });
     expect(qb).not.toBeNull();
     expect(qb).not.toBeUndefined();
-    expect(qb.resource).toEqual('category');
-    expect((qb as any).createRelativeUrl()).toEqual('odata/category?a=b');
+    expect(qb.resource).toEqual("category");
+    expect((qb as any).createRelativeUrl()).toEqual("odata/category?a=b");
   });
-  it('constructor with additionalQueryString parameter(two item)', () => {
-    const qb = new ODataQuery('category', undefined, { a: 'b', c: '10' });
+  it("constructor with additionalQueryString parameter(two item)", () => {
+    const qb = new ODataQuery("category", undefined, { a: "b", c: "10" });
     expect(qb).not.toBeNull();
     expect(qb).not.toBeUndefined();
-    expect(qb.resource).toEqual('category');
-    expect((qb as any).createRelativeUrl()).toEqual('odata/category?a=b&c=10');
+    expect(qb.resource).toEqual("category");
+    expect((qb as any).createRelativeUrl()).toEqual("odata/category?a=b&c=10");
   });
   // #endregion
 
   // #region method : apiVersion
-  it('apiVersion non-empty parameter on query', () => {
-    const qb = new ODataQuery('category');
-    qb.apiVersion('1.0');
+  it("apiVersion non-empty parameter on query", () => {
+    const qb = new ODataQuery("category");
+    qb.apiVersion("1.0");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('api-version=1.0');
+    expect(p.queryStrings[0]).toEqual("api-version=1.0");
   });
   // #endregion
 
   // #region method : filter
-  it('filter parameterless', () => {
-    const qb = new ODataQuery('category').filter();
+  it("filter parameterless", () => {
+    const qb = new ODataQuery("category").filter();
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
@@ -77,8 +82,8 @@ describe('odata-query tests', () => {
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(0);
   });
-  it('filter one empty string parameter', () => {
-    const qb = new ODataQuery('category').filter('');
+  it("filter one empty string parameter", () => {
+    const qb = new ODataQuery("category").filter("");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
@@ -86,8 +91,8 @@ describe('odata-query tests', () => {
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(0);
   });
-  it('filter two empty string parameters', () => {
-    const qb = new ODataQuery('category').filter('', '');
+  it("filter two empty string parameters", () => {
+    const qb = new ODataQuery("category").filter("", "");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
@@ -95,62 +100,73 @@ describe('odata-query tests', () => {
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(0);
   });
-  it('filter one non-empty string parameter', () => {
-    const qb = new ODataQuery('category').filter('id eq 5');
+  it("filter one non-empty string parameter", () => {
+    const qb = new ODataQuery("category").filter("id eq 5");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('$filter=id eq 5');
+    expect(p.queryStrings[0]).toEqual("$filter=id eq 5");
   });
-  it('filter one non-empty string parameter with additional query string parameter', () => {
-    const qb = new ODataQuery('category', undefined, { a: 'b', c: '10' }).filter('id eq 5');
+  it("filter one non-empty string parameter with additional query string parameter", () => {
+    const qb = new ODataQuery("category", undefined, {
+      a: "b",
+      c: "10",
+    }).filter("id eq 5");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('$filter=id eq 5');
-    expect((qb as any).createRelativeUrl()).toEqual('odata/category?$filter=id eq 5&a=b&c=10');
+    expect(p.queryStrings[0]).toEqual("$filter=id eq 5");
+    expect((qb as any).createRelativeUrl()).toEqual(
+      "odata/category?$filter=id eq 5&a=b&c=10"
+    );
   });
-  it('filter two non-empty string parameters', () => {
-    const qb = new ODataQuery('category').filter('id eq 5', 'name eq \'John\'');
+  it("filter two non-empty string parameters", () => {
+    const qb = new ODataQuery("category").filter("id eq 5", "name eq 'John'");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('$filter=id eq 5 and name eq \'John\'');
+    expect(p.queryStrings[0]).toEqual("$filter=id eq 5 and name eq 'John'");
   });
-  it('filter one empty, two non-empty string parameters', () => {
-    const qb = new ODataQuery('category').filter('', 'id eq 5', 'name eq \'John\'');
+  it("filter one empty, two non-empty string parameters", () => {
+    const qb = new ODataQuery("category").filter(
+      "",
+      "id eq 5",
+      "name eq 'John'"
+    );
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('$filter=id eq 5 and name eq \'John\'');
+    expect(p.queryStrings[0]).toEqual("$filter=id eq 5 and name eq 'John'");
   });
-  it('filter non-empty string parameter and multiple calls', () => {
-    const qb = new ODataQuery('category').filter('id eq 5').filter('name eq \'John\'');
+  it("filter non-empty string parameter and multiple calls", () => {
+    const qb = new ODataQuery("category")
+      .filter("id eq 5")
+      .filter("name eq 'John'");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('$filter=(id eq 5)and(name eq \'John\')');
+    expect(p.queryStrings[0]).toEqual("$filter=(id eq 5)and(name eq 'John')");
   });
   // #endregion filter
 
   // #region method : orderBy
-  it('orderBy one empty parameter', () => {
-    const qb = new ODataQuery('category').orderBy('');
+  it("orderBy one empty parameter", () => {
+    const qb = new ODataQuery("category").orderBy("");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
@@ -158,8 +174,8 @@ describe('odata-query tests', () => {
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(0);
   });
-  it('orderBy one empty parameter 2', () => {
-    const qb = new ODataQuery('category').orderBy(' ');
+  it("orderBy one empty parameter 2", () => {
+    const qb = new ODataQuery("category").orderBy(" ");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
@@ -167,201 +183,197 @@ describe('odata-query tests', () => {
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(0);
   });
-  it('orderBy one non-empty string parameter', () => {
-    const qb = new ODataQuery('category').orderBy('id');
+  it("orderBy one non-empty string parameter", () => {
+    const qb = new ODataQuery("category").orderBy("id");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('$orderby=id');
+    expect(p.queryStrings[0]).toEqual("$orderby=id");
   });
-  it('orderBy one non-empty string parameter with desc', () => {
-    const qb = new ODataQuery('category').orderBy('id desc');
+  it("orderBy one non-empty string parameter with desc", () => {
+    const qb = new ODataQuery("category").orderBy("id desc");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('$orderby=id desc');
+    expect(p.queryStrings[0]).toEqual("$orderby=id desc");
   });
-  it('orderBy one non-empty two string parameter', () => {
-    const qb = new ODataQuery('category').orderBy('id,name');
+  it("orderBy one non-empty two string parameter", () => {
+    const qb = new ODataQuery("category").orderBy("id,name");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('$orderby=id,name');
+    expect(p.queryStrings[0]).toEqual("$orderby=id,name");
   });
-  it('orderBy one non-empty two string parameter with whitespaces', () => {
-    const qb = new ODataQuery('category').orderBy(' id , name ');
+  it("orderBy one non-empty two string parameter with whitespaces", () => {
+    const qb = new ODataQuery("category").orderBy(" id , name ");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('$orderby=id,name');
+    expect(p.queryStrings[0]).toEqual("$orderby=id,name");
   });
-  it('orderBy multiple call with one non-empty string parameter', () => {
-    const qb = new ODataQuery('category')
-      .orderBy('id')
-      .orderBy('name');
+  it("orderBy multiple call with one non-empty string parameter", () => {
+    const qb = new ODataQuery("category").orderBy("id").orderBy("name");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('$orderby=id,name');
+    expect(p.queryStrings[0]).toEqual("$orderby=id,name");
   });
-  it('orderBy multiple call with one non-empty white-spaced string parameter', () => {
-    const qb = new ODataQuery('category')
-      .orderBy(' id ')
-      .orderBy(' name ');
+  it("orderBy multiple call with one non-empty white-spaced string parameter", () => {
+    const qb = new ODataQuery("category").orderBy(" id ").orderBy(" name ");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('$orderby=id,name');
+    expect(p.queryStrings[0]).toEqual("$orderby=id,name");
   });
   // #endregion
 
   // #region method : top
-  it('top one parameter', () => {
-    const qb = new ODataQuery('category').top(5);
+  it("top one parameter", () => {
+    const qb = new ODataQuery("category").top(5);
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('$top=5');
+    expect(p.queryStrings[0]).toEqual("$top=5");
   });
   // #endregion
 
   // #region method : skip
-  it('skip one parameter', () => {
-    const qb = new ODataQuery('category').skip(5);
+  it("skip one parameter", () => {
+    const qb = new ODataQuery("category").skip(5);
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('$skip=5');
+    expect(p.queryStrings[0]).toEqual("$skip=5");
   });
   // #endregion
 
   // #region method : expand
-  it('expand one expandbuilder parameter', () => {
-    const qb = new ODataQuery('category').expand(new ExpandBuilder('a'));
+  it("expand one expandbuilder parameter", () => {
+    const qb = new ODataQuery("category").expand(new ExpandBuilder("a"));
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('$expand=a');
+    expect(p.queryStrings[0]).toEqual("$expand=a");
   });
   // #endregion
 
   // #region method : hasExpand
-  it('hasExpand for true value', () => {
-    const qb = new ODataQuery('category').expand(new ExpandBuilder('a'));
+  it("hasExpand for true value", () => {
+    const qb = new ODataQuery("category").expand(new ExpandBuilder("a"));
     const p: boolean = qb.hasExpand();
     expect(p).toBe(true);
   });
-  it('hasExpand for false value', () => {
-    const qb = new ODataQuery('category');
+  it("hasExpand for false value", () => {
+    const qb = new ODataQuery("category");
     const p: boolean = qb.hasExpand();
     expect(p).toBe(false);
   });
   // #endregion
 
   // #region method : parameter
-  it('parameter number value parameter', () => {
-    const qb = new ODataQuery('category').parameter('id', 5);
+  it("parameter number value parameter", () => {
+    const qb = new ODataQuery("category").parameter("id", 5);
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('@id=5');
+    expect(p.queryStrings[0]).toEqual("@id=5");
   });
-  it('parameter string value parameters', () => {
-    const qb = new ODataQuery('category').parameter('a', 'asd');
+  it("parameter string value parameters", () => {
+    const qb = new ODataQuery("category").parameter("a", "asd");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('@a=\'asd\'');
+    expect(p.queryStrings[0]).toEqual("@a='asd'");
   });
-  it('parameter two parameters and multiple call', () => {
-    const qb = new ODataQuery('category')
-      .parameter('id', 5)
-      .parameter('name', 'asd');
+  it("parameter two parameters and multiple call", () => {
+    const qb = new ODataQuery("category")
+      .parameter("id", 5)
+      .parameter("name", "asd");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(2);
-    expect(p.queryStrings[0]).toEqual('@id=5');
-    expect(p.queryStrings[1]).toEqual('@name=\'asd\'');
+    expect(p.queryStrings[0]).toEqual("@id=5");
+    expect(p.queryStrings[1]).toEqual("@name='asd'");
   });
   // #endregion parameter
 
   // #region method : parameters
-  it('parameters one string parameter', () => {
-    const qb = new ODataQuery('category').parameters('@id=5');
+  it("parameters one string parameter", () => {
+    const qb = new ODataQuery("category").parameters("@id=5");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('@id=5');
+    expect(p.queryStrings[0]).toEqual("@id=5");
   });
-  it('parameters two string parameters', () => {
-    const qb = new ODataQuery('category').parameters('@id=5', '@name=\'asd\'');
+  it("parameters two string parameters", () => {
+    const qb = new ODataQuery("category").parameters("@id=5", "@name='asd'");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(2);
-    expect(p.queryStrings[0]).toEqual('@id=5');
-    expect(p.queryStrings[1]).toEqual('@name=\'asd\'');
+    expect(p.queryStrings[0]).toEqual("@id=5");
+    expect(p.queryStrings[1]).toEqual("@name='asd'");
   });
   // #endregion
 
   // #region method : allPagesRowCount
-  it('allPagesRowCount empty parameter', () => {
-    const qb = new ODataQuery('category').allPagesRowCount();
+  it("allPagesRowCount empty parameter", () => {
+    const qb = new ODataQuery("category").allPagesRowCount();
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.getAllPagesRowCount).toBe(true);
   });
-  it('allPagesRowCount true parameter', () => {
-    const qb = new ODataQuery('category').allPagesRowCount(true);
+  it("allPagesRowCount true parameter", () => {
+    const qb = new ODataQuery("category").allPagesRowCount(true);
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.getAllPagesRowCount).toBe(true);
   });
-  it('allPagesRowCount false parameter', () => {
-    const qb = new ODataQuery('category').allPagesRowCount(false);
+  it("allPagesRowCount false parameter", () => {
+    const qb = new ODataQuery("category").allPagesRowCount(false);
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
@@ -370,8 +382,8 @@ describe('odata-query tests', () => {
   // #endregion
 
   // #region method : groupBy
-  it('groupBy empty string parameter', () => {
-    const qb = new ODataQuery('category').groupBy('');
+  it("groupBy empty string parameter", () => {
+    const qb = new ODataQuery("category").groupBy("");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
@@ -379,8 +391,8 @@ describe('odata-query tests', () => {
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(0);
   });
-  it('groupBy whitespaced string parameter', () => {
-    const qb = new ODataQuery('category').groupBy(' ');
+  it("groupBy whitespaced string parameter", () => {
+    const qb = new ODataQuery("category").groupBy(" ");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
@@ -388,31 +400,31 @@ describe('odata-query tests', () => {
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(0);
   });
-  it('groupBy string parameter', () => {
-    const qb = new ODataQuery('category').groupBy('(name)');
+  it("groupBy string parameter", () => {
+    const qb = new ODataQuery("category").groupBy("(name)");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('$apply=groupby((name))');
+    expect(p.queryStrings[0]).toEqual("$apply=groupby((name))");
   });
-  it('groupBy string parameter with dot', () => {
-    const qb = new ODataQuery('category').groupBy('(products.name)');
+  it("groupBy string parameter with dot", () => {
+    const qb = new ODataQuery("category").groupBy("(products.name)");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('$apply=groupby((products/name))');
+    expect(p.queryStrings[0]).toEqual("$apply=groupby((products/name))");
   });
   // #endregion groupBy
 
   // #region method : apply
-  it('apply empty string parameter', () => {
-    const qb = new ODataQuery('category').apply('');
+  it("apply empty string parameter", () => {
+    const qb = new ODataQuery("category").apply("");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
@@ -420,8 +432,8 @@ describe('odata-query tests', () => {
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(0);
   });
-  it('apply whitespaced string parameter', () => {
-    const qb = new ODataQuery('category').apply(' ');
+  it("apply whitespaced string parameter", () => {
+    const qb = new ODataQuery("category").apply(" ");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
@@ -429,93 +441,108 @@ describe('odata-query tests', () => {
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(0);
   });
-  it('apply string parameter', () => {
-    const qb = new ODataQuery('category').apply('groupby((name))');
+  it("apply string parameter", () => {
+    const qb = new ODataQuery("category").apply("groupby((name))");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('$apply=groupby((name))');
+    expect(p.queryStrings[0]).toEqual("$apply=groupby((name))");
   });
-  it('apply string parameter with dot', () => {
-    const qb = new ODataQuery('category').apply('groupby((products.name))');
+  it("apply string parameter with dot", () => {
+    const qb = new ODataQuery("category").apply("groupby((products.name))");
     const p: any = qb;
     expect(p).not.toBeNull();
     expect(p).not.toBeUndefined();
     expect(p.queryStrings).not.toBeNull();
     expect(p.queryStrings).not.toBeUndefined();
     expect(p.queryStrings.length).toEqual(1);
-    expect(p.queryStrings[0]).toEqual('$apply=groupby((products/name))');
+    expect(p.queryStrings[0]).toEqual("$apply=groupby((products/name))");
   });
   // #endregion apply
 
   // #region execution
 
   // #region method : q
-  it('q parameterless', async () => {
-    const returnObject = { id: 1 };
+  it("q parameterless", async () => {
+    const returnObject = { data: { id: 1 }, headers: {} };
     const baseConnectionService = new ConnectionService();
-    let url: string | undefined = '';
-    const stubRequest = sinon.stub(baseConnectionService, 'request')
+    let url: string | undefined = "";
+    const stubRequest = sinon
+      .stub(baseConnectionService, "request")
       .callsFake((x: AxiosRequestConfig) => {
         url = x.url;
-        return new Promise<any>((resolve) => { resolve(returnObject); });
+        return new Promise<HttpResponse<any>>((resolve) => {
+          resolve(returnObject);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
+      const qb = new ODataQuery("category", baseConnectionService);
       const p = await qb.q();
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
       expect(p).toEqual(returnObject);
       expect(stubRequest.called).toBe(true);
-      expect(url).toBe('http://localhost:5000/odata/category');
+      expect(url).toBe("http://localhost:5000/odata/category");
     } finally {
       stubRequest.restore();
     }
   });
-  it('q parameterless with filter', async () => {
-    const returnObject = { id: 1 };
+  it("q parameterless with filter", async () => {
+    const returnObject = { data: { id: 1 }, headers: {} };
     const baseConnectionService = new ConnectionService();
-    let url: string | undefined = '';
-    const stubRequest = sinon.stub(baseConnectionService, 'request')
+    let url: string | undefined = "";
+    const stubRequest = sinon
+      .stub(baseConnectionService, "request")
       .callsFake((x: AxiosRequestConfig) => {
         url = x.url;
-        return new Promise<any>((resolve) => { resolve(returnObject); });
+        return new Promise<any>((resolve) => {
+          resolve(returnObject);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService).filter('id eq 1');
+      const qb = new ODataQuery("category", baseConnectionService).filter(
+        "id eq 1"
+      );
 
       const p = await qb.q();
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
       expect(p).toEqual(returnObject);
       expect(stubRequest.called).toBe(true);
-      expect(url).toBe('http://localhost:5000/odata/category?$filter=id eq 1');
+      expect(url).toBe("http://localhost:5000/odata/category?$filter=id eq 1");
     } finally {
       stubRequest.restore();
     }
   });
 
-  it('q parameterless with filter and rowcount', async () => {
-    const returnObject = { id: 1 };
+  it("q parameterless with filter and rowcount", async () => {
+    const returnObject = { data: { id: 1 }, headers: {} };
     const baseConnectionService = new ConnectionService();
-    let url: string | undefined = '';
-    const stubRequest = sinon.stub(baseConnectionService, 'request')
+    let url: string | undefined = "";
+    const stubRequest = sinon
+      .stub(baseConnectionService, "request")
       .callsFake((x: AxiosRequestConfig) => {
         url = x.url;
-        return new Promise<any>((resolve) => { resolve(returnObject); });
+        return new Promise<any>((resolve) => {
+          resolve(returnObject);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService).filter('id eq 1').allPagesRowCount();
+      const qb = new ODataQuery("category", baseConnectionService)
+        .filter("id eq 1")
+        .allPagesRowCount();
 
       const p = await qb.q();
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
       expect(p).toEqual(returnObject);
       expect(stubRequest.called).toBe(true);
-      expect(url).toBe('http://localhost:5000/odata/category?$filter=id eq 1&$count=true');
+      expect(url).toBe(
+        "http://localhost:5000/odata/category?$filter=id eq 1&$count=true"
+      );
     } finally {
       stubRequest.restore();
     }
@@ -523,23 +550,26 @@ describe('odata-query tests', () => {
   // #endregion q
 
   // #region method : count
-  it('count parameterless', async () => {
+  it("count parameterless", async () => {
     const returnNumber = 5;
     const baseConnectionService = new ConnectionService();
-    let url: string | undefined = '';
-    const stubRequest = sinon.stub(baseConnectionService, 'requestT')
+    let url: string | undefined = "";
+    const stubRequest = sinon
+      .stub(baseConnectionService, "requestT")
       .callsFake((x: AxiosRequestConfig) => {
         url = x.url;
-        return new Promise<HttpResponse<number>>((resolve) => { resolve( { data: returnNumber, headers: {} }); });
+        return new Promise<HttpResponse<number>>((resolve) => {
+          resolve({ data: returnNumber, headers: {} });
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
+      const qb = new ODataQuery("category", baseConnectionService);
       const p = await qb.count();
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
-      expect(p).toEqual(returnNumber);
+      expect(p.data).toEqual(returnNumber);
       expect(stubRequest.called).toBe(true);
-      expect(url).toBe('http://localhost:5000/odata/category/$count');
+      expect(url).toBe("http://localhost:5000/odata/category/$count");
     } finally {
       stubRequest.restore();
     }
@@ -547,23 +577,26 @@ describe('odata-query tests', () => {
   // #endregion count
 
   // #region method : getByKey
-  it('getByKey one parameter', async () => {
+  it("getByKey one parameter", async () => {
     const returnObject = { id: 5 };
     const baseConnectionService = new ConnectionService();
-    let url: string | undefined = '';
-    const stubRequest = sinon.stub(baseConnectionService, 'request')
+    let url: string | undefined = "";
+    const stubRequest = sinon
+      .stub(baseConnectionService, "request")
       .callsFake((x: AxiosRequestConfig) => {
         url = x.url;
-        return new Promise<any>((resolve) => { resolve(returnObject); });
+        return new Promise<any>((resolve) => {
+          resolve(returnObject);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
+      const qb = new ODataQuery("category", baseConnectionService);
       const p = await qb.getByKey(5);
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
       expect(p).toEqual(returnObject);
       expect(stubRequest.called).toBe(true);
-      expect(url).toBe('http://localhost:5000/odata/category(5)');
+      expect(url).toBe("http://localhost:5000/odata/category(5)");
     } finally {
       stubRequest.restore();
     }
@@ -576,160 +609,175 @@ describe('odata-query tests', () => {
 
   // #region post
 
-  it('post response status 200', async () => {
-    const requestObject: { name: string } = { name: 'aaa' };
-    const returnObject: { id: number, name: string } = { id: 1, name: 'aaa' };
+  it("post response status 200", async () => {
+    const requestObject: { name: string } = { name: "aaa" };
+    const returnObject: { id: number; name: string } = { id: 1, name: "aaa" };
     const axiosResponse: AxiosResponse = {
       data: returnObject,
       status: 200,
-      statusText: 'OK',
+      statusText: "OK",
       headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
-    let url = '';
-    const stubPost = sinon.stub(baseConnectionService, 'post')
+    let url = "";
+    const stubPost = sinon
+      .stub(baseConnectionService, "post")
       .callsFake((x, y, z) => {
         url = x;
-        return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
+        return new Promise<AxiosResponse>((resolve) => {
+          resolve(axiosResponse);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
-      const p = await qb.post<{ id: number, name: string }>(requestObject);
+      const qb = new ODataQuery("category", baseConnectionService);
+      const p = await qb.post<{ id: number; name: string }>(requestObject);
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
       expect(p.status).toEqual(MutationResultStatus.Ok);
       expect(p.axiosResponse).toEqual(axiosResponse);
       expect(p.entity).toEqual(returnObject);
       expect(stubPost.called).toBe(true);
-      expect(url).toBe('odata/category');
+      expect(url).toBe("odata/category");
     } finally {
       stubPost.restore();
     }
   });
 
-  it('post response status 201', async () => {
-    const requestObject: { name: string } = { name: 'aaa' };
-    const returnObject: { id: number, name: string } = { id: 1, name: 'aaa' };
+  it("post response status 201", async () => {
+    const requestObject: { name: string } = { name: "aaa" };
+    const returnObject: { id: number; name: string } = { id: 1, name: "aaa" };
     const axiosResponse: AxiosResponse = {
       data: returnObject,
       status: 201,
-      statusText: 'Created',
+      statusText: "Created",
       headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
-    let url = '';
-    const stubPost = sinon.stub(baseConnectionService, 'post')
+    let url = "";
+    const stubPost = sinon
+      .stub(baseConnectionService, "post")
       .callsFake((x, y, z) => {
         url = x;
-        return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
+        return new Promise<AxiosResponse>((resolve) => {
+          resolve(axiosResponse);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
-      const p = await qb.post<{ id: number, name: string }>(requestObject);
+      const qb = new ODataQuery("category", baseConnectionService);
+      const p = await qb.post<{ id: number; name: string }>(requestObject);
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
       expect(p.status).toEqual(MutationResultStatus.Ok);
       expect(p.axiosResponse).toEqual(axiosResponse);
       expect(p.entity).toEqual(returnObject);
       expect(stubPost.called).toBe(true);
-      expect(url).toBe('odata/category');
+      expect(url).toBe("odata/category");
     } finally {
       stubPost.restore();
     }
   });
 
-  it('post response status 204', async () => {
-    const requestObject: { name: string } = { name: 'aaa' };
+  it("post response status 204", async () => {
+    const requestObject: { name: string } = { name: "aaa" };
     const returnObject = {};
     const axiosResponse: AxiosResponse = {
       data: returnObject,
       status: 204,
-      statusText: 'No Content',
+      statusText: "No Content",
       headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
-    let url = '';
-    const stubPost = sinon.stub(baseConnectionService, 'post')
+    let url = "";
+    const stubPost = sinon
+      .stub(baseConnectionService, "post")
       .callsFake((x, y, z) => {
         url = x;
-        return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
+        return new Promise<AxiosResponse>((resolve) => {
+          resolve(axiosResponse);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
-      const p = await qb.post<{ id: number, name: string }>(requestObject);
+      const qb = new ODataQuery("category", baseConnectionService);
+      const p = await qb.post<{ id: number; name: string }>(requestObject);
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
       expect(p.status).toEqual(MutationResultStatus.Ok);
       expect(p.axiosResponse).toEqual(axiosResponse);
       expect(p.entity).toEqual(returnObject);
       expect(stubPost.called).toBe(true);
-      expect(url).toBe('odata/category');
+      expect(url).toBe("odata/category");
     } finally {
       stubPost.restore();
     }
   });
 
-  it('post response status 299', async () => {
-    const requestObject: { name: string } = { name: 'aaa' };
+  it("post response status 299", async () => {
+    const requestObject: { name: string } = { name: "aaa" };
     const returnObject = {};
     const axiosResponse: AxiosResponse = {
       data: returnObject,
       status: 299,
-      statusText: 'No Supported',
+      statusText: "No Supported",
       headers: {},
       config: {},
       request: { config: {} },
     };
     const baseConnectionService = new ConnectionService();
-    let url = '';
-    const stubPost = sinon.stub(baseConnectionService, 'post')
+    let url = "";
+    const stubPost = sinon
+      .stub(baseConnectionService, "post")
       .callsFake((x, y, z) => {
         url = x;
-        return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
+        return new Promise<AxiosResponse>((resolve) => {
+          resolve(axiosResponse);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
-      const p = await qb.post<{ id: number, name: string }>(requestObject);
+      const qb = new ODataQuery("category", baseConnectionService);
+      const p = await qb.post<{ id: number; name: string }>(requestObject);
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
       expect(p.status).toEqual(MutationResultStatus.Error);
       expect(p.error).not.toBeNull();
       expect(p.error).not.toBeUndefined();
-      expect(p.error!.code).toEqual('599');
-      expect(p.error!.name).toEqual('NotSupported');
-      expect(p.error!.message).toEqual('Not supported http status : 299');
+      expect(p.error!.code).toEqual("599");
+      expect(p.error!.name).toEqual("NotSupported");
+      expect(p.error!.message).toEqual("Not supported http status : 299");
       expect(stubPost.called).toBe(true);
-      expect(url).toBe('odata/category');
+      expect(url).toBe("odata/category");
     } finally {
       stubPost.restore();
     }
   });
 
   // 404 error
-  it('post response status 404', async () => {
-    const requestObject: { name: string } = { name: 'aaa' };
+  it("post response status 404", async () => {
+    const requestObject: { name: string } = { name: "aaa" };
     const returnObject = {};
     const error: AxiosError = {
-      code: '404',
-      name: 'NotFound',
-      message: 'Not Found',
+      code: "404",
+      name: "NotFound",
+      message: "Not Found",
       config: {},
       isAxiosError: true,
       toJSON: () => Object,
     };
     const baseConnectionService = new ConnectionService();
-    let url = '';
-    const stubPost = sinon.stub(baseConnectionService, 'post')
+    let url = "";
+    const stubPost = sinon
+      .stub(baseConnectionService, "post")
       .callsFake((x, y, z) => {
         url = x;
-        return new Promise<AxiosResponse>((resolve, reject) => { reject(error); });
+        return new Promise<AxiosResponse>((resolve, reject) => {
+          reject(error);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
-      await qb.post<{ id: number, name: string }>(requestObject);
+      const qb = new ODataQuery("category", baseConnectionService);
+      await qb.post<{ id: number; name: string }>(requestObject);
     } catch (ex: any) {
       expect(ex).not.toBeNull();
       expect(ex).not.toBeUndefined();
@@ -738,7 +786,7 @@ describe('odata-query tests', () => {
       expect(ex.error).not.toBeUndefined();
       expect(ex.error).toEqual(error);
       expect(stubPost.called).toBe(true);
-      expect(url).toBe('odata/category');
+      expect(url).toBe("odata/category");
     } finally {
       stubPost.restore();
     }
@@ -748,26 +796,32 @@ describe('odata-query tests', () => {
 
   // #region put
 
-  it('put response status 200', async () => {
-    const requestObject: { id: number, name: string } = { id: 1, name: 'aaa' };
-    const returnObject: { id: number, name: string } = { id: 1, name: 'aaa' };
+  it("put response status 200", async () => {
+    const requestObject: { id: number; name: string } = { id: 1, name: "aaa" };
+    const returnObject: { id: number; name: string } = { id: 1, name: "aaa" };
     const axiosResponse: AxiosResponse = {
       data: returnObject,
       status: 200,
-      statusText: 'OK',
+      statusText: "OK",
       headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
-    let url = '';
-    const stubPut = sinon.stub(baseConnectionService, 'put')
+    let url = "";
+    const stubPut = sinon
+      .stub(baseConnectionService, "put")
       .callsFake((x, y, z) => {
         url = x;
-        return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
+        return new Promise<AxiosResponse>((resolve) => {
+          resolve(axiosResponse);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
-      const p = await qb.put<{ id: number, name: string }>(requestObject.id, requestObject);
+      const qb = new ODataQuery("category", baseConnectionService);
+      const p = await qb.put<{ id: number; name: string }>(
+        requestObject.id,
+        requestObject
+      );
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
       expect(p.status).toEqual(MutationResultStatus.Ok);
@@ -780,26 +834,32 @@ describe('odata-query tests', () => {
     }
   });
 
-  it('put response status 201', async () => {
-    const requestObject: { id: number, name: string } = { id: 1, name: 'aaa' };
-    const returnObject: { id: number, name: string } = { id: 1, name: 'aaa' };
+  it("put response status 201", async () => {
+    const requestObject: { id: number; name: string } = { id: 1, name: "aaa" };
+    const returnObject: { id: number; name: string } = { id: 1, name: "aaa" };
     const axiosResponse: AxiosResponse = {
       data: returnObject,
       status: 201,
-      statusText: 'Created',
+      statusText: "Created",
       headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
-    let url = '';
-    const stubPut = sinon.stub(baseConnectionService, 'put')
+    let url = "";
+    const stubPut = sinon
+      .stub(baseConnectionService, "put")
       .callsFake((x, y, z) => {
         url = x;
-        return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
+        return new Promise<AxiosResponse>((resolve) => {
+          resolve(axiosResponse);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
-      const p = await qb.put<{ id: number, name: string }>(requestObject.id, requestObject);
+      const qb = new ODataQuery("category", baseConnectionService);
+      const p = await qb.put<{ id: number; name: string }>(
+        requestObject.id,
+        requestObject
+      );
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
       expect(p.status).toEqual(MutationResultStatus.Ok);
@@ -812,26 +872,32 @@ describe('odata-query tests', () => {
     }
   });
 
-  it('put response status 204', async () => {
-    const requestObject: { id: number, name: string } = { id: 1, name: 'aaa' };
+  it("put response status 204", async () => {
+    const requestObject: { id: number; name: string } = { id: 1, name: "aaa" };
     const returnObject = {};
     const axiosResponse: AxiosResponse = {
       data: returnObject,
       status: 204,
-      statusText: 'No Content',
+      statusText: "No Content",
       headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
-    let url = '';
-    const stubPut = sinon.stub(baseConnectionService, 'put')
+    let url = "";
+    const stubPut = sinon
+      .stub(baseConnectionService, "put")
       .callsFake((x, y, z) => {
         url = x;
-        return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
+        return new Promise<AxiosResponse>((resolve) => {
+          resolve(axiosResponse);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
-      const p = await qb.put<{ id: number, name: string }>(requestObject.id, requestObject);
+      const qb = new ODataQuery("category", baseConnectionService);
+      const p = await qb.put<{ id: number; name: string }>(
+        requestObject.id,
+        requestObject
+      );
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
       expect(p.status).toEqual(MutationResultStatus.Ok);
@@ -844,35 +910,41 @@ describe('odata-query tests', () => {
     }
   });
 
-  it('put response status 299', async () => {
-    const requestObject: { id: number, name: string } = { id: 1, name: 'aaa' };
+  it("put response status 299", async () => {
+    const requestObject: { id: number; name: string } = { id: 1, name: "aaa" };
     const returnObject = {};
     const axiosResponse: AxiosResponse = {
       data: returnObject,
       status: 299,
-      statusText: 'No Supported',
+      statusText: "No Supported",
       headers: {},
       config: {},
       request: { config: {} },
     };
     const baseConnectionService = new ConnectionService();
-    let url = '';
-    const stubPut = sinon.stub(baseConnectionService, 'put')
+    let url = "";
+    const stubPut = sinon
+      .stub(baseConnectionService, "put")
       .callsFake((x, y, z) => {
         url = x;
-        return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
+        return new Promise<AxiosResponse>((resolve) => {
+          resolve(axiosResponse);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
-      const p = await qb.put<{ id: number, name: string }>(requestObject.id, requestObject);
+      const qb = new ODataQuery("category", baseConnectionService);
+      const p = await qb.put<{ id: number; name: string }>(
+        requestObject.id,
+        requestObject
+      );
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
       expect(p.status).toEqual(MutationResultStatus.Error);
       expect(p.error).not.toBeNull();
       expect(p.error).not.toBeUndefined();
-      expect(p.error!.code).toEqual('599');
-      expect(p.error!.name).toEqual('NotSupported');
-      expect(p.error!.message).toEqual('Not supported http status : 299');
+      expect(p.error!.code).toEqual("599");
+      expect(p.error!.name).toEqual("NotSupported");
+      expect(p.error!.message).toEqual("Not supported http status : 299");
       expect(stubPut.called).toBe(true);
       expect(url).toBe(`odata/category(${requestObject.id})`);
     } finally {
@@ -881,27 +953,33 @@ describe('odata-query tests', () => {
   });
 
   // 404 error
-  it('put response status 404', async () => {
-    const requestObject: { id: number, name: string } = { id: 1, name: 'aaa' };
+  it("put response status 404", async () => {
+    const requestObject: { id: number; name: string } = { id: 1, name: "aaa" };
     const returnObject = {};
     const error: AxiosError = {
-      code: '404',
-      name: 'NotFound',
-      message: 'Not Found',
+      code: "404",
+      name: "NotFound",
+      message: "Not Found",
       config: {},
       isAxiosError: true,
       toJSON: () => Object,
     };
     const baseConnectionService = new ConnectionService();
-    let url = '';
-    const stubPut = sinon.stub(baseConnectionService, 'put')
+    let url = "";
+    const stubPut = sinon
+      .stub(baseConnectionService, "put")
       .callsFake((x, y, z) => {
         url = x;
-        return new Promise<AxiosResponse>((resolve, reject) => { reject(error); });
+        return new Promise<AxiosResponse>((resolve, reject) => {
+          reject(error);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
-      await qb.put<{ id: number, name: string }>(requestObject.id, requestObject);
+      const qb = new ODataQuery("category", baseConnectionService);
+      await qb.put<{ id: number; name: string }>(
+        requestObject.id,
+        requestObject
+      );
     } catch (ex: any) {
       expect(ex).not.toBeNull();
       expect(ex).not.toBeUndefined();
@@ -920,26 +998,32 @@ describe('odata-query tests', () => {
 
   // #region patch
 
-  it('patch response status 200', async () => {
-    const requestObject: { id: number, name: string } = { id: 1, name: 'aaa' };
-    const returnObject: { id: number, name: string } = { id: 1, name: 'aaa' };
+  it("patch response status 200", async () => {
+    const requestObject: { id: number; name: string } = { id: 1, name: "aaa" };
+    const returnObject: { id: number; name: string } = { id: 1, name: "aaa" };
     const axiosResponse: AxiosResponse = {
       data: returnObject,
       status: 200,
-      statusText: 'OK',
+      statusText: "OK",
       headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
-    let url = '';
-    const stubPatch = sinon.stub(baseConnectionService, 'patch')
+    let url = "";
+    const stubPatch = sinon
+      .stub(baseConnectionService, "patch")
       .callsFake((x, y, z) => {
         url = x;
-        return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
+        return new Promise<AxiosResponse>((resolve) => {
+          resolve(axiosResponse);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
-      const p = await qb.patch<{ id: number, name: string }>(requestObject.id, requestObject);
+      const qb = new ODataQuery("category", baseConnectionService);
+      const p = await qb.patch<{ id: number; name: string }>(
+        requestObject.id,
+        requestObject
+      );
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
       expect(p.status).toEqual(MutationResultStatus.Ok);
@@ -952,26 +1036,32 @@ describe('odata-query tests', () => {
     }
   });
 
-  it('patch response status 201', async () => {
-    const requestObject: { id: number, name: string } = { id: 1, name: 'aaa' };
-    const returnObject: { id: number, name: string } = { id: 1, name: 'aaa' };
+  it("patch response status 201", async () => {
+    const requestObject: { id: number; name: string } = { id: 1, name: "aaa" };
+    const returnObject: { id: number; name: string } = { id: 1, name: "aaa" };
     const axiosResponse: AxiosResponse = {
       data: returnObject,
       status: 201,
-      statusText: 'Created',
+      statusText: "Created",
       headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
-    let url = '';
-    const stubPatch = sinon.stub(baseConnectionService, 'patch')
+    let url = "";
+    const stubPatch = sinon
+      .stub(baseConnectionService, "patch")
       .callsFake((x, y, z) => {
         url = x;
-        return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
+        return new Promise<AxiosResponse>((resolve) => {
+          resolve(axiosResponse);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
-      const p = await qb.patch<{ id: number, name: string }>(requestObject.id, requestObject);
+      const qb = new ODataQuery("category", baseConnectionService);
+      const p = await qb.patch<{ id: number; name: string }>(
+        requestObject.id,
+        requestObject
+      );
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
       expect(p.status).toEqual(MutationResultStatus.Ok);
@@ -984,26 +1074,32 @@ describe('odata-query tests', () => {
     }
   });
 
-  it('patch response status 204', async () => {
-    const requestObject: { id: number, name: string } = { id: 1, name: 'aaa' };
+  it("patch response status 204", async () => {
+    const requestObject: { id: number; name: string } = { id: 1, name: "aaa" };
     const returnObject = {};
     const axiosResponse: AxiosResponse = {
       data: returnObject,
       status: 204,
-      statusText: 'No Content',
+      statusText: "No Content",
       headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
-    let url = '';
-    const stubPatch = sinon.stub(baseConnectionService, 'patch')
+    let url = "";
+    const stubPatch = sinon
+      .stub(baseConnectionService, "patch")
       .callsFake((x, y, z) => {
         url = x;
-        return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
+        return new Promise<AxiosResponse>((resolve) => {
+          resolve(axiosResponse);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
-      const p = await qb.patch<{ id: number, name: string }>(requestObject.id, requestObject);
+      const qb = new ODataQuery("category", baseConnectionService);
+      const p = await qb.patch<{ id: number; name: string }>(
+        requestObject.id,
+        requestObject
+      );
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
       expect(p.status).toEqual(MutationResultStatus.Ok);
@@ -1016,35 +1112,41 @@ describe('odata-query tests', () => {
     }
   });
 
-  it('patch response status 299', async () => {
-    const requestObject: { id: number, name: string } = { id: 1, name: 'aaa' };
+  it("patch response status 299", async () => {
+    const requestObject: { id: number; name: string } = { id: 1, name: "aaa" };
     const returnObject = {};
     const axiosResponse: AxiosResponse = {
       data: returnObject,
       status: 299,
-      statusText: 'No Supported',
+      statusText: "No Supported",
       headers: {},
       config: {},
       request: { config: {} },
     };
     const baseConnectionService = new ConnectionService();
-    let url = '';
-    const stubPatch = sinon.stub(baseConnectionService, 'patch')
+    let url = "";
+    const stubPatch = sinon
+      .stub(baseConnectionService, "patch")
       .callsFake((x, y, z) => {
         url = x;
-        return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
+        return new Promise<AxiosResponse>((resolve) => {
+          resolve(axiosResponse);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
-      const p = await qb.patch<{ id: number, name: string }>(requestObject.id, requestObject);
+      const qb = new ODataQuery("category", baseConnectionService);
+      const p = await qb.patch<{ id: number; name: string }>(
+        requestObject.id,
+        requestObject
+      );
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
       expect(p.status).toEqual(MutationResultStatus.Error);
       expect(p.error).not.toBeNull();
       expect(p.error).not.toBeUndefined();
-      expect(p.error!.code).toEqual('599');
-      expect(p.error!.name).toEqual('NotSupported');
-      expect(p.error!.message).toEqual('Not supported http status : 299');
+      expect(p.error!.code).toEqual("599");
+      expect(p.error!.name).toEqual("NotSupported");
+      expect(p.error!.message).toEqual("Not supported http status : 299");
       expect(stubPatch.called).toBe(true);
       expect(url).toBe(`odata/category(${requestObject.id})`);
     } finally {
@@ -1053,28 +1155,34 @@ describe('odata-query tests', () => {
   });
 
   // 404 error
-  it('patch response status 404', async () => {
-    const requestObject: { id: number, name: string } = { id: 1, name: 'aaa' };
+  it("patch response status 404", async () => {
+    const requestObject: { id: number; name: string } = { id: 1, name: "aaa" };
     const returnObject = {};
     const error: AxiosError = {
-      code: '404',
-      name: 'NotFound',
-      message: 'Not Found',
+      code: "404",
+      name: "NotFound",
+      message: "Not Found",
       config: {},
       isAxiosError: true,
       toJSON: () => Object,
     };
     const baseConnectionService = new ConnectionService();
-    let url = '';
-    const stubPatch = sinon.stub(baseConnectionService, 'patch')
+    let url = "";
+    const stubPatch = sinon
+      .stub(baseConnectionService, "patch")
 
       .callsFake((x, y, z) => {
         url = x;
-        return new Promise<AxiosResponse>((resolve, reject) => { reject(error); });
+        return new Promise<AxiosResponse>((resolve, reject) => {
+          reject(error);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
-      await qb.patch<{ id: number, name: string }>(requestObject.id, requestObject);
+      const qb = new ODataQuery("category", baseConnectionService);
+      await qb.patch<{ id: number; name: string }>(
+        requestObject.id,
+        requestObject
+      );
     } catch (ex: any) {
       expect(ex).not.toBeNull();
       expect(ex).not.toBeUndefined();
@@ -1093,24 +1201,27 @@ describe('odata-query tests', () => {
 
   // #region delete
 
-  it('delete response status 200', async () => {
+  it("delete response status 200", async () => {
     const returnObject = {};
     const axiosResponse: AxiosResponse = {
       data: returnObject,
       status: 200,
-      statusText: 'OK',
+      statusText: "OK",
       headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
-    let url = '';
-    const stubDelete = sinon.stub(baseConnectionService, 'dele')
+    let url = "";
+    const stubDelete = sinon
+      .stub(baseConnectionService, "dele")
       .callsFake((x, y) => {
         url = x;
-        return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
+        return new Promise<AxiosResponse>((resolve) => {
+          resolve(axiosResponse);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
+      const qb = new ODataQuery("category", baseConnectionService);
       const p = await qb.delete(1);
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
@@ -1118,30 +1229,33 @@ describe('odata-query tests', () => {
       expect(p.axiosResponse).toEqual(axiosResponse);
       expect(p.entity).toEqual(returnObject);
       expect(stubDelete.called).toBe(true);
-      expect(url).toBe('odata/category(1)');
+      expect(url).toBe("odata/category(1)");
     } finally {
       stubDelete.restore();
     }
   });
 
-  it('delete response status 201', async () => {
+  it("delete response status 201", async () => {
     const returnObject = {};
     const axiosResponse: AxiosResponse = {
       data: returnObject,
       status: 201,
-      statusText: 'Created',
+      statusText: "Created",
       headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
-    let url = '';
-    const stubDelete = sinon.stub(baseConnectionService, 'dele')
+    let url = "";
+    const stubDelete = sinon
+      .stub(baseConnectionService, "dele")
       .callsFake((x, y) => {
         url = x;
-        return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
+        return new Promise<AxiosResponse>((resolve) => {
+          resolve(axiosResponse);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
+      const qb = new ODataQuery("category", baseConnectionService);
       const p = await qb.delete(1);
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
@@ -1149,31 +1263,34 @@ describe('odata-query tests', () => {
       expect(p.axiosResponse).toEqual(axiosResponse);
       expect(p.entity).toEqual(returnObject);
       expect(stubDelete.called).toBe(true);
-      expect(url).toBe('odata/category(1)');
+      expect(url).toBe("odata/category(1)");
     } finally {
       stubDelete.restore();
     }
   });
 
-  it('delete response status 204', async () => {
+  it("delete response status 204", async () => {
     const returnObject = {};
     const axiosResponse: AxiosResponse = {
       data: returnObject,
       status: 204,
-      statusText: 'No Content',
+      statusText: "No Content",
       headers: {},
       config: {},
     };
     const baseConnectionService = new ConnectionService();
-    let url = '';
-    const stubDelete = sinon.stub(baseConnectionService, 'dele')
+    let url = "";
+    const stubDelete = sinon
+      .stub(baseConnectionService, "dele")
 
       .callsFake((x, y) => {
         url = x;
-        return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
+        return new Promise<AxiosResponse>((resolve) => {
+          resolve(axiosResponse);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
+      const qb = new ODataQuery("category", baseConnectionService);
       const p = await qb.delete(1);
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
@@ -1181,42 +1298,44 @@ describe('odata-query tests', () => {
       expect(p.axiosResponse).toEqual(axiosResponse);
       expect(p.entity).toEqual(returnObject);
       expect(stubDelete.called).toBe(true);
-      expect(url).toBe('odata/category(1)');
+      expect(url).toBe("odata/category(1)");
     } finally {
       stubDelete.restore();
     }
   });
 
-
-  it('delete response status 299', async () => {
-    const requestObject: { id: number, name: string } = { id: 1, name: 'aaa' };
+  it("delete response status 299", async () => {
+    const requestObject: { id: number; name: string } = { id: 1, name: "aaa" };
     const returnObject = {};
     const axiosResponse: AxiosResponse = {
       data: returnObject,
       status: 299,
-      statusText: 'No Supported',
+      statusText: "No Supported",
       headers: {},
       config: {},
       request: { config: {} },
     };
     const baseConnectionService = new ConnectionService();
-    let url = '';
-    const stubDelete = sinon.stub(baseConnectionService, 'dele')
+    let url = "";
+    const stubDelete = sinon
+      .stub(baseConnectionService, "dele")
       .callsFake((x, y) => {
         url = x;
-        return new Promise<AxiosResponse>((resolve) => { resolve(axiosResponse); });
+        return new Promise<AxiosResponse>((resolve) => {
+          resolve(axiosResponse);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
-      const p = await qb.delete<{ id: number, name: string }>(requestObject.id);
+      const qb = new ODataQuery("category", baseConnectionService);
+      const p = await qb.delete<{ id: number; name: string }>(requestObject.id);
       expect(p).not.toBeNull();
       expect(p).not.toBeUndefined();
       expect(p.status).toEqual(MutationResultStatus.Error);
       expect(p.error).not.toBeNull();
       expect(p.error).not.toBeUndefined();
-      expect(p.error!.code).toEqual('599');
-      expect(p.error!.name).toEqual('NotSupported');
-      expect(p.error!.message).toEqual('Not supported http status : 299');
+      expect(p.error!.code).toEqual("599");
+      expect(p.error!.name).toEqual("NotSupported");
+      expect(p.error!.message).toEqual("Not supported http status : 299");
       expect(stubDelete.called).toBe(true);
       expect(url).toBe(`odata/category(${requestObject.id})`);
     } finally {
@@ -1225,24 +1344,27 @@ describe('odata-query tests', () => {
   });
 
   // 404 error
-  it('delete response status 404', async () => {
+  it("delete response status 404", async () => {
     const error: AxiosError = {
-      code: '404',
-      name: 'NotFound',
-      message: 'Not Found',
+      code: "404",
+      name: "NotFound",
+      message: "Not Found",
       config: {},
       isAxiosError: true,
       toJSON: () => Object,
     };
     const baseConnectionService = new ConnectionService();
-    let url = '';
-    const stubDelete = sinon.stub(baseConnectionService, 'dele')
+    let url = "";
+    const stubDelete = sinon
+      .stub(baseConnectionService, "dele")
       .callsFake((x: any) => {
         url = x;
-        return new Promise<AxiosResponse>((resolve, reject) => { reject(error); });
+        return new Promise<AxiosResponse>((resolve, reject) => {
+          reject(error);
+        });
       });
     try {
-      const qb = new ODataQuery('category', baseConnectionService);
+      const qb = new ODataQuery("category", baseConnectionService);
       await qb.delete(1);
     } catch (ex: any) {
       expect(ex).not.toBeNull();
@@ -1252,7 +1374,7 @@ describe('odata-query tests', () => {
       expect(ex.error).not.toBeUndefined();
       expect(ex.error).toEqual(error);
       expect(stubDelete.called).toBe(true);
-      expect(url).toBe('odata/category(1)');
+      expect(url).toBe("odata/category(1)");
     } finally {
       stubDelete.restore();
     }
@@ -1263,13 +1385,13 @@ describe('odata-query tests', () => {
   // #endregion
 
   // #region method : cloneQuery
-  it('cloneQuery one parameter', async () => {
-    const qb = new ODataQuery('category');
+  it("cloneQuery one parameter", async () => {
+    const qb = new ODataQuery("category");
     const qb2 = qb.cloneQuery();
 
     expect(qb2).not.toBeNull();
     expect(qb2).not.toBeUndefined();
-    expect((qb2 as any).resource).toEqual('category');
+    expect((qb2 as any).resource).toEqual("category");
     expect(qb !== qb2).toBe(true);
     expect(qb2).toEqual(qb);
   });

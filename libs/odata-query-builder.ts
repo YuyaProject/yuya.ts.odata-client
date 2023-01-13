@@ -3,6 +3,7 @@ import {
   isExpression, Expression, Parameter, isParameter, GroupByBuilder, ExpandBuilder, ODataQuery,
   IConnectionService, ConnectionService,
 } from '.';
+import HttpResponse from './http-response';
 
 export enum OrderByDirection { Asc, Desc }
 
@@ -297,7 +298,7 @@ export class ODataQueryBuilder {
     return prepareFilterString(this.filters);
   }
 
-  public q(): Promise<any> {
+  public q(): Promise<HttpResponse<any>> {
     return this.getQuery().q();
   }
 }

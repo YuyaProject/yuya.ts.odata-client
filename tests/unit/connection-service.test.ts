@@ -1,7 +1,6 @@
 import { ConnectionService, config, IConnetionSettings } from '../../libs/connection-service';
 import axios, { AxiosResponse } from 'axios';
 import sinon from 'sinon';
-import HttpResponse from '../../libs/http-response';
 
 // TODO : @alper-2019-02-14: ErrorHandler ile ilgili kısım için bir test yazmadım. Bunun yazılması lazım.
 

@@ -172,7 +172,7 @@ export class ODataQuery implements IQuery {
   /**
    * execute the query
    */
-  public q(): Promise<any> {
+  public q(): Promise<HttpResponse<any>> {
     const conf: AxiosRequestConfig = {
       method: 'GET',
       url: this.connectionService.prepareServiceUrl(this.createRelativeUrl()),
@@ -193,7 +193,7 @@ export class ODataQuery implements IQuery {
    * Get by key
    * @param key the key
    */
-  public getByKey(key: any): Promise<any> {
+  public getByKey(key: any): Promise<HttpResponse<any>> {
     this.key = key;
     const conf: AxiosRequestConfig = {
       method: 'get',

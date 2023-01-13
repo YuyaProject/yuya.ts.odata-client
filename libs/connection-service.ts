@@ -37,7 +37,7 @@ export interface IConnectionService {
    * @param conf the optional request configurations
    * @returns the promise for service response
    */
-  request(conf?: AxiosRequestConfig): Promise<any>;
+  request(conf?: AxiosRequestConfig): Promise<HttpResponse<any>>;
 
   /**
    * Make request the service and receive response with T type
@@ -54,7 +54,7 @@ export interface IConnectionService {
    * @param conf the optional request configurations
    * @returns the promise for service response
    */
-  get(relativeUrl: string, conf?: AxiosRequestConfig): Promise<any>;
+  get(relativeUrl: string, conf?: AxiosRequestConfig): Promise<HttpResponse<any>>;
 
   /**
    * Make GET request the service and receive response with T type
@@ -202,7 +202,7 @@ export class ConnectionService implements IConnectionService {
    * @param conf the optional request configurations
    * @returns the promise for service response
    */
-  public request(conf?: AxiosRequestConfig): Promise<any> {
+  public request(conf?: AxiosRequestConfig): Promise<HttpResponse<any>> {
     return this.requestT<any>(conf);
   }
 
@@ -228,8 +228,8 @@ export class ConnectionService implements IConnectionService {
    * @param conf the optional request configurations
    * @returns the promise for service response
    */
-  public get(relativeUrl: string, conf?: AxiosRequestConfig): Promise<any> {
-    return this.handleAxiosPromise<any>(
+  public get(relativeUrl: string, conf?: AxiosRequestConfig): Promise<HttpResponse<any>> {
+    return this.handleAxiosPromise<HttpResponse<any>>(
       axios.get(this.prepareServiceUrl(relativeUrl), this.prepareRequestConfig(conf)));
   }
 
