@@ -1,4 +1,5 @@
 import { ExpandBuilder } from '.';
+import HttpResponse from './http-response';
 export interface IQuery {
   /**
    * set the api version.
@@ -52,16 +53,16 @@ export interface IQuery {
   /**
    * execute the query
    */
-  q(): Promise<any>;
+  q(): Promise<HttpResponse<any>>;
   /**
    * execute and get row count
    */
-  count(): Promise<any>;
+  count(): Promise<HttpResponse<number>>;
   /**
    * Get by key
    * @param key the key
    */
-  getByKey(key: any): Promise<any>;
+  getByKey(key: any): Promise<HttpResponse<any>>;
   /** Clone the query */
   cloneQuery(): IQuery;
   /**
