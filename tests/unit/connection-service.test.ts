@@ -1,5 +1,5 @@
 import { ConnectionService, config, IConnetionSettings } from '../../libs/connection-service';
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import sinon from 'sinon';
 
 // TODO : @alper-2019-02-14: ErrorHandler ile ilgili kısım için bir test yazmadım. Bunun yazılması lazım.
@@ -51,7 +51,7 @@ describe('default-connection-service tests', () => {
     const axiosStub = sinon.stub(axios, 'get');
     axiosStub
       .returns(new Promise<AxiosResponse<any>>((resolve) => {
-        resolve({ data: [], status: 200, statusText: 'OK', config: {}, headers: {} });
+        resolve({ data: [], status: 200, statusText: 'OK', config: {} as AxiosRequestConfig, headers: {} });
       }));
     try {
       const response = await new ConnectionService().get('deneme');
@@ -69,7 +69,7 @@ describe('default-connection-service tests', () => {
     ];
     axiosStub
       .returns(new Promise<AxiosResponse<any>>((resolve) => {
-        resolve({ data: returnData, status: 200, statusText: 'OK', config: {}, headers: {} });
+        resolve({ data: returnData, status: 200, statusText: 'OK', config: {} as AxiosRequestConfig, headers: {} });
       }));
     try {
       const response = await new ConnectionService().getT<Array<{ id: number, name: string }>>('deneme');
@@ -87,10 +87,10 @@ describe('default-connection-service tests', () => {
     const axiosStub = sinon.stub(axios, 'request');
     axiosStub
       .returns(new Promise<AxiosResponse<any>>((resolve) => {
-        resolve({ data: [], status: 200, statusText: 'OK', config: {}, headers: {} });
+        resolve({ data: [], status: 200, statusText: 'OK', config: {} as AxiosRequestConfig, headers: {} });
       }));
     try {
-      const response = await new ConnectionService().request({ method: 'get', url: 'deneme' });
+      const response = await new ConnectionService().request({ method: 'get', url: 'deneme' } as AxiosRequestConfig);
       // console.log(response);
       expect(response).toEqual([]);
     } finally {
@@ -105,12 +105,12 @@ describe('default-connection-service tests', () => {
     ];
     axiosStub
       .returns(new Promise<AxiosResponse<any>>((resolve) => {
-        resolve({ data: returnData, status: 200, statusText: 'OK', config: {}, headers: {} });
+        resolve({ data: returnData, status: 200, statusText: 'OK', config: {} as AxiosRequestConfig, headers: {} });
       }));
     try {
       const response =
         await new ConnectionService()
-          .requestT<Array<{ id: number, name: string }>>({ method: 'get', url: 'deneme' });
+          .requestT<Array<{ id: number, name: string }>>({ method: 'get', url: 'deneme' } as AxiosRequestConfig);
       // console.log(response);
       expect(response.data).toEqual(returnData);
       expect(response.data.length).toBe(2);
@@ -125,7 +125,7 @@ describe('default-connection-service tests', () => {
     const axiosStub = sinon.stub(axios, 'post');
     axiosStub
       .returns(new Promise<AxiosResponse<any>>((resolve) => {
-        resolve({ data: [], status: 200, statusText: 'OK', config: {}, headers: {} });
+        resolve({ data: [], status: 200, statusText: 'OK', config: {} as AxiosRequestConfig, headers: {} });
       }));
     try {
       const response = await new ConnectionService().post('deneme', {});
@@ -169,7 +169,7 @@ describe('default-connection-service tests', () => {
     ];
     axiosStub
       .returns(new Promise<AxiosResponse<any>>((resolve) => {
-        resolve({ data: returnData, status: 200, statusText: 'OK', config: {}, headers: {} });
+        resolve({ data: returnData, status: 200, statusText: 'OK', config: {} as AxiosRequestConfig, headers: {} });
       }));
     try {
       const response = await new ConnectionService().postT<Array<{ id: number, name: string }>>('deneme', {});
@@ -209,7 +209,7 @@ describe('default-connection-service tests', () => {
     const axiosStub = sinon.stub(axios, 'put');
     axiosStub
       .returns(new Promise<AxiosResponse<any>>((resolve) => {
-        resolve({ data: [], status: 200, statusText: 'OK', config: {}, headers: {} });
+        resolve({ data: [], status: 200, statusText: 'OK', config: {} as AxiosRequestConfig, headers: {} });
       }));
     try {
       const response = await new ConnectionService().put('deneme', {});
@@ -229,7 +229,7 @@ describe('default-connection-service tests', () => {
     ];
     axiosStub
       .returns(new Promise<AxiosResponse<any>>((resolve) => {
-        resolve({ data: returnData, status: 200, statusText: 'OK', config: {}, headers: {} });
+        resolve({ data: returnData, status: 200, statusText: 'OK', config: {} as AxiosRequestConfig, headers: {} });
       }));
     try {
       const response = await new ConnectionService().putT<Array<{ id: number, name: string }>>('deneme', {});
@@ -247,7 +247,7 @@ describe('default-connection-service tests', () => {
     const axiosStub = sinon.stub(axios, 'patch');
     axiosStub
       .returns(new Promise<AxiosResponse<any>>((resolve) => {
-        resolve({ data: [], status: 200, statusText: 'OK', config: {}, headers: {} });
+        resolve({ data: [], status: 200, statusText: 'OK', config: {} as AxiosRequestConfig, headers: {} });
       }));
     try {
       const response = await new ConnectionService().patch('deneme', {});
@@ -267,7 +267,7 @@ describe('default-connection-service tests', () => {
     ];
     axiosStub
       .returns(new Promise<AxiosResponse<any>>((resolve) => {
-        resolve({ data: returnData, status: 200, statusText: 'OK', config: {}, headers: {} });
+        resolve({ data: returnData, status: 200, statusText: 'OK', config: {} as AxiosRequestConfig, headers: {} });
       }));
     try {
       const response = await new ConnectionService().patchT<Array<{ id: number, name: string }>>('deneme', {});
@@ -285,7 +285,7 @@ describe('default-connection-service tests', () => {
     const axiosStub = sinon.stub(axios, 'delete');
     axiosStub
       .returns(new Promise<AxiosResponse<any>>((resolve) => {
-        resolve({ data: [], status: 200, statusText: 'OK', config: {}, headers: {} });
+        resolve({ data: [], status: 200, statusText: 'OK', config: {} as AxiosRequestConfig, headers: {} });
       }));
     try {
       const response = await new ConnectionService().dele('deneme');
@@ -305,7 +305,7 @@ describe('default-connection-service tests', () => {
     ];
     axiosStub
       .returns(new Promise<AxiosResponse<any>>((resolve) => {
-        resolve({ data: returnData, status: 200, statusText: 'OK', config: {}, headers: {} });
+        resolve({ data: returnData, status: 200, statusText: 'OK', config: {} as AxiosRequestConfig, headers: {} });
       }));
     try {
       const response = await new ConnectionService().deleT<Array<{ id: number, name: string }>>('deneme');

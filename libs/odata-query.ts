@@ -4,7 +4,7 @@ import {
   DefaultConnectionServiceConfig, Parameter,
 } from '.';
 import { IMutationResult, getMutationResult, MutationErrorResult } from './mutation';
-import { AxiosRequestConfig, Method } from 'axios';
+import { AxiosRequestConfig, Method, RawAxiosRequestConfig } from 'axios';
 import HttpResponse from './http-response';
 
 export function canQuery(arg: any): arg is IQuery {
@@ -173,7 +173,7 @@ export class ODataQuery implements IQuery {
    * execute the query
    */
   public q(): Promise<HttpResponse<any>> {
-    const conf: AxiosRequestConfig = {
+    const conf: RawAxiosRequestConfig = {
       method: 'GET',
       url: this.connectionService.prepareServiceUrl(this.createRelativeUrl()),
     };
@@ -182,7 +182,7 @@ export class ODataQuery implements IQuery {
 
   /** execute and get row count */
   public count(): Promise<HttpResponse<number>> {
-    const conf: AxiosRequestConfig = {
+    const conf: RawAxiosRequestConfig = {
       method: 'get',
       url: this.connectionService.prepareServiceUrl(this.createRelativeUrl(true)),
     };
@@ -195,7 +195,7 @@ export class ODataQuery implements IQuery {
    */
   public getByKey(key: any): Promise<HttpResponse<any>> {
     this.key = key;
-    const conf: AxiosRequestConfig = {
+    const conf: RawAxiosRequestConfig = {
       method: 'get',
       url: this.connectionService.prepareServiceUrl(this.createRelativeUrl()),
     };

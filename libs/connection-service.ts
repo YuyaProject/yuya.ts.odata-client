@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosPromise, RawAxiosRequestHeaders } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosPromise, RawAxiosRequestHeaders, AxiosHeaders, AxiosRequestHeaders, RawAxiosRequestConfig } from 'axios';
 import HttpResponse from './http-response'
 
 // const baseUrl: string = process.env.VUE_APP_BASE_URL_API || 'http://localhost:5000/';
@@ -22,7 +22,7 @@ export interface IConnectionService {
    * @param conf the request configuration
    * @returns the full axios request config
    */
-  prepareRequestConfig(conf?: AxiosRequestConfig): AxiosRequestConfig;
+  prepareRequestConfig(conf?: RawAxiosRequestConfig): RawAxiosRequestConfig;
 
   /**
    * Prepare the full service url from relative url
@@ -37,14 +37,14 @@ export interface IConnectionService {
    * @param conf the optional request configurations
    * @returns the promise for service response
    */
-  request(conf?: AxiosRequestConfig): Promise<HttpResponse<any>>;
+  request(conf?: RawAxiosRequestConfig): Promise<HttpResponse<any>>;
 
   /**
    * Make request the service and receive response with T type
    * @param conf the optional request configurations
    * @returns the promise for service response with T response type
    */
-  requestT<T>(conf?: AxiosRequestConfig): Promise<HttpResponse<T>>;
+  requestT<T>(conf?: RawAxiosRequestConfig): Promise<HttpResponse<T>>;
   // #endregion
 
   // #region gets
@@ -174,13 +174,13 @@ export class ConnectionService implements IConnectionService {
    * @param conf the request configuration
    * @returns the full axios request config
    */
-  public prepareRequestConfig(conf?: AxiosRequestConfig): AxiosRequestConfig {
+  public prepareRequestConfig(conf?: RawAxiosRequestConfig): RawAxiosRequestConfig {
     conf = conf || {};
     return {
       ...conf,
       headers: {
         'Content-Type': 'application/json',
-        ...conf.headers,
+        ...conf!.headers,
       } as RawAxiosRequestHeaders,
     };
   }
@@ -202,7 +202,7 @@ export class ConnectionService implements IConnectionService {
    * @param conf the optional request configurations
    * @returns the promise for service response
    */
-  public request(conf?: AxiosRequestConfig): Promise<HttpResponse<any>> {
+  public request(conf?: RawAxiosRequestConfig): Promise<HttpResponse<any>> {
     return this.requestT<any>(conf);
   }
 
@@ -211,7 +211,7 @@ export class ConnectionService implements IConnectionService {
    * @param conf the optional request configurations
    * @returns the promise for service response with T response type
    */
-  public requestT<T>(conf?: AxiosRequestConfig): Promise<HttpResponse<T>> {
+  public requestT<T>(conf?: RawAxiosRequestConfig): Promise<HttpResponse<T>> {
     return new Promise<HttpResponse<T>>((resolve, reject) => {
       axios.request(this.prepareRequestConfig(conf))
         .then((res: AxiosResponse<T>) => { resolve( { data: res.data, headers: res.headers }); })

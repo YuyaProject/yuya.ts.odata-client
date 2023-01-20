@@ -5,7 +5,7 @@ import {
   ExpandBuilder,
 } from "../../libs";
 import sinon from "sinon";
-import { AxiosResponse, AxiosError, AxiosRequestConfig } from "axios";
+import { AxiosResponse, AxiosError, AxiosRequestConfig, AxiosHeaders, RawAxiosRequestConfig } from "axios";
 import { MutationResultStatus } from "../../libs/mutation";
 import HttpResponse from "../../libs/http-response";
 
@@ -617,7 +617,7 @@ describe("odata-query tests", () => {
       status: 200,
       statusText: "OK",
       headers: {},
-      config: {},
+      config: {} as AxiosRequestConfig,
     };
     const baseConnectionService = new ConnectionService();
     let url = "";
@@ -652,7 +652,7 @@ describe("odata-query tests", () => {
       status: 201,
       statusText: "Created",
       headers: {},
-      config: {},
+      config: {} as AxiosRequestConfig,
     };
     const baseConnectionService = new ConnectionService();
     let url = "";
@@ -687,7 +687,7 @@ describe("odata-query tests", () => {
       status: 204,
       statusText: "No Content",
       headers: {},
-      config: {},
+      config: {} as AxiosRequestConfig,
     };
     const baseConnectionService = new ConnectionService();
     let url = "";
@@ -722,7 +722,7 @@ describe("odata-query tests", () => {
       status: 299,
       statusText: "No Supported",
       headers: {},
-      config: {},
+      config: {} as AxiosRequestConfig,
       request: { config: {} },
     };
     const baseConnectionService = new ConnectionService();
@@ -761,7 +761,7 @@ describe("odata-query tests", () => {
       code: "404",
       name: "NotFound",
       message: "Not Found",
-      config: {},
+      config: {} as AxiosRequestConfig,
       isAxiosError: true,
       toJSON: () => Object,
     };
@@ -804,7 +804,7 @@ describe("odata-query tests", () => {
       status: 200,
       statusText: "OK",
       headers: {},
-      config: {},
+      config: {} as AxiosRequestConfig,
     };
     const baseConnectionService = new ConnectionService();
     let url = "";
@@ -842,7 +842,7 @@ describe("odata-query tests", () => {
       status: 201,
       statusText: "Created",
       headers: {},
-      config: {},
+      config: {} as AxiosRequestConfig,
     };
     const baseConnectionService = new ConnectionService();
     let url = "";
@@ -880,7 +880,7 @@ describe("odata-query tests", () => {
       status: 204,
       statusText: "No Content",
       headers: {},
-      config: {},
+      config: {} as AxiosRequestConfig,
     };
     const baseConnectionService = new ConnectionService();
     let url = "";
@@ -918,7 +918,7 @@ describe("odata-query tests", () => {
       status: 299,
       statusText: "No Supported",
       headers: {},
-      config: {},
+      config: {} as AxiosRequestConfig,
       request: { config: {} },
     };
     const baseConnectionService = new ConnectionService();
@@ -960,7 +960,7 @@ describe("odata-query tests", () => {
       code: "404",
       name: "NotFound",
       message: "Not Found",
-      config: {},
+      config: {} as AxiosRequestConfig,
       isAxiosError: true,
       toJSON: () => Object,
     };
@@ -1006,7 +1006,7 @@ describe("odata-query tests", () => {
       status: 200,
       statusText: "OK",
       headers: {},
-      config: {},
+      config: {} as AxiosRequestConfig,
     };
     const baseConnectionService = new ConnectionService();
     let url = "";
@@ -1044,7 +1044,7 @@ describe("odata-query tests", () => {
       status: 201,
       statusText: "Created",
       headers: {},
-      config: {},
+      config: {} as AxiosRequestConfig,
     };
     const baseConnectionService = new ConnectionService();
     let url = "";
@@ -1082,7 +1082,7 @@ describe("odata-query tests", () => {
       status: 204,
       statusText: "No Content",
       headers: {},
-      config: {},
+      config: {} as AxiosRequestConfig,
     };
     const baseConnectionService = new ConnectionService();
     let url = "";
@@ -1120,7 +1120,7 @@ describe("odata-query tests", () => {
       status: 299,
       statusText: "No Supported",
       headers: {},
-      config: {},
+      config: {} as AxiosRequestConfig,
       request: { config: {} },
     };
     const baseConnectionService = new ConnectionService();
@@ -1162,7 +1162,7 @@ describe("odata-query tests", () => {
       code: "404",
       name: "NotFound",
       message: "Not Found",
-      config: {},
+      config: {} as AxiosRequestConfig,
       isAxiosError: true,
       toJSON: () => Object,
     };
@@ -1208,7 +1208,7 @@ describe("odata-query tests", () => {
       status: 200,
       statusText: "OK",
       headers: {},
-      config: {},
+      config: {} as AxiosRequestConfig,
     };
     const baseConnectionService = new ConnectionService();
     let url = "";
@@ -1242,7 +1242,7 @@ describe("odata-query tests", () => {
       status: 201,
       statusText: "Created",
       headers: {},
-      config: {},
+      config: {} as AxiosRequestConfig,
     };
     const baseConnectionService = new ConnectionService();
     let url = "";
@@ -1276,7 +1276,7 @@ describe("odata-query tests", () => {
       status: 204,
       statusText: "No Content",
       headers: {},
-      config: {},
+      config: {} as AxiosRequestConfig,
     };
     const baseConnectionService = new ConnectionService();
     let url = "";
@@ -1312,7 +1312,7 @@ describe("odata-query tests", () => {
       status: 299,
       statusText: "No Supported",
       headers: {},
-      config: {},
+      config: {} as AxiosRequestConfig,
       request: { config: {} },
     };
     const baseConnectionService = new ConnectionService();
@@ -1349,7 +1349,6 @@ describe("odata-query tests", () => {
       code: "404",
       name: "NotFound",
       message: "Not Found",
-      config: {},
       isAxiosError: true,
       toJSON: () => Object,
     };

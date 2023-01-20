@@ -1,6 +1,6 @@
 {
   "name": "yuya.ts.odata-client",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "OData Client for Typescript with axios",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,7 +8,7 @@
     "test": "jest",
     "test2": "jest --ci --reporters=default --reporters=jest-junit",
     "build": "rimraf -r dist | npx tsc | npx tsc -m amd --outFile dist/yuya.ts.odata-client.amd.js | npx tsc -m system --outFile dist/yuya.ts.odata-client.system.js",
-    "buildtest": "rimraf -r dist | npx tsc | npx tsc -m amd --outFile dist/yuya.ts.odata-client.amd.js | npx tsc -m system --outFile dist/yuya.ts.odata-client.system.js && cpx dist/**/* 'C:\\Projects\\TurkuazGO.VehicleShipment\\src\\TurkuazGO.VehicleShipment\\TurkuazGO.VehicleShipment.Web\\node_modules\\yuya.ts.odata-client\\dist\\'"
+    "buildtest": "rimraf -r dist | npx tsc | npx tsc -m amd --outFile dist/yuya.ts.odata-client.amd.js | npx tsc -m system --outFile dist/yuya.ts.odata-client.system.js && cpx dist/**/* C:\\Projects\\TurkuazGO.VehicleShipment\\src\\TurkuazGO.VehicleShipment\\TurkuazGO.VehicleShipment.Web\\node_modules\\yuya.ts.odata-client\\dist\\"
   },
   "repository": {
     "type": "git",
@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/YuyaProject/yuya.ts.odata-client",
   "dependencies": {
-    "axios": "1.2.2",
+    "axios": "1.2.3",
     "lodash": "4.17.21",
     "moment": "2.29.4"
   },
