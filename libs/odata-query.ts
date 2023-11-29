@@ -15,9 +15,9 @@ export function canQuery(arg: any): arg is IQuery {
  *  OData Query type. This type using to prepare odata query.
  */
 export class ODataQuery implements IQuery {
-  private queryStrings: string[] = [];
-  private key: any | null = null;
-  private getAllPagesRowCount: boolean = false;
+  public queryStrings: string[] = [];
+  public key: any | null = null;
+  public getAllPagesRowCount: boolean = false;
 
   /**
    * create a new ODataQuery
